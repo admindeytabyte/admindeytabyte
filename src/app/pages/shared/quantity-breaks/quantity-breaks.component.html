@@ -1,0 +1,13 @@
+<div class="box">
+          <dx-data-grid class="gridContainer" id="gridBalances" [dataSource]="quantityBreaks" [remoteOperations]="false"
+                    [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [height]="height"
+                    class="invoiceGrid" keyExpr="qty">
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="false"></dxo-header-filter>
+                    <dxi-column dataField="qty" caption="Qty" alignment="center" width="50"></dxi-column>
+                    <dxi-column dataField="calculatedSell" caption="Sell($)">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+          </dx-data-grid>
+</div>

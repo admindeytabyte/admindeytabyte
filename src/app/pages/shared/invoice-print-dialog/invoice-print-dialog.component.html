@@ -1,0 +1,190 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="hidden-print text-center text-md-right page-buttons">
+          <button *ngIf="isInvoice" tc-button [view]="'accent'" afterIcon="sli-printer" (click)="printDoc()">Print</button>
+          <button tc-button [view]="'accent'" afterIcon="fa fa-file-pdf-o" (click)="openPDF()">Export</button>
+          <!-- <button tc-button [view]="'accent'" afterIcon=" sli-email" (click)="emailPDF()" outline=" true">eMail</button> -->
+</div>
+<div class="container-fluid">
+          <div id="htmlData">
+                    <div>
+                              <img [src]="logoUrl" alt="" width="50" height="50">
+                    </div>
+                    <div class="row">
+                              <div class="col-md-6 mb-4 mb-md-0">
+                                        <h5>{{header.headerLine1}}</h5>
+                                        <p>{{header.headerLine2}}</p>
+                                        <p>{{header.addressLine1}}</p>
+                                        <p>{{header.addressLine2}}</p>
+                                        <p>{{header.phoneLine1}}</p>
+                                        <p>{{header.phoneLine2}}</p>
+                              </div>
+                              <div class="col-md-6 text-md-right">
+                                        <p class="mb-2"><strong>Order Date:
+                                                  </strong><i>{{data.invoice.dateDisplay}}</i>
+                                        </p>
+                                        <p class="mb-2"><strong>Order Status: </strong>
+                                                  <tc-badge [view]="'success'" [tcShape]="0">
+                                                            {{data.invoice.invoiceStatus}}
+                                                  </tc-badge>
+                                        </p>
+                                        <p><strong>Po #:
+                                                  </strong>{{data.invoice.clientPo}}</p>
+                                        <p><strong>Invoice #
+                                                  </strong>{{data.invoice.invoiceNumber}}</p>
+                              </div>
+                    </div><!-- .row -->
+                    <div id="divider"></div>
+                    <div class="row">
+                              <div class="col-md-6">
+                                        <h5>Billing Address</h5>
+                                        <address class="line-h-24" *ngIf="billingAddress">
+                                                  {{data.invoice.client.companyName}}<br>
+                                                  {{billingAddress.doorNumber}}
+                                                  {{billingAddress.street}}<br>
+                                                  {{billingAddress.cityText}},
+                                                  {{billingAddress.provinceText}}
+                                                  {{billingAddress.postalCode}}<br>
+                                                  <abbr title="Phone">P:</abbr>
+                                                  {{data.invoice.client.landline}}
+                                        </address>
+                              </div>
+
+                              <div class="col-md-6 text-md-right">
+                                        <h5>Shipping Address</h5>
+
+                                        <address class="line-h-24" *ngIf="shippingAddress">
+                                                  {{data.invoice.client.companyName}}<br>
+                                                  {{shippingAddress.doorNumber}}
+                                                  {{shippingAddress.street}}<br>
+                                                  {{shippingAddress.cityText}},
+                                                  {{shippingAddress.provinceText}}
+                                                  {{shippingAddress.postalCode}}<br>
+                                                  <abbr title="Phone">P:</abbr>
+                                                  {{data.invoice.client.landline}}
+                                        </address>
+                              </div>
+                    </div><!-- .row -->
+                    <div class="container-fluid">
+                              <div class="table-responsive mb-4">
+                                        <table class="invoiceTable">
+                                                  <thead>
+                                                            <tr>
+                                                                      <th>#</th>
+                                                                      <th>Line</th>
+                                                                      <th>Sku</th>
+                                                                      <th>Description</th>
+                                                                      <th>Quantity</th>
+                                                                      <th>Sell ($)</th>
+                                                                      <th class="text-right">Total
+                                                                      </th>
+                                                            </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                            <tr *ngFor="let dtl of details">
+                                                                      <td>{{dtl.sequenceId}}</td>
+                                                                      <td>{{dtl.line}}</td>
+                                                                      <td>{{dtl.sku}}</td>
+                                                                      <td class="text-left">
+                                                                                {{dtl.description}}
+                                                                      </td>
+                                                                      <td>{{dtl.orderQty}}</td>
+                                                                      <td class="text-right">${{dtl.sell.toFixed(2)}}
+                                                                      </td>
+                                                                      <td class="text-right">
+                                                                                ${{dtl.amount.toFixed(2)}}</td>
+                                                            </tr>
+                                                  </tbody>
+                                        </table>
+                              </div><!-- .table-responsive -->
+
+
+                              <div class="row">
+                                        <div class="col-md-6">
+                                                  <div class="table-responsive mb-6">
+                                                            <table class="invoiceTable">
+                                                                      <thead>
+                                                                                <tr>
+                                                                                          <th>Month</th>
+                                                                                          <th>Billed ($)</th>
+                                                                                          <th>Paid ($)</th>
+                                                                                          <th>Balance ($)</th>
+                                                                                </tr>
+                                                                      </thead>
+                                                                      <tbody>
+                                                                                <tr *ngFor="let bal of balances">
+                                                                                          <td class="text-left">
+                                                                                                    {{bal.billingMonth}}
+                                                                                          </td>
+                                                                                          <td class="text-right">
+                                                                                                    {{bal.billed.toFixed(2)
+                                                                                                    | currency}}
+                                                                                          </td>
+                                                                                          <td class="text-right">
+                                                                                                    {{bal.paid.toFixed(2)|
+                                                                                                    currency}}
+                                                                                          </td>
+                                                                                          <td class="text-right">
+                                                                                                    {{bal.balance.toFixed(2)
+                                                                                                    | currency}}
+                                                                                          </td>
+                                                                                </tr>
+                                                                      </tbody>
+                                                            </table>
+                                                  </div><!-- .table-responsive -->
+                                        </div>
+
+                                        <div class="col-md-6">
+                                                  <div class="mb-5 text-center text-md-right">
+                                                            <p class="h6"><strong>Sub-total:
+                                                                                {{data.invoice.gross.toFixed(2) |
+                                                                                currency}}</strong>
+                                                            </p>
+                                                            <p class="h6" *ngIf="data.invoice.discountPerc > 0">
+                                                                      <strong>Discount
+                                                                                ({{data.invoice.discountPerc}}%):
+                                                                                {{data.invoice.discount.toFixed(2) |
+                                                                                currency}}</strong>
+                                                            </p>
+                                                            <p class="h6"><strong>HST
+                                                                                ({{data.invoice.taxRate}}%):</strong>
+                                                                      {{data.invoice.hst.toFixed(2) | currency}}
+                                                            </p>
+                                                            <p class="h4 mt-2">
+                                                                      {{data.invoice.netAmount.toFixed(2) | currency}}
+                                                            </p>
+
+                                                  </div>
+                                        </div>
+                              </div>
+                    </div>
+
+                    <div class="row" id="balaceFooter">
+                              <div class="col-md-4 text-md-left header">
+                                        <p>
+                                                  Limit:
+                                                  {{data.invoice.creditLimit.toFixed(2) | currency }}
+                                        </p>
+                              </div>
+                              <div class="col-md-4 text-md-center">
+                                        <p class="header">
+                                                  Current Balance:
+                                                  {{data.invoice.currentBalance.toFixed(2) | currency }}
+                                        </p>
+                              </div>
+                              <div class="col-md-4 text-md-right">
+                                        <p class="header">
+                                                  Credit Available:
+                                                  {{data.invoice.creditAvailable.toFixed(2) | currency}}
+                                        </p>
+                              </div>
+                              <!-- <div class="row text-center text-md-left ">
+                                        <div class="col-md-6 align-self-center text-md-right pt-2 pb-2">
+                                                  <p class="mb-2 small">Phone: +1 888-555-0000</p>
+                                                  <p class="small"><a
+                                                                      href="mailto:support@mail.com">support@3pusa.com</a>
+                                                  </p>
+                                        </div>
+                              </div> -->
+                    </div>
+          </div>
+</div>

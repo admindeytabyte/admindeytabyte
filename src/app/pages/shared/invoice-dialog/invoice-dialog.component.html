@@ -1,0 +1,575 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#invoice' }" [(visible)]="loadingVisible"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+<div id="invoice" *ngIf="client">
+    <app-timeline id="invoiceTimeline" [data]="audits"></app-timeline>
+    <div class="row" *ngIf="errorMessage">
+        <div class="col col-sm-6 col-md-8 col-lg-12">
+            <tc-alert [removable]="true" [view]="'error'">
+                {{ errorMessage }}
+            </tc-alert>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="row" id="invoiceHeader">
+                <div class="col-md-2 text-md-left">
+                    <p class="headerText">{{invoice?.invoiceType}} - {{invoice?.invoiceNumber}}
+                    </p>
+                </div>
+                <div class="col-md-8 text-md-center">
+                    <p class="headerText">{{invoice?.clientName}} (Landline - {{client?.landline}} Mobile -
+                        {{client?.mobile}})
+                        ({{invoice?.clientStatus}})</p>
+                </div>
+                <div class="col-md-2 text-md-right">
+                    <p class="headerText">{{invoice?.dateDisplay}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="this.invoice">
+            <div class="col-md-12" *ngIf="invoice.client.alert">
+                <p class="alert">{{invoice.client.alert}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-12" id="invoiceInfo">
+                    <dx-form id="invoiceInfoTab">
+                        <dxi-item itemType="tabbed" [tabPanelOptions]="{
+                                height: 225,
+                                onTitleClick: invoiceInfo_tabClick
+                            }">
+                            >
+                            <dxi-tab title="Receivables">
+                                <app-account-balance [accountId]="client.accountId">
+                                </app-account-balance>
+                            </dxi-tab>
+                            <dxi-tab title="Invoice Info">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <table class="minimalistBlack">
+                                            <tr>
+                                                <th style="width:100px"></th>
+                                                <th style="width:150px"></th>
+                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="title">Created By</td>
+                                                    <td class="value text-md-center">
+                                                        {{invoice?.loggedBy}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Ordered By</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice?.orderedBy}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Delivered By</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice?.deliveredBy}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Status</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice?.invoiceStatus}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Sales Person</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice?.salesPerson}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <dx-data-grid [dataSource]="dtlHistory" [showBorders]="true" [height]="120"
+                                            class="invoiceGrid" keyExpr="id">
+                                            <dxo-selection mode="single"></dxo-selection>
+                                            <dxi-column type="buttons" [width]="40">
+                                                <dxi-button icon="edit" [onClick]="editInvoiceClick">
+                                                </dxi-button>
+                                            </dxi-column>
+                                            <dxi-column dataField="orderDate" caption="Date" dataType="date"
+                                                format="shortDate" [width]="100" sortOrder="desc">
+                                            </dxi-column>
+                                            <dxi-column dataField="invoice" caption="Invoice" [width]="80">
+                                            </dxi-column>
+                                            <dxi-column dataField="line" caption="Line" [width]="80">
+                                            </dxi-column>
+                                            <dxi-column dataField="sku" caption="Sku" [width]="100">
+                                            </dxi-column>
+                                            <dxi-column dataField="description" caption="Description">
+                                            </dxi-column>
+                                            <dxi-column dataField="orderQty" caption="Qty" alignment="center"
+                                                [width]="80">
+                                            </dxi-column>
+                                            <dxi-column dataField="sell" caption="Sell ($)" [width]="100">
+                                                <dxo-format type="fixedPoint" [precision]="2">
+                                                </dxo-format>
+                                            </dxi-column>
+                                        </dx-data-grid>
+                                        <div class="row" id="balaceInfo">
+                                            <div class="col-md-4 text-md-left headerText">
+                                                <p [ngStyle]="{'color':creditLimit > 0 ? 'green' : 'red' }">
+                                                    Limit:
+                                                    {{creditLimit.toFixed(2) | currency }}</p>
+                                            </div>
+                                            <div class="col-md-4 text-md-center">
+                                                <p class="headerText"
+                                                    [ngStyle]="{'color':currentBalance <= 0 ? 'green' : 'red' }">
+                                                    Current Balance:
+                                                    {{currentBalance.toFixed(2) | currency }} </p>
+                                            </div>
+                                            <div class="col-md-4 text-md-right">
+                                                <p class="headerText"
+                                                    [ngStyle]="{'color':creditAvailable >= 0 ? 'green' : 'red' }">
+                                                    Credit Available:
+                                                    {{creditAvailable.toFixed(2) | currency}} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" *ngIf="selectedItem">
+                                        <div class="row" id="quantityBreaks" *ngIf="quantityBreaks">
+                                            <app-quantity-breaks [height]="150" [quantityBreaks]="quantityBreaks">
+                                            </app-quantity-breaks>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dxi-tab>
+                            
+                            <dxi-tab title="Order Desk Notes">
+                                <dx-text-area [height]="220" [value]="invoice?.orderDeskNotes">
+                                </dx-text-area>
+                            </dxi-tab>
+                            <dxi-tab title="Settlement" *ngIf="isInvoice">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <table class="minimalistBlack">
+                                            <tr>
+                                                <th style="width:100px"></th>
+                                                <th style="width:150px"></th>
+                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="title">Billed ($)</td>
+                                                    <td class="value text-md-center">
+                                                        {{grandTotal.toFixed(2)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Paid ($)</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice?.payment.toFixed(2)}}
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="invoice.balance">
+                                                    <td class="title">Balance ($)</td>
+                                                    <td class="value  text-md-center">
+                                                        {{invoice.balance.toFixed(2)}}
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="deliveryLog">
+                                        <table class="minimalistBlack">
+                                            <tr>
+                                                <th style="width:100px"></th>
+                                                <th style="width:150px"></th>
+                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="title">Fulfilled By</td>
+                                                    <td class="value text-md-center">
+                                                        {{deliveryLog?.driverName}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Delivery Time ($)</td>
+                                                    <td class="value  text-md-center">
+                                                        {{deliveryLog?.deliveryTimeStamp}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="title">Note</td>
+                                                    <td class="value  text-md-center">
+                                                        {{deliveryLog?.driverNote}}
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="deliveryLog">
+                                        <table class="minimalistBlack">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="value text-md-center">
+                                                        <img alt="" [src]="formatImage(deliveryLog.signature)"
+                                                            onerror="this.src='./assets/Images/no-image.png';"
+                                                            class="center-img">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </dxi-tab>
+
+                        </dxi-item>
+                    </dx-form>
+                </div>
+                <div id="invoiceButtonPanel">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div *ngIf="isQuotation && invoiceDetails.length > 0" id="quoteButtons">
+                                    <dx-button *ngIf="isComplete==false" stylingMode="contained"
+                                        class="invoicePanelButton" text="Complete" type="primary" [width]="150"
+                                        (onClick)="SetQuoteCompleteClick()" hint="Set as Complete">
+                                    </dx-button>
+                                    <div *ngIf="isComplete && statusSortId == 5 || statusSortId == 6">
+                                        <dx-button stylingMode=" contained" class="invoicePanelButton" text="Release"
+                                            type="success" [width]="100" (onClick)="ReleaseClick()" hint="Release">
+                                        </dx-button>
+                                    </div>
+
+                                    <div class="left-box">
+                                        <div *ngIf="isComplete && holdQuote && statusSortId<5">
+                                            <dx-button stylingMode=" contained" class="invoicePanelButton"
+                                                text="On Hold" type="danger" [width]="100" (onClick)="PutOnHoldClick()"
+                                                hint="Put On Hold">
+                                            </dx-button>
+                                        </div>
+                                        <div *ngIf="isComplete && statusSortId<5 && !holdQuote">
+                                            <dx-button class="invoicePanelButton" stylingMode="contained"
+                                                text="Back Order" type="danger" [width]="120"
+                                                (onClick)="setBackOrderClick()" hint="Back Order">
+                                            </dx-button>
+                                            <dx-button class="invoicePanelButton" stylingMode="contained" text="Invoice"
+                                                type="default" [width]="100" (onClick)="CreateInvoiceClick()"
+                                                hint="Create Invoice">
+                                            </dx-button>
+                                            <dx-button stylingMode="contained" class="invoicePanelButton"
+                                                text="Estimate" type="default" [width]="100"
+                                                (onClick)="CreateEstimateClick()" hint="Create Estimate">
+                                            </dx-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="isInvoice" id="invoiceButtons">
+                                    <dx-button stylingMode="contained" class="invoicePanelButton" text="Void Invoice"
+                                            type="danger" [width]="120" (onClick)="VoidInvoiceClick()"
+                                            hint="Void Invoice" [visible]="checkRole(14)">
+                                    </dx-button>
+                                    <div *ngIf="isEstimate">
+                                        <dx-button stylingMode="contained" class="invoicePanelButton" text="To Invoice"
+                                            type="default" [width]="120" (onClick)="ConvertEstimateClick()"
+                                            hint="Convert To Invoice">
+                                        </dx-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <dx-button stylingMode="contained" id="saveButton" class="invoicePanelButton"
+                                    [text]="SaveText" type="default" [width]="100" (onClick)="saveInvoice(false)"
+                                    hint="Save">
+                                </dx-button>
+                                <!-- <dx-button *ngIf="isQuotation && isAdmin" stylingMode="contained" id="deleteButton"
+                                    class="invoicePanelButton" text="Delete" type="danger" [width]="100"
+                                    (onClick)="deleteInvoice()" hint="Delete">
+                                </dx-button> -->
+                            </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="detailsGrid">
+                            <dx-data-grid [dataSource]="invoiceDetails" keyExpr="invoiceDtlid" [showBorders]="true"
+                                [height]="invoiceGridHeight" keyExpr="sequenceId" [focusedRowEnabled]="true"
+                                [focusedRowIndex]="0" [focusedColumnIndex]="5" class="modalGridContainer"
+                                (onRowUpdated)="detailsUpdated($event)"
+                                (onFocusedRowChanged)="invoiceSelectionChanged($event)"
+                                (onCellPrepared)="onCellPrepared($event)"
+                                [repaintChangesOnly]="true"
+                                (onToolbarPreparing)="onDetailsGridToolbarPreparing($event)"
+                                (onKeyDown)="onKeyDown($event)">
+                                <dxo-selection mode="single"></dxo-selection>
+                                <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+                                </dxo-search-panel>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-paging [enabled]="false"></dxo-paging>
+                                <dxo-editing mode="cell" [allowUpdating]="true" [selectTextOnEditStart]="true"
+                                    startEditAction="click">
+                                </dxo-editing>
+                                <dxi-column [allowEditing]="false" [allowFiltering]="false" dataField="sequenceId"
+                                    sortOrder="asc" [width]="80" alignment="center" caption="Id">
+                                </dxi-column>
+                                <dxi-column [allowEditing]="true" dataField="line" caption="Line" [width]="80">
+                                </dxi-column>
+                                <dxi-column [allowEditing]="false" dataField="sku" caption="Sku" [width]="120">
+                                </dxi-column>
+                                <dxi-column dataField="description" caption="Description"></dxi-column>
+                                <dxi-column dataField="inStockQty" [allowEditing]="false" caption="Stock Qty" alignment="center"
+                                    [allowFiltering]="false" [width]="120">
+                                </dxi-column>
+                                <dxi-column dataField="unit" [allowEditing]="true" caption="Unit" alignment="center" [allowFiltering]="false"
+                                    [width]="100">
+                                </dxi-column>
+                                <dxi-column dataField="orderQty" dataType="number" [allowEditing]="statusSortId<=9"  caption="Qty" [allowFiltering]="false"
+                                    alignment="center" [width]="80">
+                                </dxi-column>
+                                <dxi-column dataField="cost" caption="Cost ($)" [visible]="minimizedView" [width]="80"
+                                    [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="isQuotation">
+                                    <dxo-format type="fixedPoint" [precision]="2" >
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column dataField="jobber" caption="Jobber ($)" [width]="80"
+                                    [visible]="minimizedView" [allowFiltering]="false" [allowEditing]="false"
+                                    dataType="number" format="currency">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column dataField="discountText" caption="Discount" alignment="center"
+                                    [visible]="checkRole(62)" [width]="100" [allowFiltering]="false"
+                                    [allowEditing]="isQuotation">
+                                </dxi-column>
+
+                                <dxi-column dataField="percDiscount" caption="Disc (%)" [width]="80"
+                                    [allowFiltering]="false" dataType="number" format="currency"
+                                    [visible]="checkRole(67)" [allowEditing]="isQuotation">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column caption="Disc ($)" [allowEditing]="false" [width]="80"
+                                    [allowFiltering]="false" dataType="number" format="currency"
+                                    [calculateCellValue]="calcDiscount" [visible]="checkRole(67)" [allowEditing]="isQuotation">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <!-- dataField="sell" -->
+                                <dxi-column dataField="priceModifiedBy" caption="Sell Mod By" [visible]="minimizedView" [width]="80"
+                                    [allowFiltering]="false"  [allowEditing]="false">
+                                </dxi-column>
+                                <dxi-column dataField="defSell" caption="Orig Sell ($)" [visible]="minimizedView" [width]="80"
+                                    [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="false">
+                                    <dxo-format type="fixedPoint" [precision]="2" >
+                                    </dxo-format>
+                                </dxi-column>
+                                
+                                <dxi-column dataField="sell" caption="Sell ($)" [width]="100" [allowFiltering]="false"
+                                    [allowEditing]="checkRole(13) && statusSortId<=9" dataType="number" format="currency">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <!-- <dxi-column [calculateCellValue]="getSell" caption="Sell ($)" [width]="100"
+                                    [allowFiltering]="false" [allowEditing]="checkRole(13)" dataType="number"
+                                    format="currency">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column> -->
+                                <dxi-column [allowEditing]="false" caption="Total ($)" [width]="100" dataType="number"
+                                    format="currency" [calculateCellValue]="getAmount">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column [allowEditing]="false" caption="Margin ($)" [width]="100"
+                                    [visible]="minimizedView" dataType="number" format="currency"
+                                    [calculateCellValue]="margin">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                
+                                <dxi-column type="buttons" [width]="50" *ngIf="isQuotation">
+                                    <dxi-button hint="Copy" icon="copy" 
+                                        [onClick]="cloneItemClick">
+                                    </dxi-button>
+                                </dxi-column>
+                                <dxi-column type="buttons" [width]="50" alignment="center" *ngIf="isQuotation">
+                                    <dxi-button hint="QDelete" icon="close" [onClick]="deleteItemClick">
+                                    </dxi-button>
+                                </dxi-column>
+                                <!-- <dxi-column type="buttons" [width]="50" alignment="center" *ngIf="isInvoice && statusSortId<=8">
+                                    <dxi-button hint="IDelete" icon="close" [onClick]="deleteItemClick">
+                                    </dxi-button>
+                                </dxi-column> -->
+                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice && statusSortId<10 || isAdmin"  alignment="center">
+                                    <dxi-button hint="Return" icon="revert" [visible]="checkRole(32)"
+                                        [onClick]="returnItemClick">
+                                    </dxi-button>
+                                </dxi-column>
+                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice && statusSortId<10 || isAdmin">
+                                    <dxi-button hint="EditItem" icon="edit" [onClick]="editItemClick">
+                                    </dxi-button>
+                                </dxi-column>
+                                <!-- <dxi-column dataField="detStatus" alignment="center" [width]="80"></dxi-column> -->
+                                <div *dxTemplate="let data of 'invoiceAlert'">
+                                    
+                                    <h5 class="counter">{{invoiceAlert}}</h5>
+                                </div>
+                            </dx-data-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="invoiceFooter">
+                    <div class="col-md-4" id="footer-left">
+                        <table class="footerTable" *ngIf="invoice">
+                            <tr>
+                                <th style="width:60px"></th>
+                                <th style="width:200px"></th>
+                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td class="title">Delivery Date</td>
+                                    <td>
+                                        <dx-date-box [(value)]="invoice.deliveryDate" type="date" [disabled]="statusSortId>=11">
+                                        </dx-date-box>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Shipping</td>
+                                    <td>
+                                        <dx-select-box height="40" [(ngModel)]="selectedShippingAddress"
+                                            [dataSource]="shippingAddresses" displayExpr="address"
+                                            placeholder="Select Shipping Address..." [disabled]="statusSortId>=11">
+                                        </dx-select-box>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Invoice Memo</td>
+                                    <td> 
+                                        <dx-text-area [height]="60" [(value)]="invoice.notes" [disabled]="statusSortId>=11">
+                                        </dx-text-area>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Account Note</td>
+                                    <td>
+                                        <dx-text-area [height]="100" [(value)]="invoice.client.notes" [disabled]="statusSortId>=11">
+                                        </dx-text-area>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4" id="footer-center">
+                        <table class="footerTable" *ngIf="invoice">
+                            <tr>
+                                <th style="width:60px"></th>
+                                <th style="width:200px"></th>
+                            </tr>
+                            <tbody>
+                                <tr *ngIf="isInvoice">
+                                    <td class="title">Log #</td>
+                                    <td>
+                                        <div class="invoiceFooterTotal">{{invoice?.dispatchId}}
+                                        </div>
+                                        <!-- <dx-button *ngIf="invoice?.dispatchId" stylingMode="contained"
+                                            id="dispatchButton" class="invoicePanelButton" [text]="dispatchNum"
+                                            type="default" [width]="150" (onClick)="openLog()" hint="Open Log">
+                                        </dx-button> -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Delivery Type</td>
+                                    <td>
+                                        <dx-select-box height="40" [(ngModel)]="selectedDelMode"
+                                            [dataSource]="deliveryModes" displayExpr="deliveryMode1"
+                                            placeholder="Select Delivery Mode" [disabled]="statusSortId>=10">
+                                        </dx-select-box>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="title">Client Po</td>
+                                    <td>
+                                        <dx-text-box [(value)]="invoice.clientPo" [disabled]="statusSortId>=11">
+                                        </dx-text-box>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Delivery Instructions</td>
+                                    <td>
+                                        <dx-text-area [height]="100" [(value)]="invoice.deliveryInstructions" [disabled]="statusSortId>=11">
+                                        </dx-text-area>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4" id="footer-right">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooter">Sub Total ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooter">
+                                    {{this.subTotal.toFixed(2)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooterDiscount">Discount (%):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <dx-number-box id="discountControl" [(value)]="discountPerc" width="80" [min]="0"
+                                    [max]="100" [showSpinButtons]="true" (onValueChanged)="calcTotals()" [disabled]="statusSortId>=16">
+                                </dx-number-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooterDiscount">Discount ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooterDiscount">
+                                    -{{this.discount.toFixed(2)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooter">HST({{invoice?.taxRate}}%)
+                                    ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooter">{{hst.toFixed(2)}}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooterTotal">Grand Total ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooterTotal">{{grandTotal.toFixed(2)}}
+                                </div>
+                            </div>
+                        </div><div class="row">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooterTotal">Paid ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooterTotal">{{this.invoice.payment.toFixed(2)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="minimizedView">
+                            <div class="col-md-6">
+                                <div class="col-xs-10 text-right invoiceFooter">Margin ($):</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-xs-2 text-right invoiceFooter">{{totalMargin.toFixed(2)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+::ng-deep #productSearchBar {
+          border: navy;
+          border-style: double;
+          background-color: navy;
+}
+
+::ng-deep .searchControl {
+          padding: 1px;
+          width: 250px;
+          margin: 5px;
+}
+
+::ng-deep #clearButton {
+          margin: 5px;
+}
+
+::ng-deep .checkBox {
+          color: white;
+          font-weight: bold;
+          margin: 10px 2px 0px 0px;
+}

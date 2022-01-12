@@ -1,0 +1,249 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="header">
+    <p mat-dialog-title>{{title}}</p>
+</div>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row" *ngIf="fromInvoice">
+        <dx-data-grid [dataSource]="filteredClientHistory" [showBorders]="true" [height]="275"
+            class="invoiceGrid gridContainer" keyExpr="id" (onRowUpdated)="quantityUpdatedFromHistory($event)"
+            (onToolbarPreparing)="onToolbarPreparing($event)">
+            <dxo-search-panel [visible]="true" [width]="300" placeholder="Search History...">
+            </dxo-search-panel>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="cell" [allowUpdating]="true" [selectTextOnEditStart]="false" startEditAction="dblClick">
+            </dxo-editing>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxi-column dataField="category" caption="Category" [width]="150">
+            </dxi-column>
+            <dxi-column dataField="orderDate" caption="Date" dataType="date" format="shortDate" [width]="100"
+                sortOrder="desc">
+            </dxi-column>
+            <dxi-column dataField="invoice" caption="Invoice" [width]="120">
+            </dxi-column>
+            <dxi-column dataField="line" caption="Line" [width]="80">
+            </dxi-column>
+            <dxi-column dataField="sku" caption="Sku" [width]="100">
+            </dxi-column>
+            <dxi-column dataField="description" caption="Description">
+            </dxi-column>
+            <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+            </dxi-column>
+            <dxi-column dataField="sell" caption="Sell ($)" [width]="100">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column type="buttons" [width]="80">
+                <dxi-button hint="Select" icon="cart" [onClick]="selectProductfromHistoryClick">
+                </dxi-button>
+            </dxi-column>
+        </dx-data-grid>
+    </div>
+
+    <div class="box" id="productSearchBar">
+        <dx-check-box class="checkBox" [(ngModel)]="showImages" text="Images">
+        </dx-check-box>
+        <dx-check-box class="checkBox" (onValueChanged)="searchProducts($event)" [(value)]="active" text="Active">
+        </dx-check-box>
+        <dx-check-box class="checkBox" (onValueChanged)="searchProducts($event)" [(value)]="inStock" text="In Stock">
+        </dx-check-box>
+        <dx-select-box class="searchControl" [(ngModel)]="category" [dataSource]="categories" displayExpr="categoryName"
+            [searchEnabled]="true" [showClearButton]=true (onValueChanged)="searchProducts($event)"
+            placeholder="Select Category...">
+        </dx-select-box>
+        <dx-text-box #lineTextBox class="searchControl" [(ngModel)]="line" placeholder="Search by Line..."
+            (onValueChanged)="searchProducts($event)">
+        </dx-text-box>
+        <dx-text-box #skuTextBox  [(ngModel)]="sku" class="searchControl" placeholder="Search by Sku..."
+            (onValueChanged)="searchProducts($event)">
+        </dx-text-box>
+        <dx-text-box #descTextBox [(ngModel)]="description" class="searchControl" placeholder="Search by Description..."
+            (onValueChanged)="searchProducts($event)">
+        </dx-text-box>
+        <dx-text-box #combTextBox class="searchControl"  [(ngModel)]="combination"
+            placeholder="Combination..." (onValueChanged)="searchProducts($event)">
+        </dx-text-box>
+
+        <dx-button icon="fa fa-refresh" id="clearButton" stylingMode="contained" (onClick)="reset()" width="50">
+        </dx-button>
+        <div class="box" *ngIf="fromInvoice && checkRole(63)">
+            <div class="field-lable">(%)</div>
+            <dx-number-box width="100" class="discNumberBox" [showSpinButtons]="true" placeholder="Disc(%)" [max]="100"
+                [min]="-100" (onValueChanged)="applyPercDiscount($event)">
+            </dx-number-box>
+            <div class="field-lable">($)</div>
+            <dx-number-box width="100" class="discNumberBox" [showSpinButtons]="true" placeholder="Disc($)"
+                (onValueChanged)="applyDollarDiscount($event)">
+            </dx-number-box>
+            <!-- <dx-button class="filterButton" icon="check" stylingMode="contained" (onClick)="applyDiscountsonSelected()">
+            </dx-button> -->
+            <!-- <dx-button class="filterButton" icon="formula" stylingMode="contained" (onClick)="ShowDiscounts()">
+            </dx-button> -->
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Results Grid Bar -->
+        <dx-data-grid (onContentReady)="onContentReady($event)"  #productsGrid id="productsGrid" [dataSource]="productsList" [showBorders]="true" 
+            [height]="500"
+            class="invoiceGrid gridContainer" [remoteOperations]="false" [allowColumnReordering]="true"
+            [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="rowId"   (onCellPrepared)="onCellPrepared($event)"
+            [wordWrapEnabled]="true" (onRowUpdated)="quantityUpdated($event)" [focusedRowEnabled]="true"
+            [focusedRowIndex]="0"
+            [(focusedRowKey)]="focusedRowKey"            
+            (onFocusedRowChanged)="productChanged($event)" (onToolbarPreparing)="onResultsGridToolbarPreparing($event)">
+            <dxo-search-panel [visible]="true" [width]="300" placeholder="Search Products...">
+            </dxo-search-panel>
+            <dxo-editing mode="cell" [allowUpdating]="true">
+            </dxo-editing>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column type="buttons" [width]="40" [visible]="checkRole(41)">
+                <dxi-button hint="Edit" icon="edit" [onClick]="editProductClick">
+                </dxi-button>
+            </dxi-column>
+            <dxi-column dataField="productImage" cellTemplate="cellTemplate" caption="" [width]="100"
+                [allowFiltering]="false" [allowSorting]="false" [allowEditing]="false" [visible]="showImages">
+            </dxi-column>
+            <dxi-column dataField="company" caption="Company" [width]="100" [allowEditing]="false" alignment="center">
+            </dxi-column>
+            <dxi-column dataField="category" caption="Category" sortOrder="asc" [width]="120" [allowEditing]="false"
+                alignment="center">
+            </dxi-column>
+            <dxi-column dataField="line" caption="Line" [width]="80" [allowEditing]="false" sortOrder="asc"
+                alignment="center">
+            </dxi-column>
+            <dxi-column dataField="sku" caption="Sku" [width]="100" [allowEditing]="false" sortOrder="asc"
+                alignment="center">
+            </dxi-column>
+            <dxi-column dataField="description" caption="Description">
+            </dxi-column>
+            <dxi-column dataField="paintNote" caption="Paint Note" [allowEditing]="true" [width]="120"></dxi-column>
+            <dxi-column dataField="inStockQty" caption="In Stock" dataType="number" alignment="center" [width]="100"
+                [allowEditing]="false" [visible]="fromInvoice">
+            </dxi-column>
+            <dxi-column dataField="onOrderQty" caption="On Order" dataType="number" alignment="center" [width]="100"
+                [allowEditing]="false" [visible]="fromInvoice">
+            </dxi-column>
+            <dxi-column dataField="jobber" [visible]="fromInvoice && data.isJobber" format="number" caption="Jobber ($)"
+                [width]="100" [allowEditing]="false">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="cost" caption="Cost($)"  dataType="number" *ngIf="!hideCost" alignment="center" [width]="100"
+                [allowEditing]="false" [visible]="fromInvoice && checkRole(9)">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="sell" format="number" caption="Sell ($)" [width]="100" [allowEditing]="false"
+                [visible]="fromInvoice">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="discount" caption="Discount ($)" [width]="100" [allowEditing]="false"
+                [visible]="fromInvoice">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="customSell" caption="Custom Sell ($)" [width]="100" [allowEditing]="false"
+                [visible]="fromInvoice">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="discountText" caption="Discount Code" [width]="120" [allowEditing]="false"
+                alignment="center">
+            </dxi-column>
+            <dxi-column dataField="paintUnit" [visible]="fromInvoice" caption="Paint Unit" [width]="100"
+                [allowEditing]="true" alignment="center">
+            </dxi-column>
+            <dxi-column caption="Order Qty"  dataType="number" dataField="orderQty" alignment="center" [width]="100"
+                [visible]="fromInvoice" [allowEditing]="true">
+            </dxi-column>
+            <dxi-column type="buttons" [width]="80">
+                <dxi-button hint="Select" icon="cart" [onClick]="selectProductClick">
+                </dxi-button>
+                <dxi-button hint="Quantity Breaks" icon="search" [onClick]="showQuantityBreaksClick">
+                </dxi-button>
+            </dxi-column>
+            <div *dxTemplate="let data of 'cellTemplate'">
+                <img [src]="data.value" alt="" />
+            </div>
+            <div *dxTemplate="let data of 'productCount'">
+                <h6 class="productCount">{{productCount}}</h6>
+            </div>
+        </dx-data-grid>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="row" id="quantityBreaks" *ngIf="quantityBreaks">
+                <app-quantity-breaks [quantityBreaks]="quantityBreaks">
+                </app-quantity-breaks>
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-8">
+            <div class="row" *ngIf="fromInvoice">
+                <dx-data-grid [dataSource]="selectedProducts" [showBorders]="true" [height]="275"
+                    class="invoiceGrid gridContainer" keyExpr="id">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-editing mode="cell" [allowUpdating]="true" [selectTextOnEditStart]="false" startEditAction="click">
+                    </dxo-editing>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxi-column dataField="line" caption="Line" [width]="80">
+                    </dxi-column>
+                    <dxi-column dataField="sku" caption="Sku" [width]="100">
+                    </dxi-column>
+                    <dxi-column dataField="description" caption="Description">
+                    </dxi-column>
+                    <dxi-column dataField="paintUnit" [visible]="fromInvoice" caption="Paint Unit" [width]="100"
+                [allowEditing]="true" alignment="center">
+            </dxi-column>
+                    <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+                    </dxi-column>
+                    <dxi-column dataField="sell" caption="Sell ($)" [width]="100">
+                        <dxo-format type="fixedPoint" [precision]="2">
+                        </dxo-format>
+                    </dxi-column>
+                    <dxi-column type="buttons" [width]="50">
+                        <dxi-button hint="Delete" icon="close" [onClick]="deleteItemClick">
+                        </dxi-button>
+                    </dxi-column>
+                </dx-data-grid>
+            </div>
+            <!-- <div class="row" id="relatedItems" *ngIf="requiredProducts">
+                <app-related-products [products]="requiredProducts" (selectProductEvent)="addedFromRequired($event)">
+                </app-related-products>
+            </div> -->
+            <!-- <dx-form id="relatedTab">
+                <dxi-item itemType="tabbed" [tabPanelOptions]="{
+                    height: 300, width: 1100
+                }">
+                    <dxi-tab title="Required">
+                        <div class="row" id="relatedItems" *ngIf="requiredProducts">
+                            <app-related-products [products]="requiredProducts"
+                                (selectProductEvent)="addedFromRequired($event)">
+                            </app-related-products>
+                        </div>
+                    </dxi-tab>
+                    <dxi-tab title="Alternate">
+
+                    </dxi-tab>
+                    <dxi-tab title="Related">
+
+                    </dxi-tab>
+                </dxi-item>
+            </dx-form> -->
+        </div>
+    </div>
+</div>

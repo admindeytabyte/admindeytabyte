@@ -1,0 +1,77 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="row" id="AccountName" *ngIf="client">
+          <div class="col-md-12">
+                    <p class="page_title">Payment for {{client.companyName}}</p>
+          </div>
+</div>
+<tc-card [title]="'Payment'" [padding]="2" height=500>
+          <div class="row" id="invoiceInfoBar" *ngIf="invoice">
+                    <div class="col-md-1">
+                              <p>{{invoice.invoiceNumber}}</p>
+                    </div>
+                    <div class="col-md-2">
+                              <p>{{invoice.invoiceType}}</p>
+                    </div>
+                    <div class="col-md-3">
+                              <p>{{invoice.status}}</p>
+                    </div>
+                    <div class="col-md-2">
+                              <p>Billed: ${{invoice.billed.toFixed(2)}}</p>
+                    </div>
+                    <div class="col-md-2">
+                              <p>Paid: ${{invoice.paid.toFixed(2)}}</p>
+                    </div>
+                    <div class="col-md-2">
+                              <p>Balance: ${{invoice.balance.toFixed(2)}}</p>
+                    </div>
+          </div>
+          <div class="row" *ngIf="errorMessage">
+                    <div class="col col-sm-6 col-md-8 col-lg-12">
+                              <tc-alert [removable]="true" [view]="'error'">
+                                        {{ errorMessage }}
+                              </tc-alert>
+                    </div>
+          </div>
+          <div class="form">
+                    <div class="dx-fieldset">
+                              <div class="dx-field">
+                                        <div class="dx-field-label">Payment Date</div>
+                                        <div class="dx-field-value">
+                                                  <dx-date-box [(value)]="paymentDate" type="date">
+                                                  </dx-date-box>
+                                        </div>
+                              </div>
+                              <div class="dx-field">
+                                        <div class="dx-field-label">Payment Type</div>
+                                        <div class="dx-field-value">
+                                                  <dx-select-box [items]="paymentTypes"
+                                                            placeholder="Choose Payment Type"
+                                                            displayExpr="paymentTypeDesc" valueExpr="paymentTypeId"
+                                                            [showClearButton]="true" [(value)]="paymentType">
+                                                  </dx-select-box>
+                                        </div>
+                              </div>
+                              <div class="dx-field">
+                                        <div class="dx-field-label">Payment Amount</div>
+                                        <div class="dx-field-value">
+                                                  <dx-number-box [(value)]="paymentTotal"
+                                                            format="$ #,##0.##;($ #,##0.##)">
+                                                  </dx-number-box>
+                                        </div>
+                              </div>
+                              <div class="dx-field">
+                                        <div class="dx-field-label">Note</div>
+                                        <div class="dx-field-value">
+                                                  <dx-text-area [height]="100" [(value)]="paymentNote">
+                                                  </dx-text-area>
+                                        </div>
+                              </div>
+                              <div class="button-right">
+                                        <dx-button stylingMode="contained" text="Save Payment" type="default"
+                                                  [width]="150" (onClick)="paymentClick($event)">
+                                        </dx-button>
+                              </div>
+
+                    </div>
+          </div>
+</tc-card>

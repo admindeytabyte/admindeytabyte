@@ -1,0 +1,19 @@
+::ng-deep #dashboard-home {
+    height: calc(100vh - 200px);
+    width: 100%;
+}
+
+::ng-deep .client {
+    font-size: 10;
+    font-weight: bold;
+    color: navy;
+}
+
+ ::ng-deep .timeElapsed {
+     font-size: 10;
+     color: maroon;
+ }
+
+
+
+

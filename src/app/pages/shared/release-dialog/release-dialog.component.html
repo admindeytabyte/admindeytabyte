@@ -1,0 +1,124 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div id="title" *ngIf="client">
+            <p>Client Summary for {{client.companyName}} - {{client.landline}} - {{client.chargeType}} </p>
+        </div>
+        <div class="col-md-12" id="accountBalance" *ngIf="accountId>0">
+            <app-account-balance [accountId]="accountId"></app-account-balance>
+        </div>
+        <div class="row">
+            <div class="col-md-8" id="invoices">
+                <dx-form>
+                    <dxi-item itemType="tabbed">
+                        <dxi-tab title="Open Invoices">
+                            <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="overDueInvoices"
+                                [remoteOperations]="false" keyExpr="invoiceId" height="200">
+                                <dxo-selection mode="single"></dxo-selection>
+                                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                <dxi-column dataField="invoiceNumber" alignment="center" width="100"></dxi-column>
+                                <dxi-column dataField="invoiceType" width="120" alignment="center"></dxi-column>
+                                <dxi-column dataField="date" dataType="datetime" sortOrder="desc" alignment="center"
+                                    format="dd-MMM-yyyy HH:mm:ss" width="200">
+                                </dxi-column>
+                                <dxi-column dataField="invoiceStatus" alignment="center" width="150">
+                                </dxi-column>
+                                <dxi-column dataField="netAmount" caption="Amount ($)" dataType="number"
+                                    format="currency" alignment="right" width="120">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column dataField="payment" caption="Payment ($)" dataType="number"
+                                    format="currency" alignment="right" width="120">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column dataField="balance" caption="Balance ($)" dataType="number"
+                                    format="currency" alignment="right" width="120">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+                                <dxi-column></dxi-column>
+                            </dx-data-grid>
+                        </dxi-tab>
+                        <dxi-tab title="Payment History">
+
+                        </dxi-tab>
+                    </dxi-item>
+                </dx-form>
+            </div>
+            <div class="col-md-4" id="notes" *ngIf="invoice">
+                <div class="field-lable">Invoice Memo</div>
+                <dx-text-area [height]="80" [(value)]="invoice.notes">
+                </dx-text-area>
+                <div class="field-lable">Delivery Note</div>
+                <dx-text-area [height]="80" [(value)]="invoice.deliveryInstructions">
+                </dx-text-area>
+            </div>
+        </div>
+
+        <div id="invoiceOptions" class="box" *ngIf="invoice">
+            <div class="field-lable">Invoice Type</div>
+            <dx-select-box height="40" [(ngModel)]="selInvType" [dataSource]="invoiceTypes" displayExpr="typeDesc"
+                placeholder="Select Invoice Type" [disabled]="true">
+            </dx-select-box>
+            <div class="field-lable">Delivery Type</div>
+            <dx-select-box height="40" [(ngModel)]="selectedDelMode" [dataSource]="deliveryModes"
+                displayExpr="deliveryMode1" placeholder="Select Delivery Mode">
+            </dx-select-box>
+            <div class="field-lable">Delivery Date</div>
+            <dx-date-box height="40" [(value)]="invoice.deliveryDate" type="date"></dx-date-box>
+        </div>
+        <div class="col-md-12" id="details">
+            <dx-data-grid [dataSource]="details" keyExpr="invoiceDtlid" [showBorders]="true" [focusedRowEnabled]="true"
+                class="gridContainer" height="300">
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxi-column [allowEditing]="false" [allowFiltering]="false" dataField="sequenceId" sortOrder="asc"
+                    [width]="80" alignment="center" caption="Id">
+                </dxi-column>
+                <dxi-column [allowEditing]="false" dataField="line" caption="Line" [width]="80">
+                </dxi-column>
+                <dxi-column [allowEditing]="false" dataField="sku" caption="Sku" [width]="120">
+                </dxi-column>
+                <dxi-column dataField="description" caption="Description"></dxi-column>
+                <dxi-column dataField="unit" caption="Unit" alignment="center" [allowFiltering]="false" [width]="100">
+                </dxi-column>
+                <dxi-column dataField="orderQty" caption="Qty" [allowFiltering]="false" alignment="center" [width]="80">
+                </dxi-column>
+                <dxi-column dataField="sell" caption="Sell ($)" [width]="100" [allowFiltering]="false" dataType="number"
+                    format="currency">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <dxi-column dataField="amount" caption="Amount ($)" [width]="100" [allowFiltering]="false"
+                    dataType="number" format="currency">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+            </dx-data-grid>
+        </div>
+        <div class="col-md-12" id="buttons" *ngIf="invoice">
+            <dx-button text="Notes" stylingMode="contained" type="success" type="default" class="footerButton"
+                (onClick)="openNotesClicked()">
+            </dx-button>
+            <dx-button text="Release" stylingMode="contained" type="success" class="footerButton"
+                (onClick)="releaseClicked()">
+            </dx-button>
+            <dx-button *ngIf="!invoice.escalate" text="Denied" stylingMode="contained" type="danger"
+                class="footerButton" (onClick)="deniedClicked()">
+            </dx-button>
+            <dx-button *ngIf="invoice.escalate" text="Escalate" stylingMode="contained" type="danger"
+                class="footerButton" (onClick)="escalateClicked()">
+            </dx-button>
+        </div>
+    </div>
+
+</div>

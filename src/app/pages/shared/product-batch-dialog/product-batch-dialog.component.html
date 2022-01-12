@@ -1,0 +1,157 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="container-fluid" id="batchEditor">
+          <tc-card title="Batch Product Entry">
+                    <div class="row">
+                              <div class="col-md-12">
+                                        <dx-data-grid [dataSource]="filteredClientHistory" [showBorders]="true"
+                                                  [height]="300" class="invoiceGrid gridContainer" keyExpr="id"
+                                                  (onToolbarPreparing)="onToolbarPreparing($event)">
+                                                  <dxo-search-panel [visible]="true" [width]="300"
+                                                            placeholder="Search History...">
+                                                  </dxo-search-panel>
+                                                  <dxo-selection mode="single"></dxo-selection>
+                                                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                                  <dxi-column dataField="category" caption="Category" [width]="150">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="orderDate" caption="Date" dataType="date"
+                                                            format="shortDate" [width]="100" sortOrder="desc">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoice" caption="Invoice" [width]="120">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="line" caption="Line" [width]="80">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="sku" caption="Sku" [width]="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="description" caption="Description">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="orderQty" caption="Qty" alignment="center"
+                                                            [width]="80">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="sell" caption="Sell ($)" [width]="100">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                        </dx-data-grid>
+                              </div>
+
+                    </div>
+                    <div class="row">
+                              <div class="col-md-2" id=" productEntry">
+                                        <dx-text-area [height]="700" [(ngModel)]="skus">
+                                        </dx-text-area>
+                              </div>
+                              <div class="col-md-10">
+
+                                        <dx-data-grid #productsGrid [dataSource]="productsList" [showBorders]="true"
+                                                  [height]="700" class="invoiceGrid gridContainer"
+                                                  [remoteOperations]="false" [allowColumnReordering]="true"
+                                                  [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="rowId"
+                                                  [focusedRowEnabled]="true" [focusedRowIndex]="0"
+                                                  [focusedColumnIndex]="12" (onCellPrepared)="onCellPrepared($event)"
+                                                  [wordWrapEnabled]="true"
+                                                  (onToolbarPreparing)="onResultsGridToolbarPreparing($event)"
+                                                  [focusedRowEnabled]="true" [focusedRowIndex]="0"
+                                                  (onFocusedRowChanged)="productChanged($event)">
+                                                  <dxo-search-panel [visible]="true" [width]="300"
+                                                            placeholder="Search Products...">
+                                                  </dxo-search-panel>
+                                                  <!-- <dxo-editing mode="cell" [allowUpdating]="true"
+                                                            [selectTextOnEditStart]="true" startEditAction="click">
+                                                  </dxo-editing> -->
+                                                  <!-- <dxo-header-filter [visible]="true"></dxo-header-filter> -->
+                                                  <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                                  <dxo-selection mode="single"></dxo-selection>
+                                                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                                  <dxo-paging [enabled]="false"></dxo-paging>
+                                                  <!-- <dxi-column type="buttons" [width]="40" [visible]="checkRole(41)">
+                                                            <dxi-button hint="Edit" icon="edit"
+                                                                      [onClick]="editProductClick">
+                                                            </dxi-button>
+                                                  </dxi-column> -->
+                                                  <!-- <dxi-column dataField="productImage" cellTemplate="cellTemplate"
+                                                            caption="" [width]="100" [allowFiltering]="false"
+                                                            [allowSorting]="false" [allowEditing]="false">
+                                                  </dxi-column> -->
+                                                  <!-- <dxi-column dataField="company" caption="Company" [width]="100"
+                                                            [allowEditing]="false" alignment="center">
+                                                  </dxi-column> -->
+                                                  <dxi-column caption="Order Qty" dataType="number" dataField="orderQty"
+                                                            alignment="center" [width]="100" [allowFiltering]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="message" caption="Status" [width]="150">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="category" caption="Category" [width]="120"
+                                                            [allowEditing]="false" alignment="center">
+                                                  </dxi-column>
+
+
+                                                  <dxi-column dataField="line" caption="Line" [width]="100"
+                                                            [allowEditing]="false" alignment="center">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="sku" caption="Sku" [width]="100"
+                                                            [allowEditing]="false" alignment="center">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="description" caption="Description">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="inStockQty" caption="In Stock"
+                                                            dataType="number" alignment="center" [width]="80"
+                                                            [allowEditing]="false" [allowFiltering]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="onOrderQty" caption="On Order"
+                                                            dataType="number" alignment="center" [width]="80"
+                                                            [allowEditing]="false" [allowFiltering]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="jobber" [visible]="data.isJobber"
+                                                            format="number" caption="Jobber ($)" [width]="100"
+                                                            [allowEditing]="false" [allowFiltering]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="cost" caption="Cost($)" dataType="number"
+                                                            alignment="center" [width]="100" [allowEditing]="false"
+                                                            [visible]="checkRole(9)" [allowFiltering]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="sell" format="number" caption="Sell ($)"
+                                                            [width]="100" [allowEditing]="false"
+                                                            [allowFiltering]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="discount" caption="Discount ($)" [width]="100"
+                                                            [allowEditing]="false" [allowFiltering]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="customSell" caption="Custom Sell ($)"
+                                                            [width]="100" [allowEditing]="false"
+                                                            [allowFiltering]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="discountText" caption="Discount Code"
+                                                            [width]="120" [allowEditing]="false" alignment="center"
+                                                            [allowFiltering]="false">
+                                                  </dxi-column>
+
+
+                                                  <!-- <dxi-column type="buttons" [width]="80">
+                                                            <dxi-button hint="Select" icon="cart"
+                                                                      [onClick]="selectProductClick">
+                                                            </dxi-button>
+                                                            <dxi-button hint="Quantity Breaks" icon="search"
+                                                                      [onClick]="showQuantityBreaksClick">
+                                                            </dxi-button>
+                                                  </dxi-column> -->
+                                                  <div *dxTemplate="let data of 'cellTemplate'">
+                                                            <img [src]="data.value" />
+                                                  </div>
+                                                  <!-- <div *dxTemplate="let data of 'productCount'">
+                                                            <h6 class="productCount">{{productCount}}</h6>
+                                                  </div> -->
+                                        </dx-data-grid>
+                              </div>
+                    </div>
+          </tc-card>
+</div>

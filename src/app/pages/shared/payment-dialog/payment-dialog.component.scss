@@ -1,0 +1,13 @@
+::ng-deep .title {
+          font-size: 16px;
+          font-weight: bold;
+          color: navy;
+          margin: 0px 0px 2px 0px;
+}
+
+::ng-deep #invoiceInfoBar {
+          border: navy;
+          border-style: double;
+          font-weight: bold;
+          font-size: small;
+}

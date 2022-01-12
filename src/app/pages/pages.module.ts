@@ -48,6 +48,35 @@ import { NgxPrintModule } from 'ngx-print';
 import { ToastrModule } from 'ngx-toastr';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TestComponent } from './test/test.component';
+import { InvoiceMiniViewComponent } from './shared/invoice-mini-view/invoice-mini-view.component';
+import { ProductSaleDialogComponent } from './shared/product-sale-dialog/product-sale-dialog.component';
+import { InvoiceDialogComponent } from './shared/invoice-dialog/invoice-dialog.component';
+import { ProductBatchDialogComponent } from './shared/product-batch-dialog/product-batch-dialog.component';
+import { ClientContactEditorComponent } from './shared/client-contact-editor/client-contact-editor.component';
+import { ClientHistoryDialogComponent } from './shared/client-history-dialog/client-history-dialog.component';
+import { InvoicePrintDialogComponent } from './shared/invoice-print-dialog/invoice-print-dialog.component';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { ProductDialogComponent } from './shared/product-dialog/product-dialog.component';
+import { ProductEditorDialogComponent } from './shared/product-editor-dialog/product-editor-dialog.component';
+import { ClientDiscountsDialogComponent } from './shared/client-discounts-dialog/client-discounts-dialog.component';
+import { ProductEditorComponent } from './shared/product-editor/product-editor.component';
+import { ProductAddDialogComponent } from './shared/product-add-dialog/product-add-dialog.component';
+import { SalesDialogComponent } from './shared/sales-dialog/sales-dialog.component';
+import { CategoriesEditorComponent } from './shared/categories-editor/categories-editor.component';
+import { NotesDialogComponent } from './shared/notes-dialog/notes-dialog.component';
+import { ReleaseDialogComponent } from './shared/release-dialog/release-dialog.component';
+import { PackingSlipDialogComponent } from './shared/packing-slip-dialog/packing-slip-dialog.component';
+import { MessageDialogComponent } from './shared/message-dialog/message-dialog.component';
+import { InvoiceLineEditorComponent } from './shared/invoice-line-editor/invoice-line-editor.component';
+import { PaymentDialogComponent } from './shared/payment-dialog/payment-dialog.component';
+import { TimelineComponent } from './shared/timeline/timeline.component';
+import { AccountBalanceComponent } from './shared/account-balance/account-balance.component';
+import { QuantityBreaksComponent } from './shared/quantity-breaks/quantity-breaks.component';
+import { ProductSlabEditorComponent } from './shared/product-slab-editor/product-slab-editor.component';
+import { ProductLinesEditorComponent } from './shared/product-lines-editor/product-lines-editor.component';
+import { ProductImagesEditorComponent } from './shared/product-images-editor/product-images-editor.component';
+import { ProductRelatedEditorComponent } from './shared/product-related-editor/product-related-editor.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -98,7 +127,36 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule
   ],
   declarations: [
-    DashboardHomeComponent
+    DashboardHomeComponent,
+    InvoiceMiniViewComponent,
+    TestComponent,
+    ProductSaleDialogComponent,
+    InvoiceDialogComponent,
+    ProductBatchDialogComponent,
+    ClientContactEditorComponent,
+    ClientHistoryDialogComponent,
+    InvoicePrintDialogComponent,
+    ConfirmDialogComponent,
+    ProductDialogComponent,
+    ProductEditorDialogComponent,
+    ClientDiscountsDialogComponent,
+    ProductEditorComponent,
+    ProductAddDialogComponent,
+    SalesDialogComponent,
+    CategoriesEditorComponent,
+    NotesDialogComponent,
+    ReleaseDialogComponent,
+    PackingSlipDialogComponent,
+    MessageDialogComponent,
+    InvoiceLineEditorComponent,
+    PaymentDialogComponent,
+    TimelineComponent,
+    AccountBalanceComponent,
+    QuantityBreaksComponent ,
+    ProductSlabEditorComponent,
+    ProductLinesEditorComponent,
+    ProductImagesEditorComponent,
+    ProductRelatedEditorComponent
   ],
   exports: [],
   entryComponents: [

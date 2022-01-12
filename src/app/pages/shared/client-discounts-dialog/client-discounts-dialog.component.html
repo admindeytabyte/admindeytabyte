@@ -1,0 +1,76 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Client Discounts Editors</p>
+<dx-load-indicator [(visible)]="dataLoading" id="large-indicator" height="60" width="60"></dx-load-indicator>
+<dx-data-grid [showBorders]="true" id="discountsGrid" class="gridContainer" [dataSource]="clientDiscounts" keyExpr="id"
+          height="750" [showBorders]="true" (onRowUpdated)="clientDiscountUpdated($event)"
+          (onRowRemoved)="clientDiscountsDeleted($event)" (onToolbarPreparing)="onGridToolbarPreparing($event)"
+          (onCellPrepared)="onCellPrepared($event)">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+          </dxo-search-panel>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-paging [pageSize]="25"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+          </dxo-pager>
+          <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [useIcons]="true">
+          </dxo-editing>
+          <!-- <dxi-column type="buttons" [width]="100">
+                    <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+          </dxi-column> -->
+          <dxi-column dataField="categoryText" sortOrder="asc" [allowEditing]="false" caption="Category"
+                    alignment="center" width="150">
+          </dxi-column>
+          <dxi-column dataField="lineText" caption="Line" alignment="center" width="80" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="partId" caption="Sku" alignment="center" width="100" [allowEditing]="false">
+          </dxi-column>
+          <!-- <dxi-column dataField="description" caption="Description" alignment="left" [allowEditing]="false">
+          </dxi-column> -->
+          <dxi-column dataField="lastSold" dataType="date" caption="Last Sold" alignment="center" width="140"
+                    [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="discountTypeId" caption="Type" [width]="100">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="discountTypes" displayExpr="discountTypeText" valueExpr="discountTypeId">
+                    </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="jobber" [visible]="isJobber" caption="Jobber ($)" [width]="80" dataType="number"
+                    alignment="center" [allowEditing]="false">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="sell" [visible]="isRetail" caption="Retail ($)" [width]="100" dataType="number"
+                    alignment="center" [allowEditing]="false">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+
+          <dxi-column dataField="discountValue" caption="Discount Perc" [width]="120" dataType="number"
+                    alignment="center" [allowEditing]="false" [calculateCellValue]="calculateDiscount">
+                    <dxo-format type="percent" [precision]="2">
+                    </dxo-format>
+                    <dxi-validation-rule type="required">
+                    </dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="customSell" caption="Custom Sell ($)" [width]="100" dataType="number"
+                    alignment="center">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="createdByText" caption="Created By" alignment="center" width="100"
+                    [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="startDate" caption="Start Date" alignment="center" width="120" dataType="date">
+          </dxi-column>
+          <dxi-column dataField="expiryDate" caption="Expiry Date" alignment="center" width="120" dataType="date">
+          </dxi-column>
+          <dxi-column dataField="isActive" caption="Active" alignment="center" width="100">
+          </dxi-column>
+          <dxi-column dataField="isLocked" caption="Locked" alignment="center" width="100">
+          </dxi-column>
+          <dxi-column dataField="sellLocked" caption="Sell Locked" alignment="center" width="100">
+          </dxi-column>
+          <dxi-column dataField="method" caption="Method" alignment="center" width="100">
+          </dxi-column>
+</dx-data-grid>

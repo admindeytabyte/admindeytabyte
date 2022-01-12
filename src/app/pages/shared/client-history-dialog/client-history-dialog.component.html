@@ -1,0 +1,48 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>{{title}}</p>
+<div class="box" id="productSearchBar" *ngIf="allowf6">
+          <dx-check-box class="checkBox"  (onValueChanged)="selectionChanged($event)" [(value)]="searchMode"
+                    text={{clientText}}>
+          </dx-check-box>
+          <dx-text-box class="searchControl" [(ngModel)]="keyword" placeholder="Search by Keyword..."
+                    (onValueChanged)="searchProducts($event)" *ngIf="searchMode" width="300">
+          </dx-text-box>
+        <!-- <dx-text-box [(ngModel)]="sku" class="searchControl" placeholder="Search by Sku..."
+                    (onValueChanged)="searchProducts($event)" *ngIf="searchMode">
+          </dx-text-box>
+          <dx-text-box [(ngModel)]="description" class="searchControl" placeholder="Search by Description..."
+                    (onValueChanged)="searchProducts($event)" *ngIf="searchMode">
+          </dx-text-box>
+          <dx-button icon="fa fa-refresh" id="clearButton" stylingMode="contained" (onClick)="reset()" width="50" *ngIf="searchMode">
+          </dx-button>  -->
+</div>
+<dx-data-grid [dataSource]="clientHistory" [showBorders]="true" [height]="780" class="invoiceGrid gridContainer"
+          keyExpr="id">
+          <dxo-search-panel [visible]="true" [width]="300" placeholder="Search History...">
+          </dxo-search-panel>
+           <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxi-column dataField="category" caption="Category" [width]="150">
+          </dxi-column>
+          <dxi-column dataField="orderDate" caption="Date" dataType="date" format="shortDate" [width]="140"
+                    sortOrder="desc">
+          </dxi-column>
+          <dxi-column dataField="invoice" caption="Invoice" [width]="120">
+          </dxi-column>
+          <dxi-column dataField="line" caption="Line" [width]="80">
+          </dxi-column>
+          <dxi-column dataField="sku" caption="Sku" [width]="100">
+          </dxi-column>
+          <dxi-column dataField="customer" caption="Client" [width]="300">
+          </dxi-column>
+          <dxi-column dataField="description" caption="Description">
+          </dxi-column>
+          <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+          </dxi-column>
+          <dxi-column dataField="sell" caption="Sell ($)" [width]="100">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+</dx-data-grid>

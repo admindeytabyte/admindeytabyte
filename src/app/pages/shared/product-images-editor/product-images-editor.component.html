@@ -1,0 +1,46 @@
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<p>Product Images Editor</p>
+<div class="row">
+    <div class="col-md-6 text-md-center">
+        <div>
+            <label class="image-upload-container btn btn-bwm">
+                <span>Select Image for {{ product.description }} </span>
+                <input #imageInput type="file" accept="image/*" (change)="processFile(imageInput)" />
+            </label>
+        </div>
+        <dx-data-grid [dataSource]="productImages" [showBorders]="true" [height]="650" class="invoiceGrid gridContainer"
+            [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+            [showBorders]="true" keyExpr="id" [focusedRowEnabled]="true" [wordWrapEnabled]="true"
+            (onRowUpdated)="ProductImagesUpdated($event)" (onRowRemoved)="ProductImagesDeleted($event)"
+            (onRowInserted)="ProductImagesAdded($event)" (onFocusedRowChanged)="ImageFocusChanged($event)"
+            [focusedRowEnabled]="true">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-editing mode="batch" [allowUpdating]="true" [selectTextOnEditStart]=true startEditAction="click"
+                [allowUpdating]="true" [allowUpdating]="true" [allowDeleting]="true" [useIcons]="true">
+            </dxo-editing>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column dataField="pictureUrl" caption="" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                cellTemplate="cellTemplate"></dxi-column>
+            <dxi-column dataField="pictureUrl" caption="Url" [allowFiltering]="false" [allowSorting]="false"
+                [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="sortId" caption="SortId" [width]="80">
+            </dxi-column>
+
+            <div *dxTemplate="let data of 'cellTemplate'">
+                <img alt="" [src]="data.value" />
+            </div>
+        </dx-data-grid>
+    </div>
+    <div class="col-md-6 text-md-center image">
+        <img alt="" class="images" [src]="selectedImage" />
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="row">
+    <div class="col-md-6">
+        <div class="header">
+            <p mat-dialog-title>Client Sales History</p>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="box" id="filtersRow">
+            <div class="field-lable">Start Date</div>
+            <dx-date-box (onValueChanged)="dateChanged($event)" [(value)]="salesDate" type="date">
+            </dx-date-box>
+            <div class="field-lable">Main Categories</div>
+            <dx-check-box class="CheckBox" (onValueChanged)="switchValueChanged($event)" [(value)]="mainCategories">
+            </dx-check-box>
+            <div class="field-lable">$/Qty</div>
+            <dx-check-box class="CheckBox" (onValueChanged)="switchValueChanged($event)" [(value)]="sumByDollar">
+            </dx-check-box>
+            <dx-button class="filterButton" text="Categories" stylingMode="contained" (onClick)="showCategories()">
+            </dx-button>
+        </div>
+    </div>
+    <!-- <div class="col-md-12">
+    <dx-chart id="sales-chart">
+        <dxo-common-series-settings type="bar"></dxo-common-series-settings>
+        <dxo-size [height]="200"></dxo-size>
+        <dxo-legend [visible]="true" verticalAlignment='bottom' horizontalAlignment='center'>
+        </dxo-legend>
+        <dxo-adaptive-layout [width]="450"></dxo-adaptive-layout>
+        <dxo-tooltip [enabled]="true" format="currency" [customizeTooltip]="customizeTooltip">
+        </dxo-tooltip>
+    </dx-chart>
+</div> -->
+    <dx-pivot-grid id="sales" [allowSortingBySummary]="true" [allowSorting]="true" [allowFiltering]="true"
+        [showBorders]="true" [dataSource]="salesGridDataSource" [showRowTotals]="false" [showColumnTotals]="false"
+        [allowSortingBySummary]="true" (onCellClick)="onPivotCellClick($event)" [height]="750"
+        (onCellPrepared)="onCellPrepared($event)">
+        <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true" [width]="300">
+        </dxo-header-filter>
+        <!-- <dxo-field-chooser [enabled]="false"></dxo-field-chooser> -->
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxo-field-panel [visible]="true"></dxo-field-panel>
+    </dx-pivot-grid>
+    <dx-popup [(visible)]="salesPopupVisible" [title]="salesPopupTitle" [width]="1100" [height]="600"
+        (onShown)="onPopupShown()">
+        <div *dxTemplate="let data of 'content'">
+            <dx-data-grid #drillDownDataGrid [height]="500" [width]="1000" [dataSource]="drillDownDataSource"
+                [columns]="['orderDate', 'invoice', 'category', 'line','sku','description','orderQty','sell']">
+                <dxi-column dataField="orderDate" dataType="date" format="shortDate" caption="Date" [width]="120"
+                    sortOrder="desc"></dxi-column>
+                <dxi-column dataField="invoice" caption="Invoice" [width]="120"></dxi-column>
+                <dxi-column dataField="line" caption="Line" [width]="80"></dxi-column>
+                <dxi-column dataField="sku" caption="Sku" [width]="120"></dxi-column>
+                <dxi-column dataField="description" caption="Description" [width]="250">
+                </dxi-column>
+                <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+                </dxi-column>
+                <dxi-column dataField="sell" caption="Sell ($)" [width]="80" dataType="number" format="currency">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <dxi-column dataField="amount" caption="Total ($)" dataType="number" [width]="120" format="currency">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <dxo-summary>
+                    <dxi-total-item column="orderDate" summaryType="count">
+                    </dxi-total-item>
+                    <dxi-total-item column="amount" summaryType="sum" valueFormat="currency">
+                    </dxi-total-item>
+                </dxo-summary>
+
+            </dx-data-grid>
+        </div>
+    </dx-popup>

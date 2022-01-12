@@ -1,0 +1,126 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Notes</p>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-md-center">
+        <dx-data-grid id="notesGrid" [dataSource]="notes" [showBorders]="true" class="gridContainer" [height]="650"
+            [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+            [showBorders]="true" keyExpr="id" [wordWrapEnabled]="true" (onRowUpdated)="NotesUpdated($event)"
+            (onRowRemoved)="NotesDeleted($event)" (onInitNewRow)="NotesAddInit($event)"
+            (onRowInserted)="NotesAdded($event)" (onToolbarPreparing)="onGridToolbarPreparing($event)">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-editing mode="popup" [allowAdding]="true" [allowUpdating]="true" [allowUpdating]="true"
+                [allowDeleting]="true" [useIcons]="true">
+                <dxo-popup title="Edit Note" [showTitle]="true" [width]="700" [height]="800"
+                    [position]="{ my: 'center', at: 'center', of: 'window' }">
+                </dxo-popup>
+                <dxo-form>
+                    <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                        <dxi-item dataField="loggedBy">
+                        </dxi-item>
+                        <dxi-item dataField="loggedTime" [editorOptions]="{ enabled: false }"></dxi-item>
+                        <dxi-item dataField="noteTypeId">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="loggedFor">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="reminderTime"></dxi-item>
+                        <dxi-item dataField="alert"></dxi-item>
+                    </dxi-item>
+                    <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                        <dxi-item dataField="note">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+                    </dxi-item>
+                </dxo-form>
+            </dxo-editing>
+            <div *dxTemplate="let data of 'cellTemplate'">
+                <div [innerHTML]="data.value"></div>
+            </div>
+            <div *dxTemplate="let cellInfo of 'htmlEditor'">
+                <dx-html-editor height="480px" valueType="html" [value]="cellInfo.value"
+                    (onValueChanged)="cellInfo.setValue($event.value)">
+                    <dxo-toolbar>
+                        <dxi-item formatName="undo"></dxi-item>
+                        <dxi-item formatName="redo"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="size" [formatValues]="[
+                    '8pt',
+                    '10pt',
+                    '12pt',
+                    '14pt',
+                    '18pt',
+                    '24pt',
+                    '36pt'
+                  ]"></dxi-item>
+                        <dxi-item formatName="font" [formatValues]="[
+                    'Arial',
+                    'Courier New',
+                    'Georgia',
+                    'Impact',
+                    'Lucida Console',
+                    'Tahoma',
+                    'Times New Roman',
+                    'Verdana'
+                  ]"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="bold"></dxi-item>
+                        <dxi-item formatName="italic"></dxi-item>
+                        <dxi-item formatName="strike"></dxi-item>
+                        <dxi-item formatName="underline"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="alignLeft"></dxi-item>
+                        <dxi-item formatName="alignCenter"></dxi-item>
+                        <dxi-item formatName="alignRight"></dxi-item>
+                        <dxi-item formatName="alignJustify"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="header" [formatValues]="[false, 1, 2, 3, 4, 5]"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="orderedList"></dxi-item>
+                        <dxi-item formatName="bulletList"></dxi-item>
+                        <dxi-item formatName="separator"></dxi-item>
+                        <dxi-item formatName="color"></dxi-item>
+                    </dxo-toolbar>
+                </dx-html-editor>
+            </div>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column dataField="note" caption=" " [visible]="false" editCellTemplate="htmlEditor"
+                [allowSorting]="false">
+            </dxi-column>
+            <dxi-column dataField="customerName" caption="Customer"></dxi-column>
+            <dxi-column dataField="noteTypeId" caption="Note Type" [width]="120">
+                <dxo-lookup [dataSource]="noteTypes" displayExpr="noteTypeText" valueExpr="noteTypeId">
+                </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="loggedTime" dataType="datetime" alignment="center" caption="Logged Date"
+                [width]="100" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="loggedBy" caption="Logged By" [width]="120" [allowEditing]="false">
+                <dxo-lookup [dataSource]="profiles" displayExpr="name" valueExpr="id">
+                </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="loggedFor" caption="Note For" [width]="120">
+                <dxo-lookup [dataSource]="profiles" displayExpr="name" valueExpr="id">
+                </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="note" cellTemplate="cellTemplate" caption="Note" width="400"></dxi-column>
+            <dxi-column dataField="alert" dataType="boolean" [width]="100" caption="Alert"></dxi-column>
+            <dxi-column dataField="readTime" dataType="datetime" alignment="center" caption="Read Time" [width]="100"
+                [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="reminderTime" dataType="datetime" alignment="center" caption="Reminder"
+                [width]="120">
+            </dxi-column>
+        </dx-data-grid>
+    </div>
+</div>

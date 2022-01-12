@@ -1,0 +1,25 @@
+::ng-deep #balaceInfo {
+          margin: 2px 0px 0px 0px;
+          border: navy;
+          border-style: double;
+          font-weight: bold;
+}
+
+table.minimalistBlack td,
+table.minimalistBlack th {
+          border: 1px solid navy;
+          padding: 5px 4px;
+}
+
+table.minimalistBlack tr {
+          height: 20px;
+}
+
+table.minimalistBlack tbody td {
+          font-size: 12px;
+          font-weight: bold;
+}
+
+table.minimalistBlack tfoot td {
+          font-size: 10px;
+}

@@ -1,0 +1,23 @@
+<button class="close-mat-button" (click)="CloseClick()">X</button>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div *ngIf="productSlabEditor">
+    <app-product-slab-editor [product]="product"></app-product-slab-editor>
+</div>
+<div *ngIf="categories">
+    <app-categories-editor></app-categories-editor>
+</div>
+<div *ngIf="productLines">
+    <app-product-lines-editor></app-product-lines-editor>
+</div>
+<div *ngIf="productImageEditor">
+    <app-product-images-editor [product]="product"></app-product-images-editor>
+</div>
+<div *ngIf="productRelatedEditor">
+    <app-product-related-editor [partLinkId]="product.id"></app-product-related-editor>
+</div>

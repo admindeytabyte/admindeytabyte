@@ -1,0 +1,91 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="hidden-print text-center text-md-right page-buttons">
+          <button tc-button [view]="'accent'" afterIcon="sli-printer" (click)="openPDF()">Print</button>
+          <!-- <button tc-button [view]="'accent'" afterIcon=" sli-email" (click)="emailPDF()" outline=" true">eMail</button> -->
+</div>
+<div class="container-fluid">
+          <div id="htmlData">
+                    <div class="row">
+                              <div class="col-md-6 mb-4 mb-md-0">
+                                        <img [src]="logoUrl" alt="" width="80" height="80">
+                              </div>
+                              <div class="col-md-6 text-md-right">
+                                        <p id="title">Packing Slip</p>
+                                        <h6 class="text-muted">
+                                                  NO: {{invoice.invoiceNumber}} | Method:
+                                                  {{invoice.deliveryMode}} | Po#: {{invoice.clientPo}} | Date:
+                                                  {{invoice.dateDisplay}}
+                                        </h6>
+                              </div>
+                    </div>
+                    <div id="divider"></div>
+                    <div class="row">
+                              <div class="col-xl-6">
+                                        <tc-card [title]="'Company'" [padding]="2">
+                                                  <dl class="dl-horizontal">
+                                                            <dt>Name</dt>
+                                                            <dd class="strong">{{header.headerLine1}}</dd>
+                                                            <dt>Address</dt>
+                                                            <dd>{{header.addressLine1}}</dd>
+                                                            <dd>{{header.addressLine2}}</dd>
+                                                            <dt>Phone</dt>
+                                                            <dd>{{header.phoneLine1}}</dd>
+                                                            <dt>Email</dt>
+                                                            <dd>{{header.email}}</dd>
+                                                  </dl>
+                                        </tc-card>
+                              </div>
+
+                              <div class="col-xl-6">
+                                        <tc-card [title]="'Customer'" [padding]="2">
+                                                  <dl class="dl-horizontal">
+                                                            <dt>ATTN</dt>
+                                                            <dd class="strong" *ngIf="contact">{{contact.fullName}}</dd>
+                                                            <dt>Name</dt>
+                                                            <dd>{{invoice.clientName}}</dd>
+                                                            <dt>Address</dt>
+                                                            <dd>{{shippingAddress.address}}</dd>
+                                                            <dt>Phone</dt>
+                                                            <dd *ngIf="contact">{{contact.phone}}</dd>
+                                                            <dt>Email</dt>
+                                                            <dd *ngIf="contact">{{contact.email}}</dd>
+                                                  </dl>
+                                        </tc-card>
+                              </div>
+                    </div>
+
+
+                    <div class="container-fluid">
+                              <div class="table-responsive mb-4">
+                                        <table class="invoiceTable">
+                                                  <thead>
+                                                            <tr>
+                                                                      <th>#</th>
+                                                                      <th>Line</th>
+                                                                      <th>Sku</th>
+                                                                      <th>Description</th>
+                                                                      <th>Location</th>
+                                                                      <th>Quantity</th>
+                                                            </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                            <tr *ngFor="let dtl of details">
+                                                                      <td>{{dtl.sequenceId}}</td>
+                                                                      <td>{{dtl.line}}</td>
+                                                                      <td>{{dtl.sku}}</td>
+                                                                      <td class="text-left">
+                                                                                {{dtl.description}}
+                                                                      </td>
+                                                                      <td>{{dtl.location}}</td>
+                                                                      <td>{{dtl.orderQty}}</td>
+                                                            </tr>
+                                                  </tbody>
+                                        </table>
+                              </div><!-- .table-responsive -->
+                    </div>
+                    <div id="divider"></div>
+                    <p class="notes">Notes:</p>
+                    <p class="notes">{{invoice.notes}}</p>
+
+          </div>
+</div>

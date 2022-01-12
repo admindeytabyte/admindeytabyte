@@ -1,0 +1,224 @@
+::ng-deep .cdk-overlay-pane.my-dialog {
+  position: relative !important;
+}
+
+::ng-deep .close.mat-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+}
+
+::ng-deep .invoice-button-panel {
+  font-weight: bold;
+  margin: 10px;
+  align-items: right;
+}
+
+::ng-deep .headerText {
+  font-weight: bold;
+  color: maroon;
+  align-items: center;
+}
+
+
+
+::ng-deep #invoiceInfo {
+  min-height: 200px;
+  margin: 5px 0px 5px 0px;
+}
+
+::ng-deep #invoiceButtonPanel {
+  height: 48px;
+  //margin: 2px 0px 0px 0px;
+}
+
+::ng-deep .invoicePanelButton {
+  margin: 10px 2px 0px 0;
+  font-weight: bold;
+}
+
+::ng-deep #invoiceAlert {
+  color: maroon;
+  font-weight: bold;
+  margin: -1px 0px 0px 0px;
+}
+
+::ng-deep #invoiceButtons {
+  margin: 2px 0px 0px 0px;
+}
+
+
+::ng-deep #invoiceInfo .dx-tab-text {
+  color: maroon;
+}
+
+::ng-deep #invoiceHeader {
+  border: navy;
+  border-style: double;
+}
+
+// ::ng-deep #balaceInfo {
+//   border: navy;
+//   border-style: double;
+// }
+
+::ng-deep #invoiceFooter {
+  font-weight: bold;
+  color: navy;
+  font-size: medium;
+  line-height: 45px;
+  margin: 5px 0px 5px -16px;
+}
+
+::ng-deep #saveButton {
+  float: right;
+}
+
+::ng-deep #deleteButton {
+  float: right;
+}
+
+
+
+::ng-deep #discountControl {
+  float: right;
+}
+
+::ng-deep .invoiceFooterTotal {
+  font-weight: bold;
+  color: navy;
+  font-size: large;
+  line-height: 50px;
+  margin: 5px 0px 5px -16px;
+}
+
+::ng-deep .invoiceFooterDiscount {
+  font-weight: bold;
+  color: maroon;
+  font-size: medium;
+  line-height: 45px;
+  margin: 5px 0px 5px -16px;
+}
+
+::ng-deep #footer-left {
+  border: maroon;
+  border-style: double;
+  display: grid;
+  place-items: center;
+}
+
+::ng-deep #footer-center {
+  border: navy;
+  border-style: double;
+  display: grid;
+  place-items: center;
+}
+
+::ng-deep #footer-right {
+  border: maroon;
+  border-style: double;
+}
+
+::ng-deep .gridContainer .dx-datagrid-header-panel .dx-toolbar {
+  color: maroon;
+  font-weight: bold;
+}
+
+::ng-deep .dx-datagrid-headers {
+  color: navy;
+  font-size: small;
+  font-weight: bold;
+}
+
+::ng-deep .title {
+  font-size: 14px;
+  font-weight: bold;
+  color: navy;
+}
+
+::ng-deep .value {
+  font-size: 12px;
+  font-weight: bold;
+  color: maroon;
+}
+
+
+::ng-deep #detailsGrid {
+  margin: 0px 0px 0px -15px;
+  border: navy;
+  border-style: double;
+}
+
+::ng-deep .gridContainer .dx-datagrid-header-panel {
+  background-color: #F7F7F7;
+}
+
+::ng-deep .dx-button-mode-contained {
+  background-color: aliceblue;
+}
+
+
+::ng-deep .dx-datagrid .dx-data-row>td.bullet {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+table.minimalistBlack {
+  border: 2px double navy;
+  width: 100%;
+  height: 150px;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table.minimalistBlack td,
+table.minimalistBlack th {
+  border: 1px solid navy;
+  padding: 5px 4px;
+}
+
+table.minimalistBlack tbody td {
+  font-size: 12px;
+}
+
+table.minimalistBlack tfoot td {
+  font-size: 10px;
+}
+
+table.footerTable {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table.footerTable td,
+table.footerTable th {
+  padding: 5px 4px;
+}
+
+table.footerTable tbody td {
+  font-size: 13px;
+}
+
+table.footerTable tfoot td {
+  font-size: 14px;
+}
+
+#invoiceTimeline {
+  left: 0px;
+  float: left;
+  width: 200px;
+}
+
+#invoiceInfoTab {
+  margin: 0px -14px 0px -30px;
+}
+
+
+
+::ng-deep .counter {
+  margin: -2px 0px 0px 0px;
+}

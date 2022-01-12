@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-md-2">
+        <table class="minimalistBlack" id="balaceInfo">
+            <tr>
+                <th style="width:200px"></th>
+                <th style="width:250px"></th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td class="title">Credit Limit</td>
+                    <td class="value text-md-center" [ngStyle]="{'color':creditLimit > 0 ? 'green' : 'red' }">
+                        {{creditLimit.toFixed(2) | currency }}</td>
+                </tr>
+                <tr>
+                    <td class="title">Invoice Balance</td>
+                    <td class="value  text-md-center" [ngStyle]="{'color':invoiceBalance > 0 ? 'red' : 'green' }">
+                        {{invoiceBalance.toFixed(2) | currency }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">Estimate Balance</td>
+                    <td class="value  text-md-center" [ngStyle]="{'color':estimateBalance > 0 ? 'red' : 'green' }">
+                        {{estimateBalance.toFixed(2) | currency }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">Total Balance</td>
+                    <td class="value  text-md-center" [ngStyle]="{'color':currentBalance <= 0 ? 'green' : 'red' }">
+                        {{currentBalance.toFixed(2) | currency }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">Credit Available</td>
+                    <td class="value  text-md-center" [ngStyle]="{'color':creditAvailable < 0 ? 'red' : 'green' }">
+                        {{creditAvailable.toFixed(2) | currency }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-10">
+        <dx-chart resolveLabelOverlapping="stack" id="chart" [dataSource]="monthlyBalance"
+            (onPointClick)="pointClick($event)">
+            <dxi-series valueField="invoiceBalance" name="Invoice Balance" color="#000080">
+            </dxi-series>
+            <dxi-series valueField="estimateBalance" name="Estimate Balance" color="#F05B41">
+            </dxi-series>
+            <dxo-size [height]="150"></dxo-size>
+            <dxo-common-series-settings argumentField="billingMonth" type="stackedBar">
+                <dxo-label [visible]="true" position="inside">
+                    <dxo-format type="currency"></dxo-format>
+                    <dxo-font [size]="16"></dxo-font>
+                </dxo-label>
+            </dxo-common-series-settings>
+            <dxo-legend [visible]="false" verticalAlignment="bottom" horizontalAlignment="center"></dxo-legend>
+            <dxo-tooltip [enabled]="true"></dxo-tooltip>
+        </dx-chart>
+
+    </div>
+</div>

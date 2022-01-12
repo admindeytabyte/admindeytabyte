@@ -1,9 +1,370 @@
 @import 'variables';
-
 @import './fonts';
-
 @import './structure';
 @import './typography';
 @import './helpers';
+// @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import './components/material-components';
 @import './components/bootstrap';
+
+// body {
+//     font-size: calc((.4em + 1vmin) + (.4em + 1vmax));
+// }
+
+.dx-popup-wrapper {
+    z-index: 11000 !important;
+}
+
+.dx-datagrid {
+    font: 11px;
+    font-weight: bold;
+    color: black;
+}
+
+.dxo-label {
+    font: 12px;
+    font-weight: bold;
+}
+
+
+.dx-datagrid-headers {
+    color: navy;
+    font-size: small;
+    font-weight: bold;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar {
+    margin: 0px 10px 0px 5px;
+}
+
+.modalGridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 50px;
+    word-wrap: break-word;
+    font-size: 10px;
+}
+
+.modalGridContainer .dx-datagrid-header-panel {
+    padding: 0;
+    background-color: #797D8D;
+}
+
+.modalGridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 50px;
+    background-color: #797D8D;
+}
+
+.modalGridContainer .dx-datagrid-header-panel .dx-checkbox {
+    color: white;
+    font-weight: bold;
+}
+
+
+.dxc-val-axis {
+    font-weight: bold;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 50px;
+    background-color: #797D8D;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+    background-color: #797D8D;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-checkbox {
+    color: white;
+    font-weight: bold;
+}
+
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-selectbox {
+    margin: 10px 10px;
+}
+
+
+.gridContainer .dx-datagrid-header-panel {
+    padding: 0;
+    background-color: #797D8D;
+    margin: 0px 5px 0px 0px;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 50px;
+    word-wrap: break-word;
+    font-size: 10px;
+}
+
+.gridContainer .dx-toolbar .dx-widget {
+    margin: 5px;
+}
+
+// .gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+//     background-color: rgba(27, 34, 55, 0.6);
+// }
+
+.gridContainer .dx-datagrid-header-panel .dx-group-panel-item {
+    font-weight: bold;
+    color: white;
+}
+
+.gridContainer .dx-datagrid-header-panel .dx-group-panel-item .dx-header-filter {
+    color: white;
+}
+
+
+
+
+// .gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+//     padding-right: 10px;
+// }
+
+.dx-header-row {
+    font: 11px verdana;
+    font-weight: 900;
+}
+
+
+
+.dx-pivotgrid-collapsed {
+    font-weight: bold;
+    color: maroon;
+}
+
+.dx-datagrid-nowrap.dx-datagrid-headers .dx-header-row>td>.dx-datagrid-text-content {
+    white-space: normal;
+}
+
+.dx-group-cell {
+    font-weight: bold;
+    color: maroon;
+}
+
+.dx-tab-text {
+    color: navy;
+    font-weight: bold;
+}
+
+.gridContainer {
+    font: 12px verdana;
+    color: black;
+}
+
+.pivotGrid {
+    font: 11px verdana;
+    font-weight: bold;
+    color: black;
+}
+
+.appGrid {
+    font: 11px verdana;
+}
+
+
+.button-right {
+    float: right;
+}
+
+.alert {
+    font: 12px verdana;
+    font-weight: bold;
+    vertical-align: middle;
+    background-color: papayawhip;
+    color: maroon;
+    min-height: 30px;
+}
+
+
+.page_title {
+    font-size: 14px;
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: center;
+    background-color: navy;
+    color: white;
+    min-height: 30px;
+}
+
+.cdk-overlay-pane.my-dialog {
+    position: relative !important;
+}
+
+.close.mat-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    margin: 2px;
+    line-height: 14px;}
+
+.close-button {
+    float: right;
+    top: -24px;
+    margin: 0px 0px 0px 4px;
+    right: -24px;
+}
+
+.cdk-overlay-pane.my-dialog {
+    position: relative !important;
+}
+
+.close.mat-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    line-height: 14px;
+}
+
+
+
+
+
+
+
+.gridContainer .dx-item-content .dx-toolbar-item-content {
+    padding: 0;
+}
+
+
+// .gridContainer .dx-datagrid-header-panel .dx-toolbar {
+//     margin: 0px -10px 0px 10px;
+//     background-color: #797D8D;
+// }
+
+.gridContainer .dx-datagrid-header-panel .dx-toolbar .dx-datagrid-group-panel {
+    margin: 0;
+    // padding-left: 10px;
+    //   background-color: white;
+}
+
+
+.gridContainer .dx-datagrid-header-panel .dx-button {
+    margin: 8px 0;
+}
+
+.dialog-button-container {
+    float: right;
+}
+
+.dialog-button {
+    margin: 3px;
+    font-weight: bold;
+}
+
+.filterDate {
+    text-align: center;
+    font-weight: bold;
+    color: navy;
+}
+
+.dx-datagrid-header-panel .dx-button {
+    margin: 17px 0;
+    font-weight: bold;
+}
+
+.dx-datagrid-summary-item {
+    font-weight: bold;
+    color: maroon;
+    font-size: 14px;
+}
+
+.close-mat-button {
+    position: absolute;
+    margin: 0px 5px 0px 0px;
+    right: 10px;
+}
+
+.dx-texteditor-input {
+    text-align: center;
+    font-weight: bold;
+    color: navy;
+}
+
+.box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.left-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.right-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.field-lable {
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px;
+}
+
+
+
+.filter-check-box {
+    margin: 10px
+}
+
+.filter-control {
+    margin: 0px 0px 10px 2px;
+}
+
+#reportFilterBar {
+    background-color: #4C5268;
+    border: #4C5268;
+    border-style: double;
+    margin: 0px -30px 10px -30px;
+    height: 60px;
+}
+
+#reportTitle {
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    margin: 10px 0px 5px 0px;
+}
+
+#reportRefreshButton {
+    margin: 0px 0px 5px 5px;
+    height: 35px;
+}
+
+.filterButton {
+    margin: 0px 0px 5px 5px;
+    height: 35px;
+}
+
+#reportFilterControl {
+    position: absolute;
+    right: 20px;
+    margin: 5px 0px 5px 0px;
+}
+
+#filtersRow {
+    border: #4C5268;
+    border-style: double;
+    margin: 5px;
+    background-color: #4C5268;
+}
+
+.dx-field-label {
+    color: white;
+    font-weight: bold;
+}
+
+.right {
+    text-align: right;
+}

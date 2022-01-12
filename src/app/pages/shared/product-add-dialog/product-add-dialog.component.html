@@ -1,0 +1,38 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Add New Product</p>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<form (submit)="onFormSubmit($event)">
+    <dx-form id="form" [formData]="newProduct" (onFieldDataChanged)="form_fieldDataChanged($event)">
+        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+            <dxi-item dataField="categoryId" editorType="dxSelectBox" [editorOptions]="{ dataSource: categories, displayExpr: 'categoryName', 
+                    valueExpr: 'categoryId', searchEnabled: 'true' }">
+                <dxi-validation-rule type="required" message="Category is required">
+                </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="lineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: productLines, displayExpr: 'line', 
+                    valueExpr: 'lineId',searchEnabled: 'true' }">
+                <dxi-validation-rule type="required" message="Category is required">
+                </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="sku">
+                <dxi-validation-rule type="required" message="Sku is required">
+                </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="shelfLocation"></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+            <dxi-item dataField="description">
+            </dxi-item>
+            <dxi-item dataField="comments"></dxi-item>
+
+        </dxi-item>
+        <dxi-item itemType="button" horizontalAlignment="left" [buttonOptions]="buttonOptions">
+        </dxi-item>
+    </dx-form>
+</form>

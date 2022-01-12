@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-md-12">
+        <div id="detailsGrid">
+            <dx-data-grid [dataSource]="product" keyExpr="invoiceDtlid" [showBorders]="true"
+                 keyExpr="sequenceId">
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-editing mode="cell" [allowUpdating]="true" [selectTextOnEditStart]="true"
+                    startEditAction="click">
+                </dxo-editing>
+                <dxi-column [allowEditing]="false" [allowFiltering]="false" dataField="sequenceId"
+                    sortOrder="asc" [width]="80" alignment="center" caption="Id">
+                </dxi-column>
+                <dxi-column [allowEditing]="true" dataField="line" caption="Line" [width]="80">
+                </dxi-column>
+                <dxi-column [allowEditing]="false" dataField="sku" caption="Sku" [width]="120">
+                </dxi-column>
+                <dxi-column dataField="description" caption="Description"></dxi-column>
+                <dxi-column dataField="inStockQty" [allowEditing]="false" caption="Stock Qty" alignment="center"
+                    [allowFiltering]="false" [width]="120">
+                </dxi-column>
+                <dxi-column dataField="unit" [allowEditing]="true" caption="Unit" alignment="center" [allowFiltering]="false"
+                    [width]="100">
+                </dxi-column>
+                <dxi-column dataField="orderQty" dataType="number"  [allowEditing]="true"  caption="Qty" [allowFiltering]="false"
+                    alignment="center" [width]="80">
+                </dxi-column>
+                <dxi-column dataField="sell" caption="Sell ($)" [width]="100" [allowFiltering]="false"
+                 dataType="number" format="currency">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <dxi-column [allowEditing]="false" caption="Total ($)" [width]="100" dataType="number"
+                    format="currency" [calculateCellValue]="getAmount">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+            </dx-data-grid>
+        </div>
+        <dx-button stylingMode="contained" id="saveButton" class="invoicePanelButton"
+                                    text="Save" type="default" [width]="100" (onClick)="save()"
+                                    hint="Save">
+                                </dx-button>
+    </div>
+</div>

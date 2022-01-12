@@ -1,0 +1,79 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="container-fluid" *ngIf="invoice">
+          <div class="col-md-12">
+                    <div class="row" id="invoiceHeader">
+                              <div class="col-md-4 text-md-left">
+                                        <p class="headerText">{{invoice.invoiceType}} - {{invoice.invoiceNumber}}</p>
+                              </div>
+                              <div class="col-md-4 text-md-center">
+                                        <p class="headerText">{{invoice.clientName}}</p>
+                              </div>
+                              <div class="col-md-4 text-md-right">
+                                        <p class="headerText">{{invoice.dateDisplay}}</p>
+                              </div>
+                    </div>
+          </div>
+          <div class="row">
+                    <div class="col-md-12">
+                              <div id="detailsGrid">
+                                        <dx-data-grid [dataSource]="invoice.details" keyExpr="invoiceDtlid"
+                                                  [showBorders]="true" height="800" keyExpr="sequenceId"
+                                                  class="gridContainer">
+                                                  <dxo-selection mode="single"></dxo-selection>
+                                                  <dxo-search-panel [visible]="true" [width]="300"
+                                                            placeholder="Search...">
+                                                  </dxo-search-panel>
+                                                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                                  <dxo-paging [enabled]="false"></dxo-paging>
+                                                  <dxi-column [allowEditing]="false" [allowFiltering]="false"
+                                                            dataField="sequenceId" sortOrder="asc" [width]="80"
+                                                            alignment="center" caption="Id">
+                                                  </dxi-column>
+                                                  <dxi-column [allowEditing]="false" dataField="line" caption="Line"
+                                                            [width]="80">
+                                                  </dxi-column>
+                                                  <dxi-column [allowEditing]="false" dataField="sku" caption="Sku"
+                                                            [width]="120">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="description" caption="Description">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="unit" caption="Unit" alignment="center"
+                                                            [allowFiltering]="false" [width]="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="orderQty" caption="Qty"
+                                                            [allowFiltering]="false" alignment="center" [width]="80">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="sell" caption="Sell ($)" [width]="100"
+                                                            [allowFiltering]="false" dataType="number"
+                                                            format="currency">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="amount" caption="Total ($)" [width]="180"
+                                                            [allowFiltering]="false" dataType="number"
+                                                            format="currency">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxo-summary>
+                                                    <dxi-total-item column="amount" summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2 }"></dxi-total-item>
+                                                  </dxo-summary>
+                                                  
+
+                                        </dx-data-grid>
+                              </div>
+                    </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row" id="invoiceHeader">
+                      <div class="col-md-7 text-md-left">
+                      </div>
+                      <div class="col-md-2 text-md-center">
+                        <p class="footerText">Tax: ${{invoice.hst}}</p>
+                      </div>
+                      <div class="col-md-3" id="footer-right">
+                        <p class="footerText">Grand Total: ${{invoice.netAmount}}</p>
+                      </div>
+            </div>
+  </div>
+</div>

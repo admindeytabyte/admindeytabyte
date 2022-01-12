@@ -1,0 +1,35 @@
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div class="col-md-12 text-md-center">
+    <dx-data-grid [dataSource]="categories" [showBorders]="true" [height]="650" class="invoiceGrid gridContainer"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
+        keyExpr="categoryId" [focusedRowEnabled]="true" [wordWrapEnabled]="true"
+        (onRowUpdated)="CategoriesUpdated($event)" (onRowRemoved)="CategoriesDeleted($event)"
+        (onRowInserted)="CategoriesAdded($event)">
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-editing mode="batch" [allowUpdating]="true"  startEditAction="click"
+            [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" [useIcons]="true">
+        </dxo-editing>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxi-column dataField="categoryId" [visible]="false" caption="Id" [width]="80" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="categoryName" caption="Category">
+        </dxi-column>
+        <dxi-column dataField="selectInSales" alignment="center" caption="Sales Tracking" [width]="120">
+        </dxi-column>
+        <dxi-column dataField="sortId" alignment="center" caption="Sort Id" [width]="80">
+        </dxi-column>
+        <dxi-column dataField="numberProducts" alignment="center" caption="# Products" [width]="80">
+        </dxi-column>
+        <dxi-column dataField="showInHeader" alignment="center" [visible]="false" caption="showInHeader" [width]="80">
+        </dxi-column>
+    </dx-data-grid>
+</div>

@@ -1,0 +1,134 @@
+::ng-deep #productSearchBar {
+    border: navy;
+    border-style: double;
+    margin: 0px -15px 5px -15px;
+    background-color: navy;
+}
+
+::ng-deep #discountsBar {
+    border: navy;
+    border-style: double;
+    margin: 0px -15px 5px -15px;
+    background-color: navy;
+}
+
+::ng-deep .discNumberBox {
+    margin: 3px;
+}
+
+// ::ng-deep #quantityBreaks {
+//     width: 500px;
+// }
+
+.filterButton {
+    margin: 5px;
+    font-weight: bold;
+}
+
+::ng-deep .searchControl {
+    width: 100%;
+    padding: 1px;
+}
+
+
+::ng-deep .productCount {
+    color: white;
+    font-weight: bold;
+    margin: -1px 0px 0px 0px;
+}
+
+
+::ng-deep #numYearsInput .dx-texteditor-input {
+    text-align: center;
+    width: 100%;
+}
+
+
+::ng-deep .dx-popup-wrapper {
+    z-index: 11000 !important;
+}
+
+
+::ng-deep .mat-select-trigger {
+    background-color: white;
+    height: 40px;
+    width: 100%;
+    align-items: center;
+}
+
+::ng-deep .mat-select-value-text {
+    color: navy;
+    font-size: 16px;
+    font-weight: 600;
+    align-items: center;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel {
+    padding: 0;
+    background-color: #797D8D;
+    z-index: -1;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-toolbar {
+    margin: 0;
+    padding-right: 20px;
+    background-color: transparent;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 50px;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+    background-color: #797D8D;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+    padding-right: 10px;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-selectbox {
+    margin: 10px 10px;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-button {
+    margin: 8px 0;
+}
+
+::ng-deep .productGridContainer .dx-datagrid-header-panel .dx-button {
+    margin: 8px 0;
+}
+
+::ng-deep .mat-dialog-content {
+    height: 1000px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: 1200px;
+}
+
+::ng-deep .mat-dialog-actions {
+    float: right;
+}
+
+::ng-deep .searchControl {
+    width: 100%;
+    padding: 1px;
+    flex: 1 1 150px;
+    margin: 5px;
+}
+
+::ng-deep #clearButton {
+    margin: 5px;
+}
+
+
+::ng-deep .checkBox {
+    color: white;
+    font-weight: bold;
+    margin: 10px 2px 0px 0px;
+}
+
+::ng-deep #relatedItems {
+    height: 100px;
+}

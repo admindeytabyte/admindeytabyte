@@ -1,0 +1,45 @@
+::ng-deep  #title{
+    height: 40px;
+    width: 100%;
+    background-color: navy;
+    margin: 0px 0px 5px 10px;
+    color: white;
+    font-weight: bold;
+    display: grid;
+    place-items: center;
+  }
+
+  ::ng-deep .field-lable  {
+    color: maroon;
+    font-weight: bold;
+  }
+
+  ::ng-deep  #buttons{
+    margin: 20px 0px 0px 0px;
+  }
+
+  ::ng-deep  #accountBalance{
+    margin: 0px 0px 10px 0px;
+  }
+
+  ::ng-deep  .footerButton{
+    font-weight: bold;
+    width: 150px;
+    color: white;
+    margin: 0px 0px 0px 5px;
+  }
+
+  ::ng-deep  #invoices{
+    margin: 0px 0px 5px 0px;
+  }
+
+  ::ng-deep  #notes{
+    border: maroon;
+    border-style: double;
+  }
+
+  ::ng-deep  #invoiceOptions{
+    margin: 5px 0px 5px 200px;
+  }
+
+  

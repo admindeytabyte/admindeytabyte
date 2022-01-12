@@ -1,0 +1,32 @@
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+
+<!-- Slab Editor -->
+<p>Product Slab Editor</p>
+<dx-data-grid class="invoiceGrid gridContainer" [showBorders]="true" [dataSource]="productSlabs" keyExpr="id"
+    [showBorders]="true" (onRowUpdated)="QuantityBreaksUpdated($event)" (onRowRemoved)="QuantityBreaksDeleted($event)"
+    (onRowInserted)="QuantityBreaksAdded($event)" (onToolbarPreparing)="onToolbarPreparing($event)">
+    <dxo-paging [enabled]="false"></dxo-paging>
+    <dxo-editing mode="batch" [allowUpdating]="true" [selectTextOnEditStart]=true startEditAction="click"
+        [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" [useIcons]="true">
+    </dxo-editing>
+    <dxi-column dataField="qty" alignment="center" [width]="100" dataType="number" sortOrder="asc">
+        <dxi-validation-rule type="required">
+        </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="discountPercentage" alignment="center" caption="Discount (%)" [width]="150"
+        dataType="number">
+        <dxi-validation-rule type="required">
+        </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column caption="Sell ($)" dataType="number" alignment="right" [allowEditing]="false"
+        [calculateCellValue]="calcSell">
+        <dxo-format type="fixedPoint" [precision]="2">
+        </dxo-format>
+    </dxi-column>
+</dx-data-grid>

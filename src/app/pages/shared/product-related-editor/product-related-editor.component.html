@@ -1,0 +1,44 @@
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<p *ngIf="parent">Related Products Editor for {{parent.partId}}-{{parent.description}}</p>
+<div class="row">
+    <div class="col-md-12 text-md-center">
+        <dx-data-grid [dataSource]="relatedProducts" [showBorders]="true" [height]="650"
+            class="invoiceGrid gridContainer" [remoteOperations]="false" [allowColumnReordering]="true"
+            [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="id" [wordWrapEnabled]="true"
+            (onRowUpdated)="ProductRelatedUpdated($event)" (onRowRemoved)="ProductRelatedDeleted($event)"
+            (onToolbarPreparing)="onGridToolbarPreparing($event)">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-editing mode="batch" [allowUpdating]="true" [selectTextOnEditStart]=true startEditAction="click"
+                [allowDeleting]="true" [useIcons]="true">
+            </dxo-editing>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column dataField="productImage" cellTemplate="cellTemplate" caption="" [width]="100"
+                [allowFiltering]="false" [allowSorting]="false" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="linkTypeId" caption="Link Type" [width]="100">
+                <dxo-lookup [dataSource]="productLinkTypes" displayExpr="linkTypeDesc" valueExpr="linkTypeId">
+                </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="line" caption="Line" [width]="100" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="sku" caption="Sku" [width]="100" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="description" caption="Description" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="sortId" dataType="number" caption="SortId" [width]="80">
+            </dxi-column>
+            <div *dxTemplate="let data of 'cellTemplate'">
+                <img alt="" [src]="data.value" />
+            </div>
+        </dx-data-grid>
+    </div>
+</div>

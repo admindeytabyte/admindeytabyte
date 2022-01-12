@@ -1,0 +1,116 @@
+table.invoiceTable {
+  font-family: "Times New Roman", Times, serif;
+  border: 1px solid #1C6EA4;
+  // background-color: #EEEEEE;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+table.invoiceTable td,
+table.invoiceTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+
+table.invoiceTable tbody td {
+  font-size: 1qpx;
+}
+
+// table.invoiceTable tr:nth-child(even) {
+//   background: #D0E4F5;
+// }
+
+::ng-deep p {
+  margin: 0px;
+  padding: 0px;
+}
+
+::ng-deep #divider {
+  margin: 2px 0px 10px 0px;
+}
+
+::ng-deep h5 {
+  margin: 0px;
+  padding: 0px;
+}
+
+::ng-deep {
+  margin: 0px;
+  padding: 0px;
+}
+
+::ng-deep h5 {
+  margin: 0px;
+  padding: 0px;
+}
+
+table.invoiceTable thead {
+  background: #0E4CA4;
+  background: -moz-linear-gradient(top, #4a79bb 0%, #265ead 66%, #0E4CA4 100%);
+  background: -webkit-linear-gradient(top, #4a79bb 0%, #265ead 66%, #0E4CA4 100%);
+  background: linear-gradient(to bottom, #4a79bb 0%, #265ead 66%, #0E4CA4 100%);
+  border-bottom: 2px solid #444444;
+}
+
+table.invoiceTable thead th {
+  font-size: 12px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  border-left: 2px solid #D0E4F5;
+}
+
+table.invoiceTable thead th:first-child {
+  border-left: none;
+}
+
+table.invoiceTable tfoot td {
+  font-size: 14px;
+}
+
+table.invoiceTable tfoot .links {
+  text-align: right;
+}
+
+table.invoiceTable tfoot .links a {
+  display: inline-block;
+  background: #1C6EA4;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+}
+
+.page-buttons {
+  margin: 5px;
+
+  .tc-btn {
+    margin: 5px;
+  }
+}
+
+::ng-deep .header1 {
+  font-size: 12;
+  font-weight: bold;
+}
+
+
+::ng-deep .header2 {
+  font-size: medium;
+}
+
+
+::ng-deep #balaceFooter {
+  margin: 5px 0px 5px 0px;
+  border: navy;
+  border-style: double;
+}
+
+#htmlData {
+  font-size: small;
+}

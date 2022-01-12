@@ -1,1 +1,133 @@
-<p>dashboard-home works!</p>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#dashboard-home' }"
+    [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div class="container-fluid" id="dashboard-home">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- <tc-card [title]="'Order Desk Stats'" id="statsCard" [padding]="2">
+                <dx-chart id="odStatsChart" [dataSource]="odStats" [rotated]="true" palette="office">
+                    <dxo-size [height]="chartHeight"></dxo-size>
+                    <dxo-legend [visible]="false"></dxo-legend>
+                    <dxi-series argumentField="staff" valueField="amount" name="Sales ($)" type="bar">
+                        <dxo-label [visible]="true" position="inside">
+                        </dxo-label>
+                    </dxi-series>
+                </dx-chart>
+            </tc-card> -->
+            <tc-card [title]="'Workflow Summary'" id="backOfficeCard" [padding]="2">
+                <dx-chart [dataSource]="invoiceStats" [rotated]="true" palette="Pastel"
+                    (onPointClick)="backOfficeflowPointClicked($event)">
+                    <dxo-size [height]="chartHeight"></dxo-size>
+                    <dxo-legend [visible]="false"></dxo-legend>
+                    <dxi-series argumentField="status" valueField="invoiceCount" name="Sales ($)" type="bar">
+                        <dxo-label [visible]="true" position="inside">
+                        </dxo-label>
+                    </dxi-series>
+                </dx-chart>
+            </tc-card>
+            <tc-card [title]="'Back Ordered'" id="backOrderCard" [padding]="2">
+                <div class="list-container">
+                    <dx-list [items]="backOrderedinvoices" [height]="backOfficeGridHeight"
+                        (onItemClick)=OpenInvoice($event)>
+                        <div *dxTemplate="let item of 'item'">
+                            <div class="WaitListedInvoice">
+                                <div>{{item.number}} - {{item.loggedBy}}</div>
+                                <div class="client">{{item.client}}</div>
+                                <div class="timeElapsed">{{item.timeElapsed}}</div>
+                            </div>
+                        </div>
+                    </dx-list>
+                </div>
+            </tc-card>
+            <tc-card [title]="'Wait List'" id="waitlistCard" [padding]="2">
+                <div class="list-container">
+                    <dx-list [items]="waitListedinvoices" height="250" (onItemClick)=OpenInvoice($event)>
+                        <div *dxTemplate="let item of 'item'">
+                            <div class="WaitListedInvoice">
+                                <div>{{item.number}} - {{item.loggedBy}}</div>
+                                <div class="client">{{item.client}}</div>
+                                <div class="timeElapsed">{{item.timeElapsed}}</div>
+                            </div>
+                        </div>
+                    </dx-list>
+                </div>
+            </tc-card>
+
+        </div>
+        <div class="col-md-9">
+            <!-- <tc-card [title]="'Workflow Status'" id="statusCard" [padding]="2">
+                <dx-chart id="workFlowstatschart" [dataSource]="workflowStats" palette="office"
+                    (onPointClick)="workflowPointClicked($event)">
+                    <dxo-size [height]="chartHeight"></dxo-size>
+                    <dxo-common-series-settings argumentField="date" type="bar" valueField="invoiceCount">
+                    </dxo-common-series-settings>
+                    <dxo-argument-axis>
+                        <dxo-label format="dd-MMM-yyyy"></dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-series-template nameField="status">
+                    </dxo-series-template>
+                    <dxo-legend verticalAlignment='bottom' horizontalAlignment='center'>
+                    </dxo-legend>
+                    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                </dx-chart>
+            </tc-card> -->
+            <tc-card [title]="'Invoices'" [padding]="2">
+                <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="invoices" [remoteOperations]="false"
+                    [allowColumnReordering]="true" [rowAlternationEnabled]="true" [height]="invoiceGridHeight"
+                    [showBorders]="true" (onToolbarPreparing)="onToolbarPreparing($event)"
+                    (onCellPrepared)="onCellPrepared($event)" (onRowClick)="rowClicked($event)"
+                    [masterDetail]="{ enabled: true, template: 'details' }" keyExpr="invoiceId">
+                    <dxo-editing mode="row" [allowDeleting]="true" [useIcons]="true"></dxo-editing>
+                    <dxo-group-panel [visible]="true"></dxo-group-panel>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+                    <dxi-column type="buttons" [width]="40">
+                        <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                    </dxi-column>
+                    <!-- <dxi-column dataField="invoiceId" alignment="center" width="100"></dxi-column> -->
+                    <dxi-column dataField="docType" caption="Type" [groupIndex]="0"></dxi-column>
+                    <!-- <dxi-column dataField="type"  width="120" alignment="center" [groupIndex]="0">
+                    </dxi-column> -->
+                    <dxi-column dataField="number" alignment="center" width="100"></dxi-column>
+                    <dxi-column dataField="date" dataType="datetime" cellTemplate="cellTemplate" sortOrder="desc"
+                        alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180">
+                    </dxi-column>
+                    <dxi-column dataField="client" cellTemplate="cellTemplate"></dxi-column>
+                    <dxi-column dataField="logNumber" alignment="center" width="120"></dxi-column>
+                    <dxi-column dataField="deliveryMode" alignment="center" width="120"></dxi-column>
+                    <dxi-column dataField="loggedBy" width="120" alignment="center"></dxi-column>
+                    <dxi-column dataField="status" width="150" cellTemplate="cellTemplate" alignment="center">
+                    </dxi-column>
+                    <dxi-column dataField="total" cellTemplate="cellTemplate" caption="Amount ($)" dataType="number"
+                        format="currency" alignment="right" width="120">
+                        <dxo-format type="fixedPoint" [precision]="2">
+                        </dxo-format>
+                    </dxi-column>
+
+                    <div *dxTemplate="let cell of 'cellTemplate'">
+                        <div style="font-weight:bold">{{cell.text}}</div>
+                    </div>
+
+                    <div *dxTemplate="let dtl of 'details'">
+                        <dx-data-grid [dataSource]="invoiceDetails" [showBorders]="true">
+                            <dxi-column dataField="sequenceId" [width]="50" alignment="center" caption="Id">
+                            </dxi-column>
+                            <dxi-column dataField="line" caption="Line" [width]="80"></dxi-column>
+                            <dxi-column dataField="partId" caption="Sku" [width]="80"></dxi-column>
+                            <dxi-column dataField="description" caption="Description"></dxi-column>
+                            <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+                            </dxi-column>
+                            <dxi-column dataField="sell" caption="Sell ($)" [width]="100"></dxi-column>
+                            <dxi-column dataField="amount" caption="Total ($)" [width]="100"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dx-data-grid>
+            </tc-card>
+        </div>
+    </div>
+</div>
