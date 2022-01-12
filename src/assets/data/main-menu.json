@@ -1,0 +1,119 @@
+[{
+  "title": "Main Menu",
+  "groupTitle": true
+},
+{
+  "title": "Dashboards",
+  "icon": {
+    "class": "fa fa-home",
+    "bg": "#ea8080",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "sub": [{
+      "title": "Home",
+      "routing": "dashboard-home"
+    },
+    {
+      "title": "Sales",
+      "routing": "dashboard-sales"
+    },
+    {
+      "title": "Receivables",
+      "routing": "dashboard-receivables"
+    },
+    {
+      "title": "Statements",
+      "routing": "dashboard-statements"
+    }
+  ]
+},
+{
+  "title": "Customers",
+  "icon": {
+    "class": "fa fa-user",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "customers"
+},
+{
+  "title": "Products",
+  "icon": {
+    "class": "fa fa-barcode",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "products"
+},
+{
+  "title": "Purchasing",
+  "icon": {
+    "class": "dx-icon-product",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "purchasing"
+},
+{
+  "title": "Dispatching",
+  "icon": {
+    "class": "dx-icon-car",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "dispatch"
+},
+{
+  "title": "Paints",
+  "icon": {
+    "class": "dx-icon-fill",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "sub": [{
+      "title": "Paint Orders",
+      "routing": "paint-orders"
+    },
+    {
+      "title": "Paint Codes",
+      "routing": "paint-codes"
+    }
+  ]
+},
+{
+  "title": "Back Office",
+  "icon": {
+    "class": "dx-icon-folder",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "backoffice"
+},
+{
+  "title": "Sales Management",
+  "icon": {
+    "class": "fa fa-briefcase",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "salesmanagement"
+},
+{
+  "title": "Reports",
+  "icon": {
+    "class": "dx-icon-chart",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "reports"
+},
+{
+  "title": "Help",
+  "icon": {
+    "class": "dx-icon-video",
+    "bg": "#E1BEE7",
+    "color": "rgba(0,0,0,.87)"
+  },
+  "routing": "help"
+}
+]

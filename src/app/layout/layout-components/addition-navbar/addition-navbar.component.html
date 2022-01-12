@@ -1,0 +1,93 @@
+<button class="no-style open-navbar" (click)="openNavbar()">
+  <i class="icon sli-settings"></i>
+</button>
+
+<div class="navbar-wrap" *ngIf="settingsForm">
+  <div class="navbar-header">
+    {{ title }}
+  </div>
+
+  <form class="navbar-content" [formGroup]="settingsForm" novalidate>
+    <div class="settings-box">
+      <h5 class="mt-0">Main settings</h5>
+      <div class="pb-4">
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="boxed"
+        >
+          Boxed
+        </mat-slide-toggle>
+      </div>
+
+      <div>
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="rtl"
+        >
+          RTL
+        </mat-slide-toggle>
+      </div>
+    </div><!-- .settings-box -->
+
+    <div class="settings-box">
+      <h5 class="mt-0">Top navbar settings</h5>
+      <div class="pb-4">
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="showTopNavbar"
+        >
+          Show navbar
+        </mat-slide-toggle>
+      </div>
+      <div>
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="showTitle"
+        >
+          Show page title
+        </mat-slide-toggle>
+      </div>
+    </div><!-- .settings-box -->
+
+    <div class="settings-box">
+      <h5 class="mt-0">Breadcrumbs settings</h5>
+      <mat-form-field class="pb-2">
+        <mat-label>Breadcrumbs style</mat-label>
+        <mat-select formControlName="crumbsType">
+          <mat-option *ngFor="let style of crumbsStyles" [value]="style.value">
+            {{ style.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div>
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="showCrumbs"
+        >
+          Show breadcrumbs
+        </mat-slide-toggle>
+      </div>
+    </div><!-- .settings-box -->
+
+    <div class="settings-box">
+      <h5 class="mt-0">Left navbar settings</h5>
+      <mat-form-field class="pb-2">
+        <mat-label>Menu style</mat-label>
+        <mat-select formControlName="menuType">
+          <mat-option *ngFor="let style of menuStyles" [value]="style.value">
+            {{ style.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="pb-4">
+        <mat-slide-toggle
+          [color]="'accent'"
+          formControlName="sidebarCompress"
+        >
+          Compressed navbar
+        </mat-slide-toggle>
+      </div>
+    </div><!-- .settings-box -->
+  </form>
+</div>

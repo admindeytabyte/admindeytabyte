@@ -1,0 +1,221 @@
+@import './../../../assets/scss/variables';
+
+:host {
+  .site-container {
+    .app-overlay {
+      background: rgba($vertical-navbar-bg,.2);
+      height: 100%;
+      left: 0;
+      opacity: 0;
+      position: fixed;
+      top: 0;
+      transition:
+        .2s opacity 0s $animation,
+        0s visibility .2s $animation;
+      visibility: hidden;
+      width: 100%;
+      z-index: 9998;
+
+      &.shown {
+        opacity: 1;
+        transition:
+          .2s opacity 0s $animation,
+          0s visibility 0s $animation;
+        visibility: visible;
+      }
+    }
+    .main-content {
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0;
+      transition: padding .2s $animation;
+
+      .page-loader-box {
+        position: relative;
+
+        .page-loader {
+          left: 0;
+          position: absolute;
+          width: 100%;
+        }
+      }
+      .main-content-wrap {
+        height: calc(100% - #{$module-rem * 4});
+        opacity: 0;
+        transition: .2s opacity 0s $animation;
+      }
+      &.loaded {
+        .main-content-wrap {
+          opacity: 1;
+          transition: 0s opacity 0s $animation;
+        }
+      }
+    }
+    .app-h-navbar {
+      transition:
+        left .2s $animation,
+        right .2s $animation,
+        transform .2s $animation;
+      @include max991 {
+        width: 100%;
+      }
+    }
+    &.open-sidebar {
+      .app-v-navbar {
+        left: 0;
+
+        ::ng-deep .sidebar-overlay {
+          @include max991 {
+            opacity: 1;
+            transition:
+              .2s opacity 0s $animation,
+              0s visibility 0s $animation;
+            visibility: visible;
+          }
+        }
+      }
+    }
+    &.rtl {
+      &.open-sidebar {
+        .app-v-navbar {
+          right: 0;
+        }
+      }
+    }
+
+    &.with-top-navbar {
+      .main-content {
+        padding-top: $navbar-height;
+      }
+    }
+    //Boxed
+    &.boxed {
+      box-shadow: 0px 5px 5px 5px rgba(#000,.25);
+      margin: 0 auto;
+      max-width: 1200px;
+      position: relative;
+    }
+
+    //Compress sidebar
+    &.compress-vertical-navbar {
+      @include min992 {
+        .app-h-navbar {
+          left: $vertical-navbar-compress-width;
+        }
+        .app-v-navbar {
+          overflow: hidden;
+          transition: width .2s $animation;
+          width: $vertical-navbar-compress-width;
+          z-index: 9997;
+
+          ::ng-deep {
+            .vertical-navbar-wrap {
+              .app-menu {
+                .main-menu {
+                  > ul {
+                    .menu-item {
+                      .item-link {
+                        .text,
+                        .item-badge,
+                        .caret {
+                          opacity: 0;
+                          transition: opacity .2s $animation;
+                        }
+                      }
+
+                      &.menu-item-group {
+                        background: rgba(main-palette(500), .1);
+                        transition: background .2s $animation;
+
+                        .group-title {
+                          opacity: 0;
+                          transition: opacity .2s $animation;
+                        }
+                      }
+
+                      &.has-sub {
+                        &.active {
+                          > .sub {
+                            max-height: 0;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          &:not(:hover):not(.show) {
+            ::ng-deep .vertical-navbar-wrap {
+              .app-logo {
+                .logo-wrap {
+                  padding-left: 2px;
+                  padding-right: 2px;
+                }
+              }
+            }
+          }
+          &:hover,
+          &.show {
+            width: $vertical-navbar-width;
+
+            ::ng-deep .vertical-navbar-wrap {
+              .app-menu {
+                .main-menu {
+                  > ul {
+                    .menu-item {
+                      .item-link {
+                        .text,
+                        .item-badge,
+                        .caret {
+                          opacity: 1;
+                        }
+                      }
+                      &.menu-item-group {
+                        background: none;
+
+                        .group-title {
+                          opacity: 1;
+                        }
+                      }
+                      &.has-sub {
+                        &.active {
+                          > .sub {
+                            max-height: 1000px;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.menu-style-2,
+        &.menu-style-3,
+        &.menu-style-4 {
+          .app-v-navbar {
+            justify-content: flex-start;
+          }
+        }
+        .main-content {
+          padding-left: $vertical-navbar-compress-width;
+        }
+      }
+    }
+    &.compress-vertical-navbar.rtl {
+      @include min992 {
+        .app-h-navbar {
+          left: 0;
+          right: $vertical-navbar-compress-width;
+        }
+        .main-content {
+          padding-left: 0;
+          padding-right: $vertical-navbar-compress-width;
+        }
+      }
+    }
+  }
+}

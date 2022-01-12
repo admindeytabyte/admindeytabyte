@@ -1,0 +1,54 @@
+.mat-form-field {
+  width: 100%;
+}
+.mat-radio-group {
+  margin: -$module-rem * 0.5;
+
+  .mat-radio-button {
+    margin: $module-rem * 0.5;
+  }
+}
+.mat-checkbox-layout {
+  margin-bottom: 0;
+}
+.mat-card-avatar {
+  overflow: hidden;
+}
+.mat-card-image {
+  max-width: initial;
+}
+body {
+  .mat-card-actions {
+    .mat-button,
+    .mat-stroked-button,
+    .mat-raised-button {
+      margin-left: 8px !important;
+      margin-right: 8px !important;
+
+      &:first-child {
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+    }
+  }
+  .mat-card > .mat-card-actions:last-child {
+    margin-bottom: 0;
+  }
+}
+.cdk-overlay-container {
+  z-index: 9999;
+}
+.mat-icon {
+  position: relative;
+}
+.mat-table {
+  width: 100%;
+}
+.mat-form-field-prefix,
+.mat-form-field-suffix {
+  //align-self: flex-end;
+}
+
+.mat-snack-bar-container {
+  background: main-palette(500);
+}

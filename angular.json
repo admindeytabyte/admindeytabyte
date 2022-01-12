@@ -31,7 +31,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/devextreme/dist/css/dx.common.css",
+              "node_modules/devextreme/dist/css/dx.light.css",
+              "src/assets/css/font-awesome.min.css",
+              "src/assets/scss/simple-line-icons.scss",
+              "src/assets/scss/bootstrap/bootstrap.scss",
+              "src/assets/scss/loader.scss",
+              "src/assets/scss/custom-material-theme.scss",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "src/assets/scss/style.scss"
             ],
             "scripts": []
           },

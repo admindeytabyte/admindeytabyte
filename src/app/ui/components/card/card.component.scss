@@ -1,0 +1,140 @@
+@import '../../../../assets/scss/variables';
+
+$_module-rem: $module-rem;
+$_shape: $shape;
+$_shadow: 1px 1px 5px 0px rgba(main-palette(500),.25);
+$_title-fs: 1.3571429rem;
+$_title-fw: $headers-fw;
+$_title-lh: 1.05;
+
+$_types: (
+  default: (
+    bg: #fff,
+    color: inherit,
+    headerBg: main-palette(50),
+    headerColor: main-palette-contrast(50)
+  ),
+  accent: (
+    bg: accent-palette(500),
+    color: accent-palette-contrast(500),
+    headerBg: rgba(#000,.1),
+    headerColor: accent-palette-contrast(500)
+  ),
+  success: (
+    bg: $success-color,
+    color: $success-contrast,
+    headerBg: rgba(#000,.1),
+    headerColor: $success-contrast
+  ),
+  info: (
+    bg: $info-color,
+    color: $info-contrast,
+    headerBg: rgba(#000,.1),
+    headerColor: $info-contrast
+  ),
+  warning: (
+    bg: $warning-color,
+    color: $warning-contrast,
+    headerBg: rgba(#000,.1),
+    headerColor: $warning-contrast
+  ),
+  error: (
+    bg: $error-color,
+    color: $error-contrast,
+    headerBg: rgba(#000,.1),
+    headerColor: $error-contrast
+  )
+);
+
+:host {
+  background: transparent 50% 50% no-repeat;
+  background-size: cover;
+  border-radius: $_shape;
+  box-shadow: $_shadow;
+	display: block;
+	margin-bottom: $_module-rem * 2;
+	position: relative;
+
+  .card-img {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    width: 100%;
+  }
+  .card-header {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    margin: 0;
+    padding: $_module-rem ($_module-rem * 2);
+
+    .card-title {
+      font-size: $_title-fs;
+      font-weight: $_title-fw;
+      line-height: $_title-lh;
+      margin: 0;
+    }
+  }
+  .card-content {
+    display: block;
+    padding: $_module-rem * 2;
+    position: relative;
+    width: 100%;
+  }
+  .bg-image {
+    border-radius: inherit;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @each $type, $color in $_types {
+    &.card-#{$type} {
+      background: map-get($color, bg);
+      color: map-get($color, color);
+
+      .card-header {
+        background: map-get($color, headerBg);
+        color: map-get($color, headerColor);
+      }
+      &.outline {
+        border-color: map-get($color, bg);
+        color: map-get($color, bg);
+
+        .card-header {
+          background: transparent;
+          color: inherit;
+        }
+      }
+    }
+  }
+  &.custom-bg-color,
+  &.custom-border-color,
+  &.custom-gradient,
+  &.bg-image {
+    .card-header {
+      background: rgba(#000,.1);
+      color: #000;
+    }
+  }
+	&.outline {
+		background: none;
+    border: 1px solid main-palette(500);
+    color: inherit;
+    
+    &.card-default {
+      border-color: main-palette(500);
+      color: main-palette(500);
+    }
+	}
+  &.bg-image {
+    background: transparent 50% 50% no-repeat;
+    background-size: cover;
+  }
+}
+
+

@@ -1,0 +1,77 @@
+@import '../../../../assets/scss/variables';
+
+:host {
+  background: main-palette(700);
+  color: main-palette-contrast(700);
+  display: block;
+  height: $module-rem * 5;
+  min-height: $module-rem * 5;
+  position: relative;
+
+  .logo-wrap {
+    align-items: center;
+    color: inherit;
+    display: flex;
+    height: 100%;
+    padding: $module-rem;
+    text-decoration: none;
+    transition: padding .2s $animation;
+
+    .logo-img {
+      height: auto;
+      margin: 0 $module-rem;
+      max-height: 100%;
+      max-width: 100%;
+      transition: transform .2s $animation;
+      vertical-align: top;
+      width: auto;
+    }
+    .logo-text {
+      display: block;
+      font-size: 33px;
+      font-weight: 300;
+      line-height: 1;
+      margin: 0 $module-rem;
+      transition: opacity .2s $animation;
+    }
+  }
+  @include min992 {
+    .compress-vertical-navbar .app-v-navbar & {
+      .logo-wrap {
+        .logo-text {
+          opacity: 0;
+        }
+      }
+    }
+    .compress-vertical-navbar .app-v-navbar:hover &,
+    .compress-vertical-navbar .app-v-navbar.show & {
+      .logo-wrap {
+        .logo-text {
+          opacity: 1;
+        }
+      }
+    }
+    .menu-style-1.compress-vertical-navbar .app-v-navbar & {
+      .logo-wrap {
+        .logo-img {
+          transform: translateX(176px);
+        }
+      }
+    }
+    .rtl.menu-style-1.compress-vertical-navbar .app-v-navbar & {
+      .logo-wrap {
+        .logo-img {
+          transform: translateX(-176px);
+        }
+      }
+    }
+    .menu-style-1.compress-vertical-navbar .app-v-navbar:hover &,
+    .menu-style-1.compress-vertical-navbar .app-v-navbar.show & {
+      .logo-wrap {
+        .logo-img {
+          transform: translateX(0);
+        }
+      }
+    }
+  }
+}

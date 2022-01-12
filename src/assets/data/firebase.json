@@ -1,0 +1,116 @@
+{
+  "table": [
+    {
+      "no": 18536,
+      "productName": "Samsung Galaxy S8",
+      "quantity": 1,
+      "status": "Closed",
+      "statusType": "error",
+      "amount": 895
+    },
+    {
+      "no": 18684,
+      "productName": "Meizu M3",
+      "quantity": 2,
+      "status": "Pending",
+      "statusType": "info",
+      "amount": 459
+    },
+    {
+      "no": 18001,
+      "productName": "Meizu Pro 6",
+      "quantity": 1,
+      "status": "Pending",
+      "statusType": "info",
+      "amount": 599
+    },
+    {
+      "no": 18002,
+      "productName": "Apple iPhone SE",
+      "quantity": 4,
+      "status": "Active",
+      "statusType": "success",
+      "amount": 499
+    },
+    {
+      "no": 18946,
+      "productName": "Apple iPhone X",
+      "quantity": 7,
+      "status": "Active",
+      "statusType": "success",
+      "amount": 789
+    },
+    {
+      "no": 18604,
+      "productName": "Huawei P8",
+      "quantity": 2,
+      "status": "Waiting",
+      "statusType": "warning",
+      "amount": 390
+    },
+    {
+      "no": 18664,
+      "productName": "Macbook Pro 13",
+      "quantity": 1,
+      "status": "Active",
+      "statusType": "success",
+      "amount": 1399
+    },
+    {
+      "no": 18214,
+      "productName": "Macbook Pro 15",
+      "quantity": 3,
+      "status": "Pending",
+      "statusType": "info",
+      "amount": 2499
+    },
+    {
+      "no": 18230,
+      "productName": "Apple Watch Series 4",
+      "quantity": 1,
+      "status": "Closed",
+      "statusType": "error",
+      "amount": 399
+    },
+    {
+      "no": 18583,
+      "productName": "Samsung Galaxy Watch Active",
+      "quantity": 2,
+      "status": "Active",
+      "statusType": "success",
+      "amount": 250
+    }
+  ],
+  "chart": [
+    {
+      "name": "Chrome",
+      "value": "80.9",
+      "color": "#C7E5C8",
+      "bgColor": "#81C784"
+    },
+    {
+      "name": "Safari",
+      "value": "2.7",
+      "color": "#d5edff",
+      "bgColor": "#2fa7ff"
+    },
+    {
+      "name": "IE9+",
+      "value": "3.3",
+      "color": "#fee8d7",
+      "bgColor": "#fc8b37"
+    },
+    {
+      "name": "Firefox",
+      "value": "9.3",
+      "color": "#ffd8dc",
+      "bgColor": "#ed253d"
+    },
+    {
+      "name": "Opera",
+      "value": "1.6",
+      "color": "#e6deff",
+      "bgColor": "#805aff"
+    }
+  ]
+}

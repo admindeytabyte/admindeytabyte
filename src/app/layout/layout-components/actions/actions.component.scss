@@ -1,0 +1,51 @@
+@import '../../../../assets/scss/variables';
+
+:host {
+  display: flex;
+  height: 100%;
+  margin: 0 !important;
+
+  .item {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin: 0 ($module-rem);
+    @include min544 {
+      position: relative;
+    }
+
+    ::ng-deep {
+      .tc-dropdown-link {
+        position: relative;
+
+        .marker {
+          background: $info-color;
+          border-radius: 50%;
+          height: 6px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 6px;
+
+          .rtl & {
+            left: 0;
+            right: auto;
+          }
+        }
+        .avatar-box {
+          margin: 0 (-$module-rem * 0.5);
+
+          > * {
+            margin: 0 ($module-rem * 0.5);
+          }
+          .name {
+            font-size: 1rem;
+          }
+        }
+        &:hover {
+          color: $navbar-icon-color-hover;
+        }
+      }
+    }
+  }
+}

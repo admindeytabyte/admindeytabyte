@@ -1,0 +1,58 @@
+<div class="site-container" [ngClass]="getClasses()" [attr.dir]="appSettings?.rtl ? 'rtl' : null">
+  <app-horizontal-navbar [ngClass]="{ 'open': appSettings?.sidebarOpened }" *ngIf="appSettings?.showTopNavbar">
+    <button
+      class="no-style navbar-button"
+      [ngClass]="{ 'open': appSettings?.sidebarOpened }"
+      (click)="toggleSidebar(!appSettings?.sidebarOpened)"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <h1 class="page-title">
+      <span *ngIf="appSettings?.showTitle">{{ pageData?.title }}</span>
+    </h1>
+
+    <app-actions></app-actions>
+  </app-horizontal-navbar>
+
+  <app-vertical-navbar [ngClass]="{ 'open': appSettings?.sidebarOpened }">
+    <app-logo [src]="'assets/img/logo.svg'" [text]="'assist'" [alt]="'Logo'" [width]="33" [height]="33"></app-logo>
+
+    <app-menu [src]="'assets/data/main-menu.json'"></app-menu>
+  </app-vertical-navbar>
+
+  <!-- <app-addition-navbar
+    [title]="'App settings'"
+    [opened]="openedAddition"
+    (open)="toggleAddition($event)"
+  ></app-addition-navbar> -->
+
+  <main class="main-content" [ngClass]="{ 'loaded': pageData?.loaded }">
+    <div *ngIf="!pageData?.loaded" class="page-loader-box">
+      <mat-progress-bar class="page-loader" value="10" mode="indeterminate"></mat-progress-bar>
+    </div>
+
+    <div class="main-content-wrap">
+      <tc-breadcrumb
+        [menu]="pageData?.breadcrumbs"
+        [style]="appSettings?.crumbsType"
+        *ngIf="appSettings?.showCrumbs && pageData?.breadcrumbs && pageData?.breadcrumbs.length"
+        class="mb-4"
+      ></tc-breadcrumb>
+
+      <router-outlet></router-outlet>
+    </div>
+
+    <app-footer></app-footer>
+  </main>
+
+  <div
+    class="app-overlay"
+    [ngClass]="{ 'shown': appSettings?.sidebarOpened || openedAddition }" (click)="toggleSidebar(false); toggleAddition(false)">
+  </div>
+</div>

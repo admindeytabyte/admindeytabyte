@@ -1,0 +1,99 @@
+@import '../../../../assets/scss/variables';
+
+:host {
+  background: main-palette(50);
+  bottom: 0;
+  box-shadow: -5px 0 5px -4px rgba(#000,.25);
+  color: main-palette-contrast(50);
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translate(300px, 0);
+  transition:
+    .2s transform 0s $animation,
+    0s z-index .2s $animation;
+  width: 300px;
+  z-index: 9997;
+  @include max543 {
+    transform: translate(270px, 0);
+    width: 270px;
+  }
+
+  .rtl & {
+    left: 0;
+    right: auto;
+    transform: translate(-300px, 0);
+    @include max543 {
+      transform: translate(-270px, 0);
+    }
+  }
+  &.open {
+    transform: translate(0, 0);
+    transition:
+      .2s transform 0s $animation,
+      .2s z-index 0s $animation;
+    z-index: 9999;
+  }
+  .open-navbar {
+    align-items: center;
+    background: main-palette(50);
+    border: 1px solid main-palette(50);
+    border-right: 0;
+    border-radius: $shape 0 0 $shape;
+    box-shadow: -1px 5px 5px -4px rgba(#000,.25);
+    color: main-palette-contrast(50);
+    display: flex;
+    font-size: 20px;
+    height: $module-rem * 4;
+    justify-content: center;
+    position: absolute;
+    right: 100%;
+    top: $module-rem * 7;
+    transition: color .2s $animation;
+    width: $module-rem * 4;
+
+    .rtl & {
+      border-radius: 0 $shape $shape 0;
+      box-shadow: 1px 5px 5px -4px rgba(#000,.25);
+      left: 100%;
+      right: auto;
+    }
+    &:hover {
+      color: accent-palette(500);
+    }
+  }
+  .navbar-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .navbar-header {
+      align-items: center;
+      background: main-palette(700);
+      color: main-palette-contrast(700);
+      display: flex;
+      height: $module-rem * 5;
+      min-height: $module-rem * 5;
+      padding: $module-rem ($module-rem * 2);
+    }
+    .navbar-content {
+      flex-grow: 1;
+      overflow: auto;
+      padding: ($module-rem * 2);
+      width: 100%;
+
+      .settings-box {
+        border-bottom: 1px solid rgba(#000,.1);
+        padding: ($module-rem * 2) 0;
+
+        &:first-child {
+          padding-top: 0;
+        }
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+@import '../../../../assets/scss/variables';
+
+:host {
+  background: $vertical-navbar-bg;
+  display: flex;
+  justify-content: flex-end;
+  height: 100%;
+  transform: translate3d(0,0,0);
+  transition:
+    left .2s $animation,
+    right .2s $animation,
+    transform .2s $animation;
+  width: $vertical-navbar-width;
+  will-change: left, right, transform, width;
+  @include max991 {
+    left: -($vertical-navbar-width);
+  }
+
+  .toggle-navbar {
+    align-items: center;
+    background: main-palette(50);
+    border: 1px solid main-palette(50);
+    border-right: 0;
+    border-radius: 0 $shape $shape 0;
+    box-shadow: 1px 5px 5px -4px rgba(#000,.25);
+    color: main-palette-contrast(50);
+    display: flex;
+    font-size: 27px;
+    height: $module-rem * 4;
+    justify-content: center;
+    left: 100%;
+    position: absolute;
+    top: $module-rem * 7;
+    transition: color .2s $animation;
+    width: $module-rem * 4;
+    @include min992 {
+      display: none;
+    }
+
+    .rtl & {
+      border-radius: $shape 0 0 $shape;
+      box-shadow: -1px 5px 5px -4px rgba(#000,.25);
+      left: auto;
+      right: 100%;
+    }
+    &:hover {
+      color: accent-palette(500);
+    }
+  }
+  .vertical-navbar-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: $vertical-navbar-width;
+    @include max991 {
+      position: relative;
+      z-index: 9999;
+    }
+  }
+}

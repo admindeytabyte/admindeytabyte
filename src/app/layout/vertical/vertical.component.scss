@@ -1,0 +1,65 @@
+@import '../../../assets/scss/variables';
+
+:host {
+  .site-container {
+    .app-h-navbar {
+      left: $vertical-navbar-width;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 9997;
+      @include max991 {
+        left: 0;
+
+        &.open {
+          transform: translateX($vertical-navbar-width);
+        }
+      }
+    }
+    .app-v-navbar {
+      left: 0;
+      position: absolute;
+      top: 0;
+      @include max991 {
+        transform: translateX(-100%);
+        z-index: 9999;
+      }
+      &.open {
+        transform: translateX(0) !important;
+      }
+    }
+    .main-content {
+      padding-left: $vertical-navbar-width;
+      @include max991 {
+        padding-left: 0;
+      }
+    }
+    &.rtl {
+      .app-h-navbar {
+        left: 0;
+        right: $vertical-navbar-width;
+        @include max991 {
+          right: 0;
+
+          &.open {
+            transform: translateX(-$vertical-navbar-width);
+          }
+        }
+      }
+      .app-v-navbar {
+        left: auto;
+        right: 0;
+        @include max991 {
+          transform: translateX(100%);
+        }
+      }
+      .main-content {
+        padding-left: 0;
+        padding-right: $vertical-navbar-width;
+        @include max991 {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}
