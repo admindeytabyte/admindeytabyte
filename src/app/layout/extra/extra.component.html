@@ -1,0 +1,7 @@
+<div class="site-container" [ngClass]="{ 'rtl': appSettings?.rtl }" [attr.dir]="appSettings?.rtl ? 'rtl' : null">
+  <main class="main-content" [ngClass]="{ 'loaded': pageData?.loaded }">
+    <div class="main-content-wrap">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

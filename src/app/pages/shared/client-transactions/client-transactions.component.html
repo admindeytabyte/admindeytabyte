@@ -1,0 +1,38 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Client Transactions</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<dx-data-grid [dataSource]="transactions" [showBorders]="true" keyExpr="id" class="gridContainer">
+          <dxo-scrolling mode="infinite"></dxo-scrolling>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-scrolling mode="infinite"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-export [enabled]="true"></dxo-export>
+          <dxo-paging [enabled]="false"></dxo-paging>
+          <dxi-column dataField="id" [allowFiltering]="false" alignment="center" width="80" sortOrder="desc">
+          </dxi-column>
+          <dxi-column dataField="transactionDate" dataType="date" alignment="center" width="150" format="dd-MMM-yyyy">
+          </dxi-column>
+          <dxi-column dataField="debit" caption="Debit ($)" dataType="number" format="currency" alignment="right"
+                    width="120">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="credit" caption="Credit ($)" dataType="number" format="currency" alignment="right"
+                    width="120">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="runningTotal" caption="Running Total ($)" dataType="number" format="currency"
+                    alignment="right" width="120">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="description" alignment="left">
+          </dxi-column>
+</dx-data-grid>

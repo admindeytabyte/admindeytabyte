@@ -1,0 +1,29 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#form' }" [(visible)]="dataLoading"
+          [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Add New Client</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<dx-form id="form" (onFieldDataChanged)="form_fieldDataChanged($event)">
+          <dxi-item dataField="companyName">
+                    <dxi-validation-rule type="required" message="Name is required">
+                    </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="unit">
+          </dxi-item>
+          <dxi-item dataField="formattedAddress">
+                    <dxo-label location="left" alignment="left" text="Address">
+                    </dxo-label>
+                    <dxi-validation-rule type="required" message="Address is required">
+                    </dxi-validation-rule>
+          </dxi-item>
+</dx-form>
+<!-- <dx-load-indicator [(visible)]="dataLoading" id="large-indicator" height="60" width="60"></dx-load-indicator> -->
+<dx-button id="saveButton" [visible]="!dataLoading" icon="save" type="default" text="Save" (onClick)="saveclicked()">
+</dx-button>

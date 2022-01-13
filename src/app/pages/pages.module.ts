@@ -81,6 +81,12 @@ import { ClientsAddressEditorComponent } from './shared/clients-address-editor/c
 import { ClientInvoicePaymentsEditorComponent } from './shared/client-invoice-payments-editor/client-invoice-payments-editor.component';
 import { ClientInvoicesDialogComponent } from './shared/client-invoices-dialog/client-invoices-dialog.component';
 import { DashboardSalesComponent } from './dashboards/dashboard-sales/dashboard-sales.component';
+import { CustomersComponent } from './customers/customers.component';
+import { AddclientDialogComponent } from './shared/addclient-dialog/addclient-dialog.component';
+import { ClientCommissionsDialogComponent } from './shared/client-commissions-dialog/client-commissions-dialog.component';
+import { ClientTransactionsComponent } from './shared/client-transactions/client-transactions.component';
+import { LoginComponent } from './login/login.component';
+import { PageNotFoundComponent } from './not-found/not-found.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -164,7 +170,13 @@ import { DashboardSalesComponent } from './dashboards/dashboard-sales/dashboard-
     ClientsAddressEditorComponent,
     ClientInvoicePaymentsEditorComponent,
     ClientInvoicesDialogComponent,
-    DashboardSalesComponent
+    DashboardSalesComponent,
+    CustomersComponent,
+    AddclientDialogComponent,
+    ClientCommissionsDialogComponent,
+    ClientTransactionsComponent,
+    LoginComponent,
+    PageNotFoundComponent
   ],
   exports: [],
   entryComponents: [

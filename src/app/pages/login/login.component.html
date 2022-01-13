@@ -1,0 +1,51 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#loginForm' }" [(visible)]="loadingVisible"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<tc-card id="loginForm" [title]="'Sign in with your UserId to continue'" [align]="'center'">
+    <div class="row" *ngIf="errorMessage">
+        <div class="col col-sm-6 col-md-8 col-lg-12">
+            <tc-alert [view]="'error'">
+                {{ errorMessage }}
+            </tc-alert>
+        </div>
+    </div>
+    <dx-select-box id="companyList" width="100%" height="40" [(ngModel)]="selectedCompany" [dataSource]="companies"
+        displayExpr="companyName" [searchEnabled]="true" [showClearButton]=true placeholder="Select Company">
+    </dx-select-box>
+    <div class="form" *ngIf="selectedCompany" autocomplete="off">
+        <div class="dx-fieldset">
+            <div class="dx-field">
+                <div class="dx-field-label">UserId</div>
+                <div class="dx-field-value">
+                    <dx-text-box [(ngModel)]="loginId">
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="UserId is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Password</div>
+                <div class="dx-field-value">
+                    <dx-text-box placeholder="Password" [showClearButton]="true" mode="password" [(ngModel)]="password"
+                        (onEnterKey)="passwordEntered($event)">
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="Password is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+            <div>
+                <p class="warning">This system is for Staff of {{selectedCompany.companyName}} . All logins are logged
+                    and
+                    monitored</p>
+            </div>
+        </div>
+        <button tc-button [view]="'accent'" [block]="true" (click)="tryLogin()">Sign In</button>
+    </div>
+    <div class="info">
+        <div class="version">Your Ip Address {{ipAddress}}</div>
+        <div class="version">{{this.version}}</div>
+    </div>
+</tc-card>

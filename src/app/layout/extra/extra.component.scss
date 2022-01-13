@@ -1,0 +1,14 @@
+@import '../../../assets/scss/variables';
+
+:host {
+  .main-content {
+    height: 100%;
+    padding: 0;
+
+    .main-content-wrap {
+      height: 100% !important;
+      padding: 0;
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,286 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#clients' }" [(visible)]="loadingVisible"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+<div class="container-fluid" id="clients">
+    <div class="row" *ngIf="errorMessage">
+        <div class="col col-sm-6 col-md-8 col-lg-12">
+            <tc-alert [removable]="true" [view]="'error'">
+                {{ errorMessage }}
+            </tc-alert>
+        </div>
+    </div>
+
+    <div class="row" id="AccountName" *ngIf="selectedAccount">
+        <div class="col-md-12">
+            <p class="page_title">{{selectedAccount.companyName}}</p>
+        </div>
+    </div>
+
+    <div class="row" id="AccountInfo">
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" *ngIf="selectedAccount">
+                <div class="col-md-12" *ngIf="selectedAccount.alert">
+                    <p class="alert">{{selectedAccount?.alert}}</p>
+                </div>
+            </div>
+            <div class="row" *ngIf="selectedAccount">
+                <div class="col-md-12">
+                    <app-account-balance [accountId]="selectedAccount.accountId">
+                    </app-account-balance>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <dx-data-grid id="gridCustomers" class="gridContainer" [dataSource]="customers"
+                        [repaintChangesOnly]="true" [remoteOperations]="false" [allowColumnReordering]="true"
+                        [rowAlternationEnabled]="true" [showBorders]="true" [height]="customerGridHeight"
+                        keyExpr="accountId" [focusedRowEnabled]="true"
+                        (onFocusedRowChanged)="customerFocusChanged($event)" (onInitNewRow)="customerAddInit($event)"
+                        (onRowUpdated)="clientUpdated($event)" (onRowRemoved)="clientDeleted($event)"
+                        (onRowInserted)="clientAdded($event)" [(focusedRowKey)]="focusedRowKey"
+                        (onToolbarPreparing)="onclientGridToolbarPreparing($event)">
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [useIcons]="true">
+                            <dxo-popup title="Customer Information" [showTitle]="true"
+                                [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="950" [height]="1100">
+                            </dxo-popup>
+                            <dxo-form>
+                                <dxi-item itemType="tabbed" class="EditTab" [tabPanelOptions]="{
+                                    height: 1050, width: 900
+                                }">
+                                    <dxi-tab title="Basic Info">
+                                        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                                            <dxi-item dataField="companyName"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item itemType="group" [colCount]="3" [colSpan]="2">
+                                            <dxi-item dataField="isaJobber"></dxi-item>
+                                            <dxi-item dataField="valuedCustomer"></dxi-item>
+                                            <dxi-item dataField="estimatesByDefault"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item itemType="group" [colCount]="3" [colSpan]="2">
+                                            <dxi-item dataField="locked"></dxi-item>
+                                            <dxi-item dataField="holdQuotes"></dxi-item>
+                                            <dxi-item dataField="escalate"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item itemType="group" [colCount]="3" [colSpan]="2">
+                                            <dxi-item dataField="houseAccount"></dxi-item>
+                                            <dxi-item dataField="showTransactions"></dxi-item>
+                                            <dxi-item dataField="hasPaintSystem"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item itemType="group" caption="Billing Address" [colCount]="2"
+                                            [colSpan]="2">
+                                            <dxi-item dataField="doorNumber">
+                                            </dxi-item>
+                                            <dxi-item dataField="unit"></dxi-item>
+                                            <dxi-item dataField="address1"></dxi-item>
+                                            <dxi-item dataField="address2"></dxi-item>
+                                            <dxi-item dataField="cityId"></dxi-item>
+                                            <dxi-item dataField="provinceId"></dxi-item>
+                                            <dxi-item dataField="postalCode"></dxi-item>
+                                            <dxi-item dataField="countryId"></dxi-item>
+                                            <dxi-item dataField="mobile" [editorOptions]="{ 
+                                                mask: '+1 (X00) 000-0000',
+                                                maskRules: phoneRules,
+                                                useMaskedValue: true,
+                                                maskInvalidMessage: 'The phone must have a correct phone format'
+                                            }"></dxi-item>
+                                            <dxi-item dataField="landline" [editorOptions]="{ 
+                                                mask: '+1 (X00) 000-0000',
+                                                maskRules: phoneRules,
+                                                useMaskedValue: true,
+                                                maskInvalidMessage: 'The phone must have a correct phone format'
+                                            }"></dxi-item>
+                                            <dxi-item dataField="fax"></dxi-item>
+                                            <dxi-item dataField="shippingZoneId"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item itemType="group" caption="Accounting" [colCount]="2" [colSpan]="2">
+                                            <dxi-item dataField="creditLimit" [disabled]="!checkRole(79)"  editorType="dxNumberBox" 
+                                            [editorOptions]="{ format: '$ #,##0.##'}">
+                                            </dxi-item>
+                                            <dxi-item dataField="creditTerm" [disabled]="!checkRole(79)"  helpText="Term 0 to 90 Days"
+                                                editorType="dxNumberBox" [editorOptions]="{ 
+                                              min: 0,
+                                              max: 90,
+                                              showSpinButtons: 'true'
+                                            }">
+                                            </dxi-item>
+                                            
+
+                                            <dxi-item dataField="chargeTypeId"></dxi-item>
+                                            <dxi-item dataField="paymentTypeId"></dxi-item>
+                                            <dxi-item dataField="salesPersonId"></dxi-item>
+                                            <dxi-item dataField="servicePriority" helpText="Priorty 1-High, 5 - Low"
+                                                editorType="dxNumberBox" [editorOptions]="{ 
+                                              min: 1,
+                                              max: 5,
+                                              showSpinButtons: 'true'
+                                            }"></dxi-item>
+                                            <dxi-item dataField="rating" helpText="Rating 1-Low, 5 - High"
+                                                editorType="dxNumberBox" [editorOptions]="{ 
+                                              min: 1,
+                                              max: 5,
+                                              showSpinButtons: 'true'
+                                            }">
+                                            </dxi-item>
+                                            <dxi-item dataField="onlineDiscount" editorType="dxNumberBox"
+                                                [editorOptions]="{ 
+                                                    min: 1,
+                                              max: 25,
+                                              showSpinButtons: 'true',
+                                            format: '##.##'
+                                          }"></dxi-item>
+                                        </dxi-item>
+                                        <dxi-item dataField="alert" editorType="dxTextArea"
+                                            [editorOptions]="{ height: 120 }" [colSpan]="2"></dxi-item>
+                                    </dxi-tab>
+                                    <dxi-tab title="Notes">
+                                        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                                            <dxi-item dataField="notes" editorType="dxTextArea"
+                                                [editorOptions]="{ height: 200 }" [colSpan]="2"></dxi-item>
+                                        </dxi-item>
+                                    </dxi-tab>
+                                </dxi-item>
+                            </dxo-form>
+                        </dxo-editing>
+                        <dxi-column dataField="locked" caption="Locked" alignment="center" width="100">
+                        </dxi-column>
+                        <dxi-column type="buttons" [width]="100">
+                            <dxi-button name="edit"></dxi-button>
+                            <dxi-button name="delete"></dxi-button>
+                        </dxi-column>
+                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+                        </dxo-search-panel>
+                        <dxi-column dataField="accountNo" caption="#" alignment="center" width="80">
+                        </dxi-column>
+                        <dxi-column dataField="companyName" caption="Name" alignment="center" caption="Name"
+                            alignment="left" width="250" selectedFilterOperation="startswith">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-column>
+                        <dxi-column dataField="pastMonthSales" caption="30 Day Sales ($)" dataType="number"
+                            alignment="right" [width]="100" [allowEditing]="true">
+                            <dxo-format type="fixedPoint" [precision]="2">
+                            </dxo-format>
+                        </dxi-column>
+                        <dxi-column dataField="creditLimit" dataType="number" format="currency" [visible]="checkRole(79)" 
+                        [width]="100" alignment="center">
+                        </dxi-column>
+                        <dxi-column dataField="creditTerm" caption="Term Limit" dataType="number" 
+                        [visible]="checkRole(79)" [width]="100" alignment="center">
+                        </dxi-column>
+                        <dxi-column dataField="unit" width="80"></dxi-column>
+                        <dxi-column dataField="formattedAddress" caption="Address" alignment="left">
+                        </dxi-column>
+                        <dxi-column dataField="salesPersonId" caption="Sales Person" width="140">
+                            <dxo-lookup [dataSource]="salesPeople" displayExpr="salesPersonName"
+                                valueExpr="salesPersonId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="landline" caption="landline" alignment="center" width="140">
+                        </dxi-column>
+                        <dxi-column dataField="mobile" caption="mobile" alignment="center" width="140">
+                        </dxi-column>
+                        <dxi-column dataField="chargeTypeId" caption="Charge Type" width="120">
+                            <dxo-lookup [dataSource]="chargeTypes" displayExpr="chargeTypeDesc"
+                                valueExpr="chargeTypeId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="paymentTypeId" caption="Payment Type" width="120">
+                            <dxo-lookup [dataSource]="paymentTypes" displayExpr="paymentTypeDesc"
+                                valueExpr="paymentTypeId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="rating" caption="Rating" alignment="center" width="100">
+                        </dxi-column>
+                        <dxi-column dataField="servicePriority" caption="Priority" alignment="center" width="100">
+                        </dxi-column>
+                        <dxi-column dataField="isaJobber" caption="Jobber" alignment="center" width="100">
+                        </dxi-column>
+
+                        <dxi-column dataField="tags" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="address" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-column>
+                        <dxi-column dataField="doorNumber" [visible]="false"></dxi-column>
+                        <dxi-column dataField="address1" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-column>
+                        <dxi-column dataField="address2" [visible]="false"></dxi-column>
+                        <dxi-column dataField="postalCode" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-column>
+                        <!-- <dxi-column dataField="mobile" [visible]="false"></dxi-column>
+                        <dxi-column dataField="landline" [visible]="false"></dxi-column> -->
+                        <dxi-column dataField="fax" [visible]="false"></dxi-column>
+                        <dxi-column dataField="email" [visible]="false"></dxi-column>
+                        <!-- <dxi-column dataField="isaJobber" caption="Jobber" [visible]="false"></dxi-column> -->
+                        <dxi-column dataField="notes" caption="Notes" [visible]="false"></dxi-column>
+                        <dxi-column dataField="alert" caption="Alert" [visible]="false"></dxi-column>
+                        <dxi-column dataField="valuedCustomer" caption="Valued Customer" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="holdQuotes" caption="Hold Quotes" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="showTransactions" [visible]="false">
+                        </dxi-column>
+                        
+                        <dxi-column dataField="houseAccount" caption="House Account" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="escalate" caption="Escalate" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="geoCoded" caption="Geo Coded" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="shipSameAsBill" caption="Ship same as Bill" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="estimatesByDefault" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="salesPerc" caption="Sales Percentage (%)" dataType="number"
+                            [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="onlineDiscount" caption="Online Discount (%)" dataType="number"
+                            [visible]="false">
+                        </dxi-column>
+                        
+                        <dxi-column dataField="hasPaintSystem" [visible]="true" [width]="100" caption="Paint System">
+                        </dxi-column>
+                        <dxi-column dataField="cityId" caption="City" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                            <dxo-lookup [dataSource]="cities" displayExpr="cityName" valueExpr="cityId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <!-- <dxi-column dataField="rating" dataType="number" [visible]="false"></dxi-column> -->
+                        <dxi-column dataField="provinceId" caption="Province" width="100" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                            <dxo-lookup [dataSource]="provinces" displayExpr="provinceName" valueExpr="provinceId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="countryId" caption="Country" width="100" [visible]="false">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                            <dxo-lookup [dataSource]="countries" displayExpr="country1" valueExpr="countryId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="shippingZoneId" caption="Shipping Zone" [visible]="false">
+                            <dxo-lookup [dataSource]="zones" displayExpr="zoneDesc" valueExpr="shippingZoneId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <!-- <dxi-column dataField="salesPersonId" caption="Sales Person" [visible]="false">
+                            <dxo-lookup [dataSource]="salesPeople" displayExpr="salesPersonName"
+                                valueExpr="salesPersonId">
+                            </dxo-lookup>
+                        </dxi-column> -->
+                        <!-- <dxi-column dataField="tags" [visible]="false">
+                        </dxi-column> -->
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

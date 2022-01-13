@@ -20,6 +20,7 @@ import { HorizontalNavbarComponent } from './layout-components/horizontal-navbar
 import { FooterComponent } from './layout-components/footer/footer.component';
 import { MenuComponent } from './layout-components/menu/menu.component';
 import { UIModule } from '../ui/ui.module';
+import { ExtraLayoutComponent } from './extra/extra.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { UIModule } from '../ui/ui.module';
     FooterComponent,
     LogoComponent,
     MenuComponent,
-    ActionsComponent
+    ActionsComponent,
+    ExtraLayoutComponent
   ]
 })
 export class LayoutsModule { }
