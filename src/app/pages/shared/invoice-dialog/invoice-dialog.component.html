@@ -3,7 +3,7 @@
     [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
 </dx-load-panel>
 <div id="invoice" *ngIf="client">
-    <app-timeline id="invoiceTimeline" [data]="audits"></app-timeline>
+    <!-- <app-timeline id="invoiceTimeline" [data]="audits"></app-timeline> -->
     <div class="row" *ngIf="errorMessage">
         <div class="col col-sm-6 col-md-8 col-lg-12">
             <tc-alert [removable]="true" [view]="'error'">
@@ -51,8 +51,8 @@
                                     <div class="col-md-3">
                                         <table class="minimalistBlack">
                                             <tr>
-                                                <th style="width:100px"></th>
-                                                <th style="width:150px"></th>
+                                                <th class="col1"></th>
+                                                <th class="col2"></th>
                                             </tr>
                                             <tbody>
                                                 <tr>

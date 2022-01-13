@@ -1,0 +1,250 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#dashboard-sales' }"
+          [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+          [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div class="container-fluid">
+          <div class="box" id="filtersRow">
+                    <div class="field-lable">Start Date</div>
+                    <dx-date-box width="200" height="40" [(value)]="startDate" type="date">
+                    </dx-date-box>
+                    <dx-button class="filterButton" icon="fa fa-refresh" stylingMode="contained"
+                              (onClick)="refreshReceivablesData()">
+                    </dx-button>
+          </div>
+          <div class="row">
+                    <div class="col-md-3">
+                              <tc-card [title]="'Yearly Receivables'" [padding]="2">
+                                        <dx-chart id="yearlychart" [dataSource]="yearlySummary"
+                                                  (onPointClick)="yearClicked($event)">
+                                                  <dxo-size [height]="200"></dxo-size>
+                                                  <dxo-legend [visible]="false"></dxo-legend>
+                                                  <dxi-series valueField="balance" name="Balance($)" color="#000080">
+                                                            <dxo-label [visible]="true" position="outside">
+                                                                      <dxo-format type="thousands" [precision]="2">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxo-common-series-settings argumentField="year" type="bar">
+                                                  </dxo-common-series-settings>
+                                                  <dxo-argument-axis>
+                                                            <dxo-label>
+                                                                      <dxo-format type="decimal"> </dxo-format>
+                                                                      <dxo-font weight="600"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxo-argument-axis>
+                                        </dx-chart>
+                              </tc-card>
+                    </div>
+                    <div class="col-md-9">
+                              <tc-card [title]="'Monthly Receivables'" [padding]="2">
+                                        <dx-chart id="monthlychart" [dataSource]="MonthlySummary"
+                                                  resolveLabelOverlapping="shift" [customizeLabel]="customizeLabel"
+                                                  (onPointClick)="monthClicked($event)">
+                                                  <dxo-size [height]="200"></dxo-size>
+                                                  <dxo-legend [visible]="false"></dxo-legend>
+                                                  <dxo-argument-axis>
+                                                            <dxo-label>
+                                                                      <dxo-font weight="600"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxo-argument-axis>
+                                                  <dxi-series type="spline" valueField="originalBalance"
+                                                            name="Orig. Bal($)" color="#BD2046">
+                                                            <dxo-label [visible]="true" position="outside">
+                                                                      <dxo-format type="thousands" [precision]="0">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxi-series valueField="currentBalance" name="Balance($)"
+                                                            color="#000080">
+                                                            <dxo-label [visible]="true" position="inside">
+                                                                      <dxo-format type="thousands" [precision]="0">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxo-common-series-settings argumentField="month" type="bar">
+                                                  </dxo-common-series-settings>
+
+                                                  <!-- <dxo-tooltip [enabled]="true" [shared]="true">
+                                                            <dxo-format type="largeNumber" [precision]="1">
+                                                            </dxo-format>
+                                                  </dxo-tooltip> -->
+                                        </dx-chart>
+                              </tc-card>
+                    </div>
+          </div>
+          <div class="row">
+                    <div class="col-md-3">
+                              <tc-card [title]="gridCaption" [padding]="2">
+
+                                        <dx-pivot-grid class="pivotGrid" id="sales" [allowSortingBySummary]="true"
+                                                  [allowSorting]="true" [allowFiltering]="true" [showBorders]="true"
+                                                  [dataSource]="recGridDataSource" [showRowTotals]="false"
+                                                  [showColumnGrandTotals]="true" [showColumnTotals]="false"
+                                                  [allowSortingBySummary]="true" [height]="pivotGridHeight"
+                                                  (onCellClick)="clientCellClicked($event)"
+                                                  (onCellPrepared)="onCellPrepared($event)">
+                                                  <dxo-export [enabled]="true"></dxo-export>
+                                                  <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true"
+                                                            [width]="300">
+                                                  </dxo-header-filter>
+                                                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                                  <dxo-field-panel [visible]="true"></dxo-field-panel>
+                                        </dx-pivot-grid>
+                              </tc-card>
+                    </div>
+                    <div class="col-md-9" *ngIf="accountId">
+                              <tc-card [title]="clientCaption" [padding]="2">
+                                        <div class="row">
+                                                  <div class="col-md-6">
+                                                            <dx-data-grid id="contactsGrid" class="gridContainer"
+                                                                      [dataSource]="clientContacts" [showBorders]="true"
+                                                                      [height]="250"
+                                                                      (onToolbarPreparing)="onContactsGridToolbarPreparing($event)">
+                                                                      <dxo-paging [pageSize]="5"></dxo-paging>
+                                                                      <dxo-pager [showPageSizeSelector]="true"
+                                                                                [allowedPageSizes]="[5, 10, 20]"
+                                                                                [showInfo]="true">
+                                                                      </dxo-pager>
+                                                                      <dxi-column dataField="fullName"> </dxi-column>
+                                                                      <dxi-column dataField="position" [width]="140">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="phone" [width]="140">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="email" [width]="140">
+                                                                      </dxi-column>
+                                                            </dx-data-grid>
+                                                            <dx-data-grid id="invoicesGrid"
+                                                                      [dataSource]="clientInvoices" [showBorders]="true"
+                                                                      class="gridContainer" [height]="gridHeight">
+                                                                      <dxo-paging [pageSize]="20"></dxo-paging>
+                                                                      <dxo-pager [showPageSizeSelector]="true"
+                                                                                [allowedPageSizes]="[5, 10, 20]"
+                                                                                [showInfo]="true">
+                                                                      </dxo-pager>
+                                                                      <dxo-group-panel [visible]="true">
+                                                                      </dxo-group-panel>
+                                                                      <dxi-column type="buttons"
+                                                                                [visible]="checkRole(48)">
+                                                                                <dxi-button hint="Edit" icon="edit"
+                                                                                          [onClick]="editInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Payment" icon="money"
+                                                                                          [onClick]="payInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Collections"
+                                                                                          icon="fa fa-thumbs-o-down"
+                                                                                          [onClick]="collectionsClick">
+                                                                                </dxi-button>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceType" caption="Type"
+                                                                                [groupIndex]="0"></dxi-column>
+                                                                      <dxi-column dataField="invoiceNumber"
+                                                                                caption="Number" alignment="center"
+                                                                                width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceDate" caption="Date"
+                                                                                dataType="date" sortOrder="desc"
+                                                                                alignment="center" format="dd-MMM-yyyy"
+                                                                                width="120">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="status" alignment="center"
+                                                                                caption="Status" width="140">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="billed" caption="Total ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="120">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2"> </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paid" caption="Paid ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="120">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2"> </dxo-format>
+                                                                      </dxi-column>
+                                                                      <!-- <dxi-column dataField="collections"
+                                                                                caption="Collections ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="90">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2"> </dxo-format>
+                                                                      </dxi-column> -->
+                                                                      <dxi-column dataField="balance"
+                                                                                caption="Balance ($)" dataType="number"
+                                                                                format="currency" alignment="right"
+                                                                                width="120">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2"> </dxo-format>
+                                                                      </dxi-column>
+                                                            </dx-data-grid>
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                            <dx-data-grid id="contactsGrid" [dataSource]="clientNotes"
+                                                                      class="gridContainer" [showBorders]="true"
+                                                                      [height]="250"
+                                                                      (onToolbarPreparing)="onNotesGridToolbarPreparing($event)">
+
+                                                                      <dxo-paging [pageSize]="5"></dxo-paging>
+                                                                      <dxo-pager [showPageSizeSelector]="true"
+                                                                                [allowedPageSizes]="[5, 10, 20]"
+                                                                                [showInfo]="true">
+                                                                      </dxo-pager>
+                                                                      <dxi-column dataField="loggedTime"
+                                                                                dataType="datetime" alignment="center"
+                                                                                caption="Logged Date" [width]="150"
+                                                                                [allowEditing]="false">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="loggedByUser"
+                                                                                caption="Logged By" [width]="80"
+                                                                                [allowEditing]="false">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="note"
+                                                                                cellTemplate="cellTemplate"
+                                                                                caption="Note">
+                                                                      </dxi-column>
+                                                                      <div *dxTemplate="let data of 'cellTemplate'">
+                                                                                <div [innerHTML]="data.value"></div>
+                                                                      </div>
+                                                            </dx-data-grid>
+                                                            <dx-data-grid id="paymentsGrid"
+                                                                      [dataSource]="clientPayments" [showBorders]="true"
+                                                                      class="gridContainer" [height]="gridHeight"
+                                                                      (onToolbarPreparing)="onPaymentsGridToolbarPreparing($event)">
+                                                                      <dxo-paging [pageSize]="20"></dxo-paging>
+                                                                      <dxo-pager [showPageSizeSelector]="true"
+                                                                                [allowedPageSizes]="[5, 10, 20]"
+                                                                                [showInfo]="true">
+                                                                      </dxo-pager>
+                                                                      <dxi-column dataField="paymentDate"
+                                                                                caption="Payment Date" alignment="left"
+                                                                                width="120" dataType="date">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentType"
+                                                                                caption="Payment Type"
+                                                                                alignment="center" width="150">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="loggedBy"
+                                                                                caption="Logged By" alignment="center"
+                                                                                width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentAmount"
+                                                                                caption="Payment Amount"
+                                                                                alignment="right" width="120"
+                                                                                dataType="number" format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2"> </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentNote" caption="Note"
+                                                                                alignment="left">
+                                                                      </dxi-column>
+                                                            </dx-data-grid>
+                                                  </div>
+                                        </div>
+                              </tc-card>
+                    </div>
+          </div>
+</div>

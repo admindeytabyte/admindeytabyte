@@ -1,0 +1,162 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#dashboard-sales' }"
+    [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div class="container-fluid">
+    <div class="box" id="filtersRow">
+        <div class="field-lable">Snapshot</div>
+        <dx-check-box class="filter-check-box" (onValueChanged)="refreshSalesData()" [(value)]="snapShot">
+        </dx-check-box>
+        <div class="field-lable">Client Type</div>
+        <dx-select-box width="150" height="40" [(ngModel)]="clientFilterType" [dataSource]="clientFilterTypes"
+            displayExpr="filterType" [searchEnabled]="true" [showClearButton]=true placeholder="Select Client Type...">
+        </dx-select-box>
+        <div class="field-lable">Start Date</div>
+        <dx-date-box width="200" height="40" [(value)]="startDate" type="date">
+        </dx-date-box>
+        <div class="field-lable">End Date</div>
+        <dx-date-box width="200" [(value)]="endDate" type="date">
+        </dx-date-box>
+        <div class="field-lable">Month to Compare</div>
+        <dx-number-box [width]="100" id="monthNumSelect" [value]="15" [min]="1" [max]="12" [(value)]="monthToCompare"
+            (onValueChanged)="CompareMonths()" [showSpinButtons]="true">
+        </dx-number-box>
+        <dx-button class="filter-button" icon="fa fa-refresh" stylingMode="contained" (onClick)="refreshSalesData()">
+        </dx-button>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <tc-card [title]="'Yearly Sales'" [padding]="2">
+                <dx-chart id="yearlychart" [dataSource]="yearlySummary">
+                    <dxo-size [height]="200"></dxo-size>
+                    <dxo-legend [visible]="false"></dxo-legend>
+                    <dxi-series valueField="amount" name="Sales($)" color="#000080">
+                        <dxo-label [visible]="true" position="outside">
+                            <dxo-format type="millions" [precision]="2">
+                            </dxo-format>
+                        </dxo-label>
+                    </dxi-series>
+                    <dxi-series type="spline" valueField="margin" name="Margin($)">
+                        <dxo-label [visible]="false"></dxo-label>
+                    </dxi-series>
+                    <dxo-common-series-settings argumentField="year" type="bar">
+                    </dxo-common-series-settings>
+                    <dxo-argument-axis>
+                        <dxo-label>
+                            <dxo-format type="decimal"></dxo-format>
+                        </dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-tooltip [enabled]="true" [shared]="true">
+                        <dxo-format type="largeNumber" [precision]="1"></dxo-format>
+                    </dxo-tooltip>
+                </dx-chart>
+            </tc-card>
+        </div>
+        <div class="col-md-9">
+            <tc-card [title]="'Monthly Sales'" [padding]="2">
+                <dx-chart id="monthlychart" [dataSource]="MonthlySummary"
+                    (onPointClick)="monthlychartPointClicked($event)" resolveLabelOverlapping="shift">
+                    <dxo-size [height]="200"></dxo-size>
+                    <dxo-legend [visible]="false"></dxo-legend>
+                    <dxi-series valueField="amount" name="Sales($)">
+                        <dxo-label [visible]="true" position="outside">
+                            <dxo-format type="thousands" [precision]="0">
+                            </dxo-format>
+                        </dxo-label>
+                    </dxi-series>
+                    <dxi-series type="spline" valueField="margin" name="Margin($)">
+                        <dxo-label [visible]="false"></dxo-label>
+                    </dxi-series>
+                    <dxo-common-series-settings argumentField="month" type="bar">
+                    </dxo-common-series-settings>
+                    <dxo-argument-axis>
+                        <dxo-label>
+                            <dxo-format type="decimal"></dxo-format>
+                        </dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-tooltip [enabled]="true" [shared]="true">
+                        <dxo-format type="largeNumber" [precision]="1"></dxo-format>
+                    </dxo-tooltip>
+                </dx-chart>
+            </tc-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <tc-card [title]="'Category'" [padding]="2">
+                <dx-data-grid class="pivotGrid" [dataSource]="categorySummary" [showBorders]="true"
+                    [height]="gridHeight" keyExpr="id" [remoteOperations]="false" [allowColumnReordering]="true"
+                    [rowAlternationEnabled]="true" [showBorders]="true" [focusedRowEnabled]="true"
+                    [masterDetail]="{ enabled: true, template: 'detail' }" (onFocusedRowChanged)="focusChanged($event)"
+                    (onCellPrepared)="onCellPrepared($event)">
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-paging [enabled]="false"></dxo-paging>
+                    <dxi-column dataField="category" caption="Category" alignment="left"></dxi-column>
+                    <dxi-column dataField="month1" [allowFiltering]="false" width="80" caption="{{month1}}"
+                        alignment="right" dataType="number" format="currency">
+                        <dxo-format type="fixedPoint" [precision]="2">
+                        </dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="month2" caption="{{month2}}" [allowFiltering]="false" width="100"
+                        alignment="right" dataType="number" format="currency">
+                        <dxo-format type="fixedPoint" [precision]="2">
+                        </dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="change" caption="Change ($)" [allowFiltering]="false" sortOrder="asc"
+                        width="100" alignment="right" dataType="number" format="currency">
+                        <dxo-format type="fixedPoint" [precision]="2">
+                        </dxo-format>
+                    </dxi-column>
+                    <div *dxTemplate="let dtl of 'detail'">
+                        <dx-data-grid [dataSource]="clientSummary" [showBorders]="true"
+                            class="gridContainer invoiceGrid">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxo-selection mode="single"></dxo-selection>
+                            <dxo-paging [enabled]="false"></dxo-paging>
+                            <dxi-column dataField="clientName" caption="Client" alignment="left"></dxi-column>
+                            <dxi-column dataField="month1" [allowFiltering]="false" width="80" caption="{{month1}}"
+                                alignment="right" dataType="number" format="currency">
+                                <dxo-format type="fixedPoint" [precision]="2">
+                                </dxo-format>
+                            </dxi-column>
+                            <dxi-column dataField="month2" caption="{{month2}}" [allowFiltering]="false" width="100"
+                                alignment="right" dataType="number" format="currency">
+                                <dxo-format type="fixedPoint" [precision]="2">
+                                </dxo-format>
+                            </dxi-column>
+                            <dxi-column dataField="change" caption="Change ($)" [allowFiltering]="false" sortOrder="asc"
+                                width="100" alignment="right" dataType="number" format="currency">
+                                <dxo-format type="fixedPoint" [precision]="2">
+                                </dxo-format>
+                            </dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dx-data-grid>
+            </tc-card>
+
+        </div>
+        <div class="col-md-9">
+            <dx-pivot-grid class="pivotGrid" id="sales" [allowSortingBySummary]="true" [allowSorting]="true"
+                [allowFiltering]="true" [showBorders]="true" [dataSource]="salesGridDataSource" [showRowTotals]="false"
+                [showColumnGrandTotals]="true" [showColumnTotals]="false" [allowSortingBySummary]="true"
+                [height]="pivotGridHeight" (onCellPrepared)="onPivotCellPrepared($event)">
+                <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true" [width]="300">
+                </dxo-header-filter>
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-field-panel [visible]="false"></dxo-field-panel>
+            </dx-pivot-grid>
+        </div>
+    </div>
+</div>
+
+
+<!-- <dx-form>
+            <dxi-item itemType="tabbed">
+                <dxi-tab title="Monthly Sales">
+                    
+                </dxi-tab>
+            </dxi-item>
+        </dx-form> -->

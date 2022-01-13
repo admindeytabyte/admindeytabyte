@@ -1,0 +1,424 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Client Payments</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<div class="col-md-12" id="accountBalance" *ngIf="accountId>0">
+          <app-account-balance (selectMonthEvent)="monthSelected($event)" [accountId]="accountId"></app-account-balance>
+</div>
+<div class="container-fluid">
+          <div class="row">
+                    <div class="col-md-7">
+                              <dx-form>
+                                        <dxi-item itemType="tabbed">
+                                                  <dxi-tab title="Pending Invoices">
+                                                            <div class="box" id="inputsBar">
+                                                                      <div class="field-lable">Invoices</div>
+                                                                      <dx-check-box id="invoiceFilter" class="checkBox"
+                                                                                [(ngModel)]="invoicesFilter"
+                                                                                (onValueChanged)="FilterChanged($event)">
+                                                                      </dx-check-box>
+                                                                      <div class="field-lable">Amount Available ($)
+                                                                      </div>
+                                                                      <dx-number-box width="150"
+                                                                                [disabled]="paymentsPending"
+                                                                                [(ngModel)]="AvailableAmount">
+                                                                      </dx-number-box>
+                                                                      <dx-button stylingMode="contained"
+                                                                                text="Calculate" type="default"
+                                                                                [width]="100" id="resetButton"
+                                                                                (onClick)="calculatePayments()">
+                                                                      </dx-button>
+                                                                      <dx-button stylingMode="contained" text="Reset"
+                                                                                type="default" [width]="100"
+                                                                                id="resetButton"
+                                                                                (onClick)="refreshInvoices()">
+                                                                      </dx-button>
+                                                            </div>
+                                                            <dx-data-grid [dataSource]="invoices" [showBorders]="true"
+                                                                      keyExpr="invoiceId" class="gridContainer"
+                                                                      height="700"
+                                                                      (onCellPrepared)="onCellPrepared($event)">
+                                                                      <dxo-scrolling mode=" infinite">
+                                                                      </dxo-scrolling>
+                                                                      <dxo-header-filter [visible]="true">
+                                                                      </dxo-header-filter>
+                                                                      <dxo-scrolling mode="infinite">
+                                                                      </dxo-scrolling>
+                                                                      <dxo-selection mode="single">
+                                                                      </dxo-selection>
+                                                                      <dxo-paging [enabled]="false">
+                                                                      </dxo-paging>
+                                                                      <dxi-column type="buttons" [width]="100"
+                                                                                [visible]="checkRole(48)">
+                                                                                <dxi-button hint="Edit" icon="edit"
+                                                                                          [onClick]="editInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Payment" icon="money"
+                                                                                          [onClick]="payInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Collections"
+                                                                                          icon="fa fa-thumbs-o-down"
+                                                                                          [onClick]="collectionsClick">
+                                                                                </dxi-button>
+                                                                      </dxi-column>
+                                                                      <!-- <dxi-column dataField="invoiceId"
+                                                                                alignment="center" width="120"
+                                                                                sortOrder="asc">
+                                                                      </dxi-column> -->
+                                                                      <dxi-column dataField="billingMonth"
+                                                                                caption="Month" dataType="date"
+                                                                                sortOrder="asc" alignment="center"
+                                                                                format="MMM-yyyy">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceDate" caption="Date"
+                                                                                dataType="date" sortOrder="asc"
+                                                                                alignment="center" format="dd-MMM-yyyy">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceType"
+                                                                                alignment="center" caption="Type"
+                                                                                width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="status" alignment="center"
+                                                                                caption="Status" [groupIndex]="0">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceNumber"
+                                                                                alignment="center" width="120">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="billed"
+                                                                                caption="Billed ($)" dataType="number"
+                                                                                format="currency" alignment="right"
+                                                                                width="90">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paid" caption="Payment ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="90">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <!-- <dxi-column dataField="collections"
+                                                                                caption="Collection ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column> -->
+                                                                      <dxi-column dataField="balance"
+                                                                                caption="Balance ($)" dataType="number"
+                                                                                format="currency" alignment="right"
+                                                                                width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="overDueDays"
+                                                                                caption="Days Left" dataType="number"
+                                                                                alignment="center" width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column [visible]="notCalculated"
+                                                                                dataField="isSelected" caption="Select"
+                                                                                [width]="100" dataType="boolean"
+                                                                                editCellTemplate="checkBoxTemplate">
+                                                                      </dxi-column>
+                                                                      <div *dxTemplate="let cell of 'checkBoxTemplate'">
+                                                                                <dx-check-box
+                                                                                          (onValueChanged)="selectionChanged(cell, $event)"
+                                                                                          [value]="cell.value == null ? undefined : cell.value">
+                                                                                </dx-check-box>
+                                                                      </div>
+                                                            </dx-data-grid>
+                                                  </dxi-tab>
+                                                  <dxi-tab title="Payments">
+                                                            <dx-data-grid [showBorders]="true"
+                                                                      class="invoiceGrid gridContainer"
+                                                                      [dataSource]="clientPayments" keyExpr="paymentId"
+                                                                      (onToolbarPreparing)="onPaymentGridToolbarPreparing($event)"
+                                                                      [showBorders]="true"
+                                                                      [masterDetail]="{ enabled: true, template: 'detail' }">
+                                                                      <dxo-selection mode="single"></dxo-selection>
+                                                                      <dxo-paging [pageSize]="20"></dxo-paging>
+                                                                      <dxo-pager [showPageSizeSelector]="true"
+                                                                                [allowedPageSizes]="[5, 10, 20]"
+                                                                                [showInfo]="true">
+                                                                      </dxo-pager>
+                                                                      <dxi-column dataField="paymentId" caption="Id"
+                                                                                alignment="center" width="80">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentDate"
+                                                                                caption="Payment Date"
+                                                                                alignment="center" width="150"
+                                                                                dataType="date">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentType"
+                                                                                caption="Payment Type"
+                                                                                alignment="center" width="150">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentAmount"
+                                                                                caption="Payment Amount"
+                                                                                alignment="center" width="120"
+                                                                                dataType="number" format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="loggedBy"
+                                                                                caption="Logged By" alignment="center"
+                                                                                width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paymentNote" caption="Note"
+                                                                                alignment="center">
+                                                                      </dxi-column>
+                                                                      <dxi-column [visible]="checkRole(48)"
+                                                                                type="buttons" [width]="100">
+                                                                                <dxi-button hint="Reverse"
+                                                                                          text="Reverse"
+                                                                                          [onClick]="clientPaymentDeleted">
+                                                                                </dxi-button>
+                                                                      </dxi-column>
+                                                                      <div *dxTemplate="let map of 'detail'">
+                                                                                <dx-data-grid
+                                                                                          [dataSource]="getDetails(map)"
+                                                                                          [showBorders]="true"
+                                                                                          keyExpr="paymentsMapId">
+                                                                                          <dxo-selection mode="single">
+                                                                                          </dxo-selection>
+                                                                                          <dxi-column
+                                                                                                    dataField="paymentsMapId"
+                                                                                                    caption="Id"
+                                                                                                    [width]="100"
+                                                                                                    sortOrder="asc">
+                                                                                          </dxi-column>
+                                                                                          <dxi-column
+                                                                                                    dataField="invoiceNumber"
+                                                                                                    caption="Number"
+                                                                                                    [width]="100">
+                                                                                          </dxi-column>
+                                                                                          <dxi-column
+                                                                                                    dataField="invoiceType"
+                                                                                                    caption="Type"
+                                                                                                    [width]="100"
+                                                                                                    alignment="center">
+                                                                                          </dxi-column>
+                                                                                          <dxi-column
+                                                                                                    dataField="invoiceDate"
+                                                                                                    caption="Invoice Date"
+                                                                                                    [width]="150"
+                                                                                                    dataType="date"
+                                                                                                    alignment="center">
+                                                                                          </dxi-column>
+                                                                                          <dxi-column
+                                                                                                    dataField="paymentAmount"
+                                                                                                    caption="Payment ($)"
+                                                                                                    [width]="150"
+                                                                                                    dataType="number"
+                                                                                                    format="currency">
+                                                                                                    <dxo-format
+                                                                                                              type="fixedPoint"
+                                                                                                              [precision]="2">
+                                                                                                    </dxo-format>
+                                                                                          </dxi-column>
+                                                                                </dx-data-grid>
+                                                                      </div>
+                                                            </dx-data-grid>
+                                                  </dxi-tab>
+                                                  <dxi-tab title="Collections">
+                                                            <dx-data-grid [dataSource]="collectioninvoices"
+                                                                      [showBorders]="true" keyExpr="invoiceId"
+                                                                      class="gridContainer" height="700"
+                                                                      (onCellPrepared)="onCellPrepared($event)">
+                                                                      <dxo-scrolling mode=" infinite">
+                                                                      </dxo-scrolling>
+                                                                      <dxo-header-filter [visible]="true">
+                                                                      </dxo-header-filter>
+                                                                      <dxo-scrolling mode="infinite">
+                                                                      </dxo-scrolling>
+                                                                      <dxo-selection mode="single">
+                                                                      </dxo-selection>
+                                                                      <dxo-paging [enabled]="false">
+                                                                      </dxo-paging>
+                                                                      <dxi-column type="buttons" [width]="100"
+                                                                                [visible]="checkRole(48)">
+                                                                                <dxi-button hint="Edit" icon="edit"
+                                                                                          [onClick]="editInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Payment" icon="money"
+                                                                                          [onClick]="payInvoiceClick">
+                                                                                </dxi-button>
+                                                                                <dxi-button hint="Reverse Collection"
+                                                                                          icon="undo"
+                                                                                          [onClick]="reversecollectionsClick">
+                                                                                </dxi-button>
+                                                                      </dxi-column>
+                                                                      <!-- <dxi-column dataField="invoiceId"
+                                                                      alignment="center" width="120"
+                                                                      sortOrder="asc">
+                                                            </dxi-column> -->
+                                                                      <dxi-column dataField="billingMonth"
+                                                                                caption="Month" dataType="date"
+                                                                                sortOrder="asc" alignment="center"
+                                                                                format="MMM-yyyy">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceDate" caption="Date"
+                                                                                dataType="date" sortOrder="asc"
+                                                                                alignment="center" format="dd-MMM-yyyy">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceType"
+                                                                                alignment="center" caption="Type"
+                                                                                width="100">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="status" alignment="center"
+                                                                                caption="Status" [groupIndex]="0">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="invoiceNumber"
+                                                                                alignment="center" width="120">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="billed"
+                                                                                caption="Billed ($)" dataType="number"
+                                                                                format="currency" alignment="right"
+                                                                                width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paid" caption="Payment ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="collections"
+                                                                                caption="Collection ($)"
+                                                                                dataType="number" format="currency"
+                                                                                alignment="right" width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="balance"
+                                                                                caption="Balance ($)" dataType="number"
+                                                                                format="currency" alignment="right"
+                                                                                width="100">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column [visible]="notCalculated"
+                                                                                dataField="isSelected" caption="Select"
+                                                                                [width]="100" dataType="boolean"
+                                                                                editCellTemplate="checkBoxTemplate">
+                                                                      </dxi-column>
+                                                                      <div *dxTemplate="let cell of 'checkBoxTemplate'">
+                                                                                <dx-check-box
+                                                                                          (onValueChanged)="selectionChanged(cell, $event)"
+                                                                                          [value]="cell.value == null ? undefined : cell.value">
+                                                                                </dx-check-box>
+                                                                      </div>
+                                                            </dx-data-grid>
+                                                  </dxi-tab>
+                                        </dxi-item>
+                              </dx-form>
+                    </div>
+                    <div class="col-md-5">
+                              <tc-card [title]="'Selected Invoices'" [padding]="2" height=300>
+                                        <dx-data-grid [dataSource]="paymentInvoices" [showBorders]="true"
+                                                  keyExpr="invoiceId" height=300>
+                                                  <dxo-selection mode="single">
+                                                  </dxo-selection>
+                                                  <dxi-column dataField="invoiceId" caption="Id" [width]="60"
+                                                            sortOrder="asc" [visible]="false" [allowEditing]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoiceType" caption="Type" [width]="80"
+                                                            alignment="center" [allowEditing]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoiceDate" caption="Date" [width]="120"
+                                                            dataType="date" alignment="center" [allowEditing]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoiceNumber" caption="Number" [width]="80"
+                                                            [allowEditing]="false">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="billed" caption="Billed ($)" dataType="number"
+                                                            format="currency" alignment="right" width="120"
+                                                            [allowEditing]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="appliedPayment" caption="Payment ($)"
+                                                            dataType="number" format="currency" alignment="right"
+                                                            width="120" [allowEditing]="true">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="calcBalance" caption="Balance ($)" width="120"
+                                                            dataType="number" format="currency" alignment="right"
+                                                            [allowEditing]="false">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+
+                                                  </dxi-column>
+                                                  <dxi-column [allowEditing]="false">
+                                                  </dxi-column>
+                                        </dx-data-grid>
+                              </tc-card>
+                              <tc-card [title]="'Payment'" [padding]="2">
+                                        <div class="form">
+                                                  <div class="dx-fieldset">
+                                                            <div class="dx-field">
+                                                                      <div class="dx-field-label">Payment Date</div>
+                                                                      <div class="dx-field-value">
+                                                                                <dx-date-box [(value)]="paymentDate"
+                                                                                          type="date">
+                                                                                </dx-date-box>
+                                                                      </div>
+                                                            </div>
+                                                            <div class="dx-field">
+                                                                      <div class="dx-field-label">Payment Type</div>
+                                                                      <div class="dx-field-value">
+                                                                                <dx-select-box [items]="paymentTypes"
+                                                                                          placeholder="Choose Payment Type"
+                                                                                          displayExpr="paymentTypeDesc"
+                                                                                          valueExpr="paymentTypeId"
+                                                                                          [showClearButton]="true"
+                                                                                          [(value)]="paymentType">
+                                                                                </dx-select-box>
+                                                                      </div>
+                                                            </div>
+                                                            <div class="dx-field">
+                                                                      <div class="dx-field-label">Payment Amount</div>
+                                                                      <div class="dx-field-value">
+                                                                                <dx-number-box [(value)]="paymentTotal"
+                                                                                          format="$ #,##0.##;($ #,##0.##)">
+                                                                                </dx-number-box>
+                                                                      </div>
+                                                            </div>
+                                                            <div class="dx-field">
+                                                                      <div class="dx-field-label">Note</div>
+                                                                      <div class="dx-field-value">
+                                                                                <dx-text-area [height]="100"
+                                                                                          [(value)]="paymentNote">
+                                                                                </dx-text-area>
+                                                                      </div>
+                                                            </div>
+                                                            <div class="button-right">
+                                                                      <dx-button stylingMode="contained"
+                                                                                text="Save Payment" type="default"
+                                                                                [width]="150"
+                                                                                (onClick)="paymentClick($event)">
+                                                                      </dx-button>
+                                                            </div>
+
+                                                  </div>
+                                        </div>
+                              </tc-card>
+                    </div>
+          </div>
+</div>

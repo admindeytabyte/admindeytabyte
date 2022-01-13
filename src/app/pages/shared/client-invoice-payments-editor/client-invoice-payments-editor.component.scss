@@ -1,0 +1,15 @@
+::ng-deep #inputsBar {
+          border: navy;
+          border-style: double;
+          margin: 0px -15px 5px -15px;
+          background-color: navy;
+          min-height: 40px;
+}
+
+::ng-deep #invoiceFilter {
+          margin: 10px 50px 0px 0px;
+}
+
+::ng-deep #resetButton {
+          margin: 0px 0px 0px 10px;
+}

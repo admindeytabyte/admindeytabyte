@@ -7,9 +7,9 @@
 @import './components/material-components';
 @import './components/bootstrap';
 
-// body {
-//     font-size: calc((.4em + 1vmin) + (.4em + 1vmax));
-// }
+body {
+    font-size: calc((.4em + 1vmin) + (.4em + 1vmax));
+}
 
 .dx-popup-wrapper {
     z-index: 11000 !important;
@@ -368,3 +368,6 @@
 .right {
     text-align: right;
 }
+
+.text-right {
+    text-align: right !important; }

@@ -1,0 +1,45 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Client Address Editor</p>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<dx-data-grid [showBorders]="true" class="invoiceGrid gridContainer" [dataSource]="clientAddress" keyExpr="addressId"
+    [showBorders]="true" (onRowUpdated)="clientAddressUpdated($event)" (onRowRemoved)="clientAddressDeleted($event)"
+    (onRowInserted)="clientAddressAdded($event)">
+    <dxo-paging [enabled]="false"></dxo-paging>
+    <dxo-editing mode="batch" [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"
+        [useIcons]="true">
+    </dxo-editing>
+    <!-- <dxi-column dataField="addressId" caption="Id" [width]="80" [allowEditing]="false">
+    </dxi-column> -->
+    <dxi-column dataField="addressTypeId" caption="Type" [width]="100">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+        <dxo-lookup [dataSource]="addressTypes" displayExpr="addressTypeText" valueExpr="addressTypeId">
+        </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="addressTag" caption="Tag" [width]="120">
+    </dxi-column>
+    <dxi-column dataField="unit" caption="Unit" [width]="100">
+    </dxi-column>
+    <dxi-column dataField="address" caption="Address">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="postalCode" caption="Postal Code" [width]="100" allowEditing="false">
+    </dxi-column>
+    <dxi-column dataField="cityId" caption="City" [width]="120" allowEditing="false">
+        <dxo-lookup [dataSource]="cities" displayExpr="cityName" valueExpr="cityId">
+        </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="provinceId" caption="Province" [width]="120" allowEditing="false">
+        <dxo-lookup [dataSource]="provinces" displayExpr="provinceName" valueExpr="provinceId">
+        </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="countryId" caption="Country" [width]="100" allowEditing="false">
+        <dxo-lookup [dataSource]="countries" displayExpr="country1" valueExpr="countryId">
+        </dxo-lookup>
+    </dxi-column>
+</dx-data-grid>

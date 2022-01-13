@@ -1,0 +1,33 @@
+<!-- <div class="row">
+    <button class="close-mat-button mat-button" (click)="CloseClick()">X</button>
+</div> -->
+
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<div *ngIf="clientContactsEditor">
+    <app-client-contact-editor [accountId]="client.accountId"></app-client-contact-editor>
+</div>
+<div *ngIf="clientAddressEditor">
+    <app-clients-address-editor [accountId]="client.accountId"></app-clients-address-editor>
+</div>
+<div *ngIf="clientInvoicePaymentsEditor">
+    <app-client-invoice-payments-editor [accountId]="client.accountId"></app-client-invoice-payments-editor>
+</div>
+<div *ngIf="clientInvoicesEditor">
+    <app-client-invoices-dialog [accountId]="client.accountId"></app-client-invoices-dialog>
+</div>
+<!-- <div *ngIf="clientDiscountsEditor">
+    <app-client-discounts-dialog [accountId]="client.accountId" [isJobber]="client.isaJobber">
+    </app-client-discounts-dialog>
+</div> -->
+<div *ngIf="clientEstimatePaymentsEditor">
+    <app-client-invoice-payments-editor [accountId]="client.accountId"></app-client-invoice-payments-editor>
+</div>
+<div *ngIf="clientNotesEditor">
+    <app-notes-dialog [accountId]="client.accountId"></app-notes-dialog>
+</div>

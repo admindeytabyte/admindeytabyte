@@ -48,7 +48,6 @@ import { NgxPrintModule } from 'ngx-print';
 import { ToastrModule } from 'ngx-toastr';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TestComponent } from './test/test.component';
 import { InvoiceMiniViewComponent } from './shared/invoice-mini-view/invoice-mini-view.component';
 import { ProductSaleDialogComponent } from './shared/product-sale-dialog/product-sale-dialog.component';
 import { InvoiceDialogComponent } from './shared/invoice-dialog/invoice-dialog.component';
@@ -70,13 +69,18 @@ import { PackingSlipDialogComponent } from './shared/packing-slip-dialog/packing
 import { MessageDialogComponent } from './shared/message-dialog/message-dialog.component';
 import { InvoiceLineEditorComponent } from './shared/invoice-line-editor/invoice-line-editor.component';
 import { PaymentDialogComponent } from './shared/payment-dialog/payment-dialog.component';
-import { TimelineComponent } from './shared/timeline/timeline.component';
 import { AccountBalanceComponent } from './shared/account-balance/account-balance.component';
 import { QuantityBreaksComponent } from './shared/quantity-breaks/quantity-breaks.component';
 import { ProductSlabEditorComponent } from './shared/product-slab-editor/product-slab-editor.component';
 import { ProductLinesEditorComponent } from './shared/product-lines-editor/product-lines-editor.component';
 import { ProductImagesEditorComponent } from './shared/product-images-editor/product-images-editor.component';
 import { ProductRelatedEditorComponent } from './shared/product-related-editor/product-related-editor.component';
+import { DashboardReceivablesComponent } from './dashboards/dashboard-receivables/dashboard-receivables.component';
+import { CommonEditorDialogComponent } from './shared/common-editor-dialog/common-editor-dialog.component';
+import { ClientsAddressEditorComponent } from './shared/clients-address-editor/clients-address-editor.component';
+import { ClientInvoicePaymentsEditorComponent } from './shared/client-invoice-payments-editor/client-invoice-payments-editor.component';
+import { ClientInvoicesDialogComponent } from './shared/client-invoices-dialog/client-invoices-dialog.component';
+import { DashboardSalesComponent } from './dashboards/dashboard-sales/dashboard-sales.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -129,7 +133,6 @@ import { ProductRelatedEditorComponent } from './shared/product-related-editor/p
   declarations: [
     DashboardHomeComponent,
     InvoiceMiniViewComponent,
-    TestComponent,
     ProductSaleDialogComponent,
     InvoiceDialogComponent,
     ProductBatchDialogComponent,
@@ -150,13 +153,18 @@ import { ProductRelatedEditorComponent } from './shared/product-related-editor/p
     MessageDialogComponent,
     InvoiceLineEditorComponent,
     PaymentDialogComponent,
-    TimelineComponent,
     AccountBalanceComponent,
     QuantityBreaksComponent ,
     ProductSlabEditorComponent,
     ProductLinesEditorComponent,
     ProductImagesEditorComponent,
-    ProductRelatedEditorComponent
+    ProductRelatedEditorComponent,
+    DashboardReceivablesComponent,
+    CommonEditorDialogComponent,
+    ClientsAddressEditorComponent,
+    ClientInvoicePaymentsEditorComponent,
+    ClientInvoicesDialogComponent,
+    DashboardSalesComponent
   ],
   exports: [],
   entryComponents: [
