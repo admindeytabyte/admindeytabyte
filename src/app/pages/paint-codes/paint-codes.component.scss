@@ -1,0 +1,20 @@
+#layerSelector {
+          margin: 0px 100px 10px 0px;
+}
+
+.formulaButton {
+          font-weight: bold;
+          margin: 2px;
+}
+
+::ng-deep #SearchBar {
+          border: navy;
+          border-style: double;
+          margin: 0px 0px 5px 0px;
+          background-color: navy;
+}
+
+::ng-deep .searchControl {
+          width: 100%;
+          padding: 1px;
+}

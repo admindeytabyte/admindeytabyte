@@ -1,0 +1,16 @@
+::ng-deep #filterBar {
+    border: navy;
+    border-style: double;
+    background-color: navy;
+    width: 100%;
+}
+
+::ng-deep .filterLabel {
+    color: white;
+    font-weight: bold;
+    margin: 5px;
+}
+
+::ng-deep .searchButton{
+    margin: 2px;
+  }

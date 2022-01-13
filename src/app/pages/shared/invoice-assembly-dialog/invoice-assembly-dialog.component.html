@@ -1,0 +1,124 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Invoice Assembly</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<div class="row col-md-12" id="invoiceSummary" *ngIf="data.invoice">
+          <div class="col-md-3">
+                    <p class='client-name'>{{data.invoice.invoiceText}}</p>
+          </div>
+          <div class="col-md-6">
+                    <p class='invoice-number'>{{data.invoice.clientName}}</p>
+          </div>
+          <div class="col-md-3">
+                    <p class="assembly">Assembly: {{assemblyPercComplete}} % </p>
+                    <!-- <dx-button id="dispatchButton" stylingMode="contained" icon="fa fa-truck" hint="Dispatch"
+                              type="default" [width]="60" (onClick)="setDispatch($event)">
+                    </dx-button> -->
+          </div>
+</div>
+<div>
+          <div id="productDetails" *ngIf="product" class="col-md-12">
+                    <div class="content">
+                              <div class="sku">
+                                        <div class="product-sku">Line - {{product.line}} - SKU #{{ product.sku }}</div>
+                              </div>
+                              <div class="imageContainer">
+                                        <img class="product-img" src="{{product.productImage}}" />
+                              </div>
+
+                              <div class="description">
+                                        <span>{{product.description}}</span>
+                              </div>
+                              <div class="row">
+                                        <div class="col-md-6 location">Location:
+                                                  {{product.location}}</div>
+                                        <div class="col-md-6 stockQty">Stock Qty:
+                                                  {{product.inStockQty}}
+                                        </div>
+                              </div>
+                    </div>
+          </div>
+          <tc-card [title]="'Supplies'" id="assemblyCard" [padding]="2" *ngIf="supplies.length > 0">
+                    <dx-data-grid [dataSource]="supplies" [showBorders]="true" class="gridContainer dialogGrid"
+                              [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="invoiceDtlid"
+                              [focusedRowEnabled]="true" (onFocusedRowChanged)="productChanged($event)"
+                              [(focusedRowKey)]="focusedRowKey" (onRowUpdated)="quantityUpdated($event)"
+                              (onCellPrepared)="onCellPrepared($event)">
+                              <dxo-editing mode="cell" [allowUpdating]="true" [selectTextOnEditStart]="true"
+                                        startEditAction="click">
+                              </dxo-editing>
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-paging [enabled]="false"></dxo-paging>
+                              <dxi-column dataField="isAssembled" caption="Assembled" [allowEditing]="false"
+                                        [groupIndex]="0">
+                              </dxi-column>
+                              <dxi-column dataField="line" alignment="center" caption="Line" [allowEditing]="false"
+                                        width="100">
+                              </dxi-column>
+                              <dxi-column dataField="sku" alignment="center" caption="Sku" [allowEditing]="false"
+                                        width="100">
+                              </dxi-column>
+                              <dxi-column dataField="description" alignment="left" caption="Description"
+                                        [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column caption="Order Qty" dataType="number" dataField="orderQty" alignment="center"
+                                        [width]="60" [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column caption="Dispatch Qty" dataType="number" dataField="dispatchQty"
+                                        alignment="center" [width]="80">
+                              </dxi-column>
+                              <dxi-column caption="Remaining Qty" dataType="number" dataField="remainingQty"
+                                        alignment="center" [width]="100" [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column type="buttons" [width]="50">
+                                        <dxi-button hint="Fill Quantity" icon="cart" [onClick]="quantityUpdated">
+                                        </dxi-button>
+                              </dxi-column>
+                              <dxi-column type="buttons" [width]="50">
+                                        <dxi-button hint="Back Order" icon="revert" [onClick]="backOrdered">
+                                        </dxi-button>
+                              </dxi-column>
+                              <!-- <dxi-column dataField="isAssembled" caption=" " [width]="40"
+                                        cellTemplate="statusCellTemplate">
+                              </dxi-column>
+                              <div *dxTemplate="let d of 'statusCellTemplate'">
+                                        <p class="status" [style.background-color]="d.value ? 'green' : 'red'">
+                                        </p>
+                              </div> -->
+                    </dx-data-grid>
+          </tc-card>
+          <tc-card [title]="'Paints'" id="assemblyCard" [padding]="2" *ngIf="paints.length > 0">
+                    <dx-data-grid [dataSource]="paints" [showBorders]="true" class="invoiceGrid"
+                              [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="invoiceDtlid"
+                              [focusedRowEnabled]="true">
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-paging [enabled]="false"></dxo-paging>
+                              <dxi-column dataField="line" alignment="center" caption="Line" [allowEditing]="false"
+                                        width="100">
+                              </dxi-column>
+                              <dxi-column dataField="sku" alignment="center" caption="Sku" [allowEditing]="false"
+                                        width="100">
+                              </dxi-column>
+                              <dxi-column dataField="description" caption="Description" [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column caption="Paint Qty" dataField="unit" alignment="center" [width]="80"
+                                        [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column caption="Ready?" dataField="isPaintMixed" alignment="center" [width]="60"
+                                        [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column type="buttons" [width]="80">
+                                        <dxi-button hint="Confirm" icon="check" [onClick]="confirmMixed">
+                                        </dxi-button>
+                              </dxi-column>
+                    </dx-data-grid>
+          </tc-card>
+
+</div>

@@ -1,0 +1,358 @@
+<div class="container-fluid">
+  <div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+      <tc-alert [removable]="true" [view]="'error'">
+        {{ errorMessage }}
+      </tc-alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <dx-form>
+        <dxi-item itemType="tabbed">
+          <dxi-tab title="Deliveries">
+            <dx-data-grid class="gridContainer" id="gridDispatchLogs" [dataSource]="dispatchLogs"
+              [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+              [showBorders]="true" height="300" (onToolbarPreparing)="onDispatchToolbarPreparing($event)"
+              (onRowRemoved)="dispatchLogDeleted($event)" keyExpr="id" (onRowUpdated)="dispatchLogUpdated($event)">
+              <dxo-editing [allowDeleting]="true" [useIcons]="true" mode="row" [allowUpdating]="true"
+                [(editRowKey)]="editRowKey">
+              </dxo-editing>
+              <dxo-load-panel
+        [enabled]="true">
+    </dxo-load-panel>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-scrolling mode="infinite"></dxo-scrolling>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+              <dxi-column dataField="id" caption="ID" width="80" [allowEditing]="false" [visible]="false">
+              </dxi-column>
+              <dxi-column dataField="dispatchId" caption="ID" width="80" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="dispatchDate" dataType="datetime" sortOrder="desc" alignment="center"
+                format="dd-MMM-yyyy HH:mm:ss" width="180" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="dispatchedBy" caption="Dispatched By" width="100" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="driverId" caption="Driver" [width]="120" alignment="center">
+                <dxo-lookup [dataSource]="drivers" displayExpr="driverName" valueExpr="driverId">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="shippingZoneId" caption="Zone" width="100" alignment="center">
+                <dxo-lookup [dataSource]="shippingZones" displayExpr="zoneDesc" valueExpr="shippingZoneId">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="invoiceCount" caption="# Invoices" width="80" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="dispatchNotes" caption="Note" alignment="center">
+              </dxi-column>
+              <dxi-column dataField="dispatchStatusText" caption="Status" alignment="center" width="100">
+              </dxi-column>
+              <dxi-column type="buttons" [width]="150">
+                <dxi-button name="edit"></dxi-button>
+                <dxi-button hint="Check" icon="cart" [onClick]="checkItemsClick" *ngIf="!editRowKey"></dxi-button>
+                <dxi-button hint="Lock" icon="fa fa-lock" [onClick]="lockClick" *ngIf="!editRowKey"></dxi-button>
+                <dxi-button hint="Dispatch" icon="car" [onClick]="dispatchClick" *ngIf="!editRowKey"></dxi-button>
+                <dxi-button name="delete"></dxi-button>
+              </dxi-column>
+            </dx-data-grid>
+            <tc-card [title]="'Invoices'" [padding]="2">
+              <dx-data-grid class="gridContainer" [dataSource]="filteredInvoices" [remoteOperations]="false"
+                [allowColumnReordering]="true" [height]="chartHeight" [rowAlternationEnabled]="true"
+                [showBorders]="true" (onCellPrepared)="onCellPrepared($event)" keyExpr="invoiceId"
+                (onRowUpdated)="invoiceUpdated($event)" (onToolbarPreparing)="onInvoicesToolbarPreparing($event)">
+                <dxo-editing [allowDeleting]="false" [useIcons]="true" mode="batch" [allowUpdating]="true"
+                  [selectTextOnEditStart]=true startEditAction="click">
+                </dxo-editing>
+                <dxo-group-panel [visible]="true"> </dxo-group-panel>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-header-filter [visible]="true"> </dxo-header-filter>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+                </dxo-search-panel>
+                <dxi-column dataField="deliveryMode" caption="Zones" [groupIndex]="1">
+                </dxi-column>
+                <dxi-column type="buttons" [width]="120">
+                  <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                  <!-- <dxi-button hint="Assemble" icon="cart" [onClick]="assembleInvoiceClick">
+                  </dxi-button> -->
+                  <dxi-button hint="Address" icon="map" [onClick]="editAddressClick">
+                  </dxi-button>
+                  <dxi-button hint="Packing Slip" icon="print" [onClick]="openPackingSlipClick">
+                  </dxi-button>
+                </dxi-column>
+                <dxi-column dataField="dispatchId" caption="Log #" [width]="120" alignment="center">
+                  <dxo-lookup [dataSource]="dispatchList" displayExpr="LogText" valueExpr="id">
+                  </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="clientName" [allowEditing]="false" [visible]="checkRole(64)" caption="Name"
+                  width="250">
+                </dxi-column>
+                <dxi-column dataField="orderDate" dataType="datetime" sortOrder="desc" alignment="center"
+                  format="dd-MMM-yyyy" width="120" [allowEditing]="false">
+                </dxi-column>
+                <dxi-column dataField="invoiceText" caption="Number" alignment="center" width="100"
+                  [allowEditing]="false">
+                </dxi-column>
+                <dxi-column dataField="status" width="100" alignment="center" [allowEditing]="false">
+                </dxi-column>
+                <dxi-column dataField="assemblyPercComplete" caption="Assembly (%)" width="120" alignment="center"
+                  dataType="number" format="number" [allowEditing]="false">
+                  <dxo-format type="percent" [precision]="2"> </dxo-format>
+                </dxi-column>
+                <dxi-column dataField="timeElapsed" alignment="center" caption="Elapsed" [allowEditing]="false">
+                </dxi-column>
+                <dxi-column dataField="total" caption="Total ($)" dataType="number" format="currency" alignment="right"
+                  width="100" [allowEditing]="false">
+                  <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+                </dxi-column>
+              </dx-data-grid>
+            </tc-card>
+
+          </dxi-tab>
+          <dxi-tab title="Pickups">
+            <dx-data-grid class="gridContainer" [dataSource]="pickupInvoices" [remoteOperations]="false"
+              [allowColumnReordering]="true" [height]="chartHeight2" [rowAlternationEnabled]="true" [showBorders]="true"
+              (onCellPrepared)="onCellPrepared($event)" keyExpr="invoiceId" (onRowUpdated)="invoiceUpdated($event)"
+              (onToolbarPreparing)="onPickupToolbarPreparing($event)">
+              <dxo-editing [allowDeleting]="false" [useIcons]="true" mode="batch" [allowUpdating]="true"
+                [allowDeleting]="true" [selectTextOnEditStart]=true startEditAction="click">
+              </dxo-editing>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-scrolling mode="infinite"></dxo-scrolling>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+              </dxo-search-panel>
+              <dxi-column dataField="deliveryMode" caption="Zones" [groupIndex]="1">
+              </dxi-column>
+              <dxi-column type="buttons" [width]="120">
+                <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                <!-- <dxi-button hint="Assemble" icon="cart" [onClick]="assembleInvoiceClick">
+                </dxi-button> -->
+                <dxi-button hint="Address" icon="map" [onClick]="editAddressClick">
+                </dxi-button>
+                <dxi-button hint="Packing Slip" icon="print" [onClick]="openPackingSlipClick">
+                </dxi-button>
+              </dxi-column>
+
+              <dxi-column type="buttons" [width]="80">
+                <dxi-button icon="fa fa-file" hint="Close No Payment" [onClick]="closeInvoiceClick">
+                </dxi-button>
+                <dxi-button icon="money" hint="Settle Invoice" [onClick]="payInvoiceClick">
+                </dxi-button>
+              </dxi-column>
+              <dxi-column dataField="dispatchId" caption="Log #" [width]="120" alignment="center">
+                <dxo-lookup [dataSource]="dispatchList" displayExpr="LogText" valueExpr="dispatchId">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="clientName" [visible]="checkRole(64)" [allowEditing]="false" caption="Name"
+                width="250">
+              </dxi-column>
+              <dxi-column dataField="orderDate" dataType="datetime" sortOrder="desc" alignment="center"
+                format="dd-MMM-yyyy" width="120" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="invoiceText" caption="Number" alignment="center" width="100"
+                [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="status" width="100" alignment="center" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="assemblyPercComplete" caption="Assembly (%)" width="120" alignment="center"
+                dataType="number" format="number" [allowEditing]="false">
+                <dxo-format type="percent" [precision]="2"> </dxo-format>
+                >
+              </dxi-column>
+              <dxi-column dataField="timeElapsed" alignment="center" caption="Elapsed" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="total" caption="Total ($)" dataType="number" format="currency" alignment="right"
+                width="100" [allowEditing]="false">
+                <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+              </dxi-column>
+            </dx-data-grid>
+          </dxi-tab>
+          <dxi-tab title="Shipping">
+            <dx-data-grid class="gridContainer" id="gridShippingLogs" [dataSource]="shippingLogs"
+              [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+              [showBorders]="true" height="300" (onRowRemoved)="shippingLogDeleted($event)" keyExpr="id"
+              (onRowUpdated)="shippingLogUpdated($event)" (onRowInserted)="shippingLogAdded($event)"
+              (onToolbarPreparing)="onShippingLogToolbarPreparing($event)">
+              <dxo-editing [allowDeleting]="true" [useIcons]="true" mode="popup" [allowUpdating]="true"
+                [allowAdding]="true" [allowAdding]="true">
+                <dxo-popup title="Manage Shipping Log" [showTitle]="true"
+                  [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="650" [height]="850">
+                </dxo-popup>
+                <dxo-form>
+                  <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                    <dxi-item dataField="packageTypeId"> </dxi-item>
+                    <dxi-item dataField="carrierId"> </dxi-item>
+                    <dxi-item dataField="qty" editorType="dxNumberBox" [editorOptions]="{
+                      min: 1,
+                      max: 10,
+                      showSpinButtons: 'true'
+                    }">
+                    </dxi-item>
+                    <dxi-item dataField="weight"> </dxi-item>
+                    <dxi-item dataField="height"> </dxi-item>
+                    <dxi-item dataField="length"> </dxi-item>
+                    <dxi-item dataField="width"> </dxi-item>
+                    <dxi-item dataField="commodityClass"> </dxi-item>
+                  </dxi-item>
+                  <dxi-item itemType="group" [colCount]="1" [colSpan]="2" caption="Tracking">
+                    <dxi-item dataField="dispatchStatusId"> </dxi-item>
+                    <dxi-item dataField="itemDescription"> </dxi-item>
+                    <dxi-item dataField="bolNumber"> </dxi-item>
+                    <dxi-item dataField="tracking"> </dxi-item>
+                    <dxi-item dataField="deliveryEta"> </dxi-item>
+                  </dxi-item>
+                  <dxi-item itemType="group" [colCount]="1" [colSpan]="2" caption="Instructions">
+                    <dxi-item dataField="specialInstructions" editorType="dxTextArea" [editorOptions]="{ height: 100 }">
+                    </dxi-item>
+                  </dxi-item>
+                </dxo-form>
+              </dxo-editing>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-scrolling mode="infinite"></dxo-scrolling>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+              <dxi-column dataField="id" caption="ID" width="80" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="shippingDate" dataType="datetime" sortOrder="desc" alignment="center"
+                format="dd-MMM-yyyy HH:mm:ss" width="180" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="shippedByText" caption="Shipped By" width="120" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="carrierId" caption="Carrier" [width]="120" alignment="center">
+                <dxo-lookup [dataSource]="carriers" displayExpr="carrierName" valueExpr="carrierId">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="packageTypeId" caption="Type" width="100" alignment="center">
+                <dxo-lookup [dataSource]="packageTypes" displayExpr="packageType" valueExpr="packageTypeId">
+                </dxo-lookup>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="dispatchStatusId" caption="Status" width="120" alignment="center">
+                <dxo-lookup [dataSource]="dispatchStatuses" displayExpr="dispatchStatusText"
+                  valueExpr="dispatchStatusId">
+                </dxo-lookup>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="bolNumber" caption="Bill of Lading" alignment="center" [visible]="false">
+              </dxi-column>
+              <dxi-column dataField="tracking" caption="Tracking #" alignment="center" [visible]="false">
+              </dxi-column>
+              <dxi-column dataField="qty" caption="Quantity" alignment="center" [visible]="false">
+              </dxi-column>
+              <dxi-column dataField="itemDescription" caption="Description" alignment="center">
+              </dxi-column>
+              <dxi-column dataField="specialInstructions" caption="Spl Instructions" alignment="center"
+                [visible]="false">
+              </dxi-column>
+              <dxi-column dataField="deliveryEta" alignment="center" [visible]="false" dataType="date">
+              </dxi-column>
+              <dxi-column dataField="width" caption="Width" alignment="center" [visible]="false" dataType="number">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="length" caption="Length" alignment="center" [visible]="false" dataType="number">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="height" caption="Height" alignment="center" [visible]="false" dataType="number">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="weight" caption="Weight" alignment="center" [visible]="false" dataType="number">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="commodityClass" caption="Class" alignment="center" [visible]="false"
+                dataType="number">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column type="buttons" [width]="120">
+                <dxi-button name="edit"></dxi-button>
+                <dxi-button name="delete"></dxi-button>
+                <dxi-button hint="Confirm" icon="car" [onClick]="confirmShipmentClick">
+                </dxi-button>
+              </dxi-column>
+            </dx-data-grid>
+            <dx-data-grid class="gridContainer" [dataSource]="shippingInvoices" [remoteOperations]="false"
+              [allowColumnReordering]="true" [height]="chartHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+              (onCellPrepared)="onCellPrepared($event)" keyExpr="invoiceId"
+              (onRowUpdated)="shippingInvoiceUpdated($event)">
+              <dxo-editing [allowDeleting]="false" [useIcons]="true" mode="batch" [allowUpdating]="true"
+                [allowDeleting]="true" [selectTextOnEditStart]=true startEditAction="click">
+              </dxo-editing>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-scrolling mode="infinite"></dxo-scrolling>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+              </dxo-search-panel>
+              <dxi-column type="buttons" [width]="120">
+                <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                <!-- <dxi-button hint="Assemble" icon="cart" [onClick]="assembleInvoiceClick">
+                </dxi-button> -->
+                <dxi-button hint="Address" icon="map" [onClick]="editAddressClick">
+                </dxi-button>
+                <dxi-button hint="Packing Slip" icon="print" [onClick]="openPackingSlipClick">
+                </dxi-button>
+              </dxi-column>
+              <dxi-column type="buttons" [width]="80">
+                <dxi-button icon="fa fa-file" hint="Close No Payment" [onClick]="closeInvoiceClick">
+                </dxi-button>
+                <dxi-button icon="money" hint="Settle Invoice" [onClick]="payInvoiceClick">
+                </dxi-button>
+              </dxi-column>
+              <dxi-column dataField="shippingLogId" caption="Log #" [width]="120" alignment="center">
+                <dxo-lookup [dataSource]="shippingLogList" displayExpr="text" valueExpr="id">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="clientName" [visible]="checkRole(64)" [allowEditing]="false" caption="Name"
+                width="250">
+              </dxi-column>
+              <dxi-column dataField="orderDate" dataType="datetime" sortOrder="desc" alignment="center"
+                format="dd-MMM-yyyy" width="120" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="invoiceText" caption="Number" alignment="center" width="100"
+                [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="status" width="100" alignment="center" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="assemblyPercComplete" caption="Assembly (%)" width="120" alignment="center"
+                dataType="number" format="number" [allowEditing]="false">
+                <dxo-format type="percent" [precision]="2"> </dxo-format>
+                >
+              </dxi-column>
+              <dxi-column dataField="timeElapsed" alignment="center" caption="Elapsed" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="total" caption="Total ($)" dataType="number" format="currency" alignment="right"
+                width="100" [allowEditing]="false">
+                <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+              </dxi-column>
+            </dx-data-grid>
+          </dxi-tab>
+        </dxi-item>
+      </dx-form>
+    </div>
+    <div class="col-xl-5 col-lg-12 col-md-0 col-sm-0 col-xs-0">
+      <tc-card [title]="'Invoice Counts'" [padding]="2">
+        <dx-chart [dataSource]="invoiceCounts" palette="Pastel">
+          <dxo-size [height]="150"></dxo-size>
+          <dxo-legend [visible]="false"></dxo-legend>
+          <dxi-series argumentField="deliveryMode" valueField="invoiceCount" name="Count" type="bar">
+            <dxo-label [visible]="true" position="inside"> </dxo-label>
+          </dxi-series>
+        </dx-chart>
+      </tc-card>
+
+      <div class="Map">
+        <div class="box" id="filtersRow">
+          <div class="field-lable">Zone</div>
+          <dx-select-box width="150" height="40" [dataSource]="shippingZones" displayExpr="zoneDesc"
+            valueExpr="shippingZoneId" [searchEnabled]="true" [showClearButton]=true
+            (onValueChanged)="zoneChanged($event)" placeholder="Select Zone...">
+          </dx-select-box>
+        </div>
+        <dx-map provider="google" [zoom]="mapZoom" [center]="centerCoordinates" [height]="chartHeight2" width="100%"
+        [apiKey]="keys"[controls]="true" [markers]="filteredMarkers" [autoAdjust]="true">
+        </dx-map>
+      </div>
+    </div>
+  </div>
+</div>

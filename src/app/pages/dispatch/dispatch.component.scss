@@ -1,0 +1,22 @@
+.grid-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          gap: 0px 0px;
+          grid-template-areas:
+                    "DispatchLOgs DispatchLOgs"
+                    "Invoices Map";
+}
+
+.DispatchLogs {
+          grid-area: DispatchLogs;
+          height: 300px;
+}
+
+.Invoices {
+          grid-area: Invoices;
+}
+
+.Map {
+          grid-area: Map;
+}

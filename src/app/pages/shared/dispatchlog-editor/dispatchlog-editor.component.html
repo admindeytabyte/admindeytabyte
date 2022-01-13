@@ -1,0 +1,72 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<div class="row">
+          <tc-card [title]="'Driver Log Invoices'" [padding]="2">
+                    <dx-data-grid class="gridContainer" [dataSource]="invoices" [remoteOperations]="false"
+                              [allowColumnReordering]="true" [height]="700" [rowAlternationEnabled]="true"
+                              [showBorders]="true" keyExpr="invoiceId" (onCellPrepared)="onCellPrepared($event)"
+                              [focusedRowEnabled]="true" (onFocusedRowChanged)="invoiceSelectionChanged($event)">
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+                              <dxo-filter-row [visible]="true"></dxo-filter-row>
+                              <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+                              </dxo-search-panel>
+                              <dxi-column type="buttons" [width]="80">
+                                        <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                              </dxi-column>
+                              <dxi-column dataField="statusGroup" [allowEditing]="false" caption="Status"
+                                        [groupIndex]="0" sortOrder="desc">
+                              </dxi-column>
+
+                              <dxi-column width="300" dataField="clientName" [allowEditing]="false" caption="Name">
+                              </dxi-column>
+                              <dxi-column dataField="orderDate" dataType="datetime" sortOrder="desc" alignment="center"
+                                        format="dd-MMM-yyyy" width="120" [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column dataField="invoiceText" caption="Number" alignment="center" width="100"
+                                        [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column dataField="status" width="100" alignment="center" [allowEditing]="false">
+                              </dxi-column>
+                              <dxi-column dataField="total" caption="Total ($)" dataType="number" format="currency"
+                                        alignment="right" width="100" [allowEditing]="false">
+                                        <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="payment" caption="Paid ($)" dataType="number" format="currency"
+                                        alignment="right" width="100" [allowEditing]="false">
+                                        <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="cashPayments" caption="Cash Paid ($)" dataType="number"
+                                        format="currency" alignment="right" width="150" [allowEditing]="false">
+                                        <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="balance" caption="Balance ($)" dataType="number" format="currency"
+                                        alignment="right" width="100" [allowEditing]="false">
+                                        <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+                              </dxi-column>
+                              <dxi-column type="buttons" [width]="120">
+                                        <dxi-button icon="fa fa-file" hint="Close No Payment"
+                                                  [onClick]="closeInvoiceClick">
+                                        </dxi-button>
+                                        <dxi-button icon="money" hint="Settle Invoice" [onClick]="payInvoiceClick">
+                                        </dxi-button>
+                              </dxi-column>
+                              <dxi-column dataField="dispatchNote" [allowEditing]="false" caption="Delivery Note">
+                              </dxi-column>
+                              <dxo-summary>
+                                        <dxi-total-item column="cashPayments" summaryType="sum"
+                                                  [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                  [customizeText]="customizeValue">
+                                        </dxi-total-item>
+                              </dxo-summary>
+                    </dx-data-grid>
+          </tc-card>
+          <p *ngIf="selectedInvoice">{{selectedInvoice.accountNote}}</p>
+</div>

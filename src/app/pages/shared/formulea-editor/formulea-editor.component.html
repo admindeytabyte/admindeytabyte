@@ -1,0 +1,7 @@
+<div *ngIf="this.data.variant">
+          <p>Formulea Editor for {{this.data.variant.variance}} - Layer - {{this.data.variant.layerId}}</p>
+          <dx-text-area [height]="400" [(value)]="formuleaText">
+          </dx-text-area>
+          <dx-button stylingMode="contained" text="Save" type="default" [width]="120" (onClick)="saveClick($event)">
+          </dx-button>
+</div>

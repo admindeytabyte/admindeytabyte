@@ -1,0 +1,242 @@
+<div class="container-fluid">
+          <div class="row" *ngIf="errorMessage">
+                    <div class="col col-sm-6 col-md-8 col-lg-12">
+                              <tc-alert [removable]="true" [view]="'error'">
+                                        {{ errorMessage }}
+                              </tc-alert>
+                    </div>
+          </div>
+          <div class="row">
+                    <div class="col-md-12">
+                              <div class="box" id="filtersRow">
+                                        <div class="field-lable">Start Date</div>
+                                        <dx-date-box width="200" height="40" [(value)]="startDate" type="date">
+                                        </dx-date-box>
+                                        <dx-button class="filterButton" icon="fa fa-refresh" stylingMode="contained"
+                                                  (onClick)="refreshOrders()">
+                                        </dx-button>
+                                        <!-- <dx-button class="filterButton" text="Manage Codes" stylingMode="contained"
+                                                  (onClick)="openPaintCodeEditor()">
+                                        </dx-button> -->
+
+
+                              </div>
+                    </div>
+          </div>
+
+          <div class="row" id="orderChart">
+                    <div class="col-md-2">
+                              <tc-card [title]="'Orders By Month'" [padding]="2">
+                                        <dx-chart id="monthlychart" [dataSource]="monthlySummary">
+                                                  <dxo-size [height]="180"></dxo-size>
+                                                  <dxo-legend [visible]="false"></dxo-legend>
+                                                  <dxi-series valueField="orderCount" name="Orders By Month"
+                                                            color="#000080">
+                                                            <dxo-label [visible]="true" position="inside">
+                                                                      <dxo-format [precision]="0">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxo-common-series-settings argumentField="month" type="bar">
+                                                  </dxo-common-series-settings>
+                                                  <dxo-argument-axis>
+                                                            <dxo-label>
+                                                                      <dxo-format type="int"></dxo-format>
+                                                            </dxo-label>
+                                                  </dxo-argument-axis>
+                                                  <dxo-tooltip [enabled]="true" [shared]="true">
+                                                            <dxo-format [precision]="0"></dxo-format>
+                                                  </dxo-tooltip>
+                                        </dx-chart>
+                              </tc-card>
+                    </div>
+                    <div class="col-md-4">
+                              <tc-card [title]="'Orders By Day'" [padding]="2">
+                                        <dx-chart id="dailychart" [dataSource]="dailySummary"
+                                                  (onPointClick)="dailyChartPointClicked($event)">
+                                                  <dxo-size [height]="180"></dxo-size>
+                                                  <dxo-legend [visible]="false"></dxo-legend>
+                                                  <dxi-series valueField="orderCount" name="Orders By Day"
+                                                            color="#000080">
+                                                            <dxo-label [visible]="true" position="inside">
+                                                                      <dxo-format [precision]="0">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxo-common-series-settings argumentField="day" type="bar">
+                                                  </dxo-common-series-settings>
+                                                  <dxo-argument-axis>
+                                                            <dxo-label>
+                                                                      <dxo-format type="int"></dxo-format>
+                                                            </dxo-label>
+                                                  </dxo-argument-axis>
+                                                  <!-- <dxo-tooltip [enabled]="true" [shared]="true">
+                                                            <dxo-format [precision]="0"></dxo-format>
+                                                  </dxo-tooltip> -->
+                                        </dx-chart>
+                              </tc-card>
+                    </div>
+                    <div class="col-md-6">
+                              <tc-card [title]="hourChartTitle" [padding]="2">
+                                        <dx-chart id="hourlyChart" [dataSource]="hourlyChartData">
+                                                  <dxo-size [height]="180"></dxo-size>
+                                                  <dxo-legend [visible]="false"></dxo-legend>
+                                                  <dxi-series valueField="orderCount" name="Orders By Hour"
+                                                            color="#000080">
+                                                            <dxo-label [visible]="true" position="inside">
+                                                                      <dxo-format [precision]="0">
+                                                                      </dxo-format>
+                                                                      <dxo-font weight="800"></dxo-font>
+                                                            </dxo-label>
+                                                  </dxi-series>
+                                                  <dxo-common-series-settings argumentField="hour" type="bar">
+                                                  </dxo-common-series-settings>
+                                                  <!-- <dxo-argument-axis>
+                                                            <dxo-label>
+                                                                      <dxo-format type="int"></dxo-format>
+                                                            </dxo-label>
+                                                  </dxo-argument-axis> -->
+                                                  <dxo-tooltip [enabled]="true" [shared]="true">
+                                                            <dxo-format [precision]="0"></dxo-format>
+                                                  </dxo-tooltip>
+                                        </dx-chart>
+                              </tc-card>
+
+                    </div>
+          </div>
+
+          <div class="row">
+                    <div class="col-md-12 reportViewer">
+                              <tc-card [title]="hourGridTitle" [padding]="2">
+                                        <dx-data-grid [showBorders]="true" [dataSource]="paintOrders"
+                                                  class="gridContainer" keyExpr="invoiceDtlid" [showBorders]="true"
+                                                  [height]="controlHeight">
+                                                  <dxo-group-panel [visible]="false">
+                                                  </dxo-group-panel>
+                                                  <dxo-grouping [autoExpandAll]="true">
+                                                  </dxo-grouping>
+                                                  <dxo-selection mode="single">
+                                                  </dxo-selection>
+                                                  <dxo-search-panel [visible]="true" [width]="300"
+                                                            placeholder="Search...">
+                                                  </dxo-search-panel>
+                                                  <dxo-header-filter [visible]="true">
+                                                  </dxo-header-filter>
+                                                  <dxo-scrolling mode="infinite">
+                                                  </dxo-scrolling>
+                                                  <dxi-column dataField="zoneDesc" caption="Zone" alignment="center"
+                                                            [groupIndex]="0">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="servicePriority" caption="Priority"
+                                                            alignment="center" width="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="description" alignment="left">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="companyName" alignment="left" width="300">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoiceNumber" alignment="center" width="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="typeDesc" alignment="center" width="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="line" alignment="center" width="80">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="partId" alignment="left" width="120">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="paintcodeId" caption="Paint Code"
+                                                            alignment="center" width="100">
+                                                  </dxi-column>
+
+                                                  <dxi-column dataField="unit" caption="Unit" alignment="center"
+                                                            width="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="isPaintMixed" caption="Paint Mixed"
+                                                            alignment="center" width="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="date" caption="Order Time" dataType="datetime"
+                                                            format="dd-MMM-yyyy HH:mm:ss" alignment="center"
+                                                            width="200"></dxi-column>
+                                                  <dxi-column dataField="paintMixedTimeStamp" caption="Mixed Time"
+                                                            alignment="center" width="200" dataType="datetime"
+                                                            format="dd-MMM-yyyy HH:mm:ss">
+                                                  </dxi-column>
+                                                  <!-- <dxi-column type="buttons" [width]="80" [visible]="checkRole(55)">
+                                                            <dxi-button hint="Confirm" icon="check"
+                                                                      [onClick]="confirmMixed">
+                                                            </dxi-button>
+                                                  </dxi-column> -->
+                                        </dx-data-grid>
+                                        <!-- <dx-form>
+                                                  <dxi-item itemType="tabbed">
+                                                            <dxi-tab title="Open Orders">
+                                                                     
+                                                            </dxi-tab>
+                                                            <dxi-tab title="Completed Orders">
+                                                                      <dx-data-grid [showBorders]="true"
+                                                                                [dataSource]="completedPaintOrders"
+                                                                                class="gridContainer"
+                                                                                keyExpr="invoiceDtlid"
+                                                                                [showBorders]="true"
+                                                                                [height]="controlHeight">
+                                                                                <dxo-group-panel [visible]="false">
+                                                                                </dxo-group-panel>
+                                                                                <dxo-grouping [autoExpandAll]="true">
+                                                                                </dxo-grouping>
+                                                                                <dxo-selection mode="single">
+                                                                                </dxo-selection>
+                                                                                <dxo-search-panel [visible]="true"
+                                                                                          [width]="300"
+                                                                                          placeholder="Search...">
+                                                                                </dxo-search-panel>
+                                                                                <dxo-header-filter [visible]="true">
+                                                                                </dxo-header-filter>
+                                                                                <dxo-scrolling mode="infinite">
+                                                                                </dxo-scrolling>
+                                                                                <dxi-column dataField="zoneDesc"
+                                                                                          caption="Zone"
+                                                                                          alignment="center"
+                                                                                          [groupIndex]="0">
+                                                                                </dxi-column>
+                                                                                <dxi-column dataField="servicePriority"
+                                                                                          caption="Priority"
+                                                                                          alignment="center"
+                                                                                          width="100">
+                                                                                </dxi-column>
+                                                                                <dxi-column dataField="description"
+                                                                                          alignment="left">
+                                                                                </dxi-column>
+                                                                                <!-- <dxi-column dataField="companyName"
+                                                                                          alignment="left" width="250">
+                                                                                </dxi-column> 
+                                        <dxi-column dataField="invoiceNumber" alignment="center" width="100">
+                                        </dxi-column>
+                                        <dxi-column dataField="typeDesc" alignment="center" width="100">
+                                        </dxi-column>
+                                        <dxi-column dataField="date" dataType="date" alignment="center" width="100">
+                                        </dxi-column>
+                                        <dxi-column dataField="line" alignment="center" width="80">
+                                        </dxi-column>
+                                        <dxi-column dataField="partId" alignment="left" width="120">
+                                        </dxi-column>
+                                        <dxi-column dataField="paintcodeId" caption="Paint Code" alignment="center"
+                                                  width="100">
+                                        </dxi-column>
+
+                                        <dxi-column dataField="unit" caption="Unit" alignment="center" width="100">
+                                        </dxi-column>
+                                        <dxi-column dataField="isPaintMixed" caption="Paint Ready?" alignment="center"
+                                                  width="100">
+                                        </dxi-column>
+                                        <dxi-column dataField="paintMixedTimeStamp" caption="Mixed Time"
+                                                  alignment="center" width="200" dataType="datetime"
+                                                  format="dd-MMM-yyyy HH:mm:ss">
+                                        </dxi-column>
+                                        </dx-data-grid>
+                                        </dxi-tab>
+                                        </dxi-item>
+                                        </dx-form> -->
+                              </tc-card>
+                    </div>
+          </div>
+</div>

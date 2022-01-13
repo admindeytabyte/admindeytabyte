@@ -87,6 +87,19 @@ import { ClientCommissionsDialogComponent } from './shared/client-commissions-di
 import { ClientTransactionsComponent } from './shared/client-transactions/client-transactions.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './not-found/not-found.component';
+import { ProductsComponent } from './products/products.component';
+import { ProductMergeDialogComponent } from './shared/product-merge-dialog/product-merge-dialog.component';
+import { InputDialogComponent } from './shared/input-dialog/input-dialog.component';
+import { DispatchComponent } from './dispatch/dispatch.component';
+import { InvoiceAssemblyDialogComponent } from './shared/invoice-assembly-dialog/invoice-assembly-dialog.component';
+import { PendingAssemblyDialogComponent } from './shared/pending-assembly-dialog/pending-assembly-dialog.component';
+import { PaintsComponent } from './paints/paints.component';
+import { PaintcodeEditorComponent } from './shared/paintcode-editor/paintcode-editor.component';
+import { FormuleaEditorComponent } from './shared/formulea-editor/formulea-editor.component';
+import { PaintCodesComponent } from './paint-codes/paint-codes.component';
+import { BackOfficeComponent } from './back-office/back-office.component';
+import { DispatchlogEditorComponent } from './shared/dispatchlog-editor/dispatchlog-editor.component';
+import { SalesManagementComponent } from './sales-management/sales-management.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -176,7 +189,20 @@ import { PageNotFoundComponent } from './not-found/not-found.component';
     ClientCommissionsDialogComponent,
     ClientTransactionsComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ProductMergeDialogComponent ,
+    ProductsComponent,
+    InputDialogComponent,
+    DispatchComponent,
+    InvoiceAssemblyDialogComponent,
+    PendingAssemblyDialogComponent,
+    PaintsComponent,
+    PaintcodeEditorComponent,
+    FormuleaEditorComponent,
+    PaintCodesComponent,
+    BackOfficeComponent,
+    DispatchlogEditorComponent,
+    SalesManagementComponent
   ],
   exports: [],
   entryComponents: [

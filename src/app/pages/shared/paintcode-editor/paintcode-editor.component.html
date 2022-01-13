@@ -1,0 +1,184 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="row" *ngIf="errorMessage">
+  <div class="col col-sm-6 col-md-8 col-lg-12">
+    <tc-alert [removable]="true" [view]="'error'">
+      {{ errorMessage }}
+    </tc-alert>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-7">
+          <tc-card [title]="'Paint Codes'" [padding]="2">
+            <div class="box" id="SearchBar">
+              <div class="field-lable">Paint Code</div>
+              <dx-text-box class="searchControl" [(ngModel)]="paintCode" placeholder="Search by Paint Code..."
+                (onValueChanged)="searchCodes($event)" width="200">
+              </dx-text-box>
+              <div class="field-lable">Make</div>
+              <dx-text-box class="searchControl" [(ngModel)]="make" placeholder="Filter by Make..."
+                (onValueChanged)="searchCodes($event)" width="200">
+              </dx-text-box>
+              <div class="field-lable">Year</div>
+              <!-- <dx-text-box class="searchControl" [(ngModel)]="year" placeholder="Filter by Year..."
+                (onValueChanged)="searchCodes($event)" width="200">
+              </dx-text-box> -->
+              <dx-number-box width="100" class="discNumberBox" [(ngModel)]="year" [showSpinButtons]="true"
+                placeholder="Select Year..." [max]="2050" [min]="1990" (onValueChanged)="searchCodes($event)">
+              </dx-number-box>
+            </div>
+            <dx-data-grid [showBorders]="true" [dataSource]="PaintCodes" class="gridContainer" keyExpr="id"
+              [showBorders]="true" height="950" [focusedRowEnabled]="true"
+              (onFocusedRowChanged)="codeFocusChanged($event)" (onRowUpdated)="codeUpdated($event)"
+              (onRowRemoved)="codeDeleted($event)" (onRowInserted)="codeAdded($event)">
+              <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true"
+                [allowDeleting]="true" [useIcons]="true">
+                <dxo-popup title="Variance Editor" [showTitle]="true"
+                  [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="600" [height]="400">
+                </dxo-popup>
+                <dxo-form>
+                  <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                    <dxi-item dataField="carMake">
+                    </dxi-item>
+                    <dxi-item dataField="paintCode">
+                    </dxi-item>
+                    <dxi-item dataField="variance">
+                    </dxi-item>
+                    <dxi-item dataField="layers">
+                    </dxi-item>
+                    <dxi-item dataField="year">
+                    </dxi-item>
+                    <dxi-item dataField="colorName">
+                    </dxi-item>
+                    <dxi-item dataField="customerRating" helpText="Match Rating 1-Low, 10 - High"
+                      editorType="dxNumberBox" [editorOptions]="{ 
+                                              min: 1,
+                                              max: 10,
+                                              showSpinButtons: 'true'
+                                            }">
+                    </dxi-item>
+                  </dxi-item>
+                </dxo-form>
+              </dxo-editing>
+              <dxo-selection mode="single">
+              </dxo-selection>
+              <dxo-header-filter [visible]="true">
+              </dxo-header-filter>
+              <dxo-scrolling mode="infinite">
+              </dxo-scrolling>
+              <dxi-column dataField="carMake" caption="Make" alignment="center" width="100">
+                <dxi-validation-rule type="required">
+                </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="model" caption="Model" alignment="center" width="100">
+              </dxi-column>
+              <dxi-column dataField="paintCode" caption="Code" alignment="center" width="120">
+                <dxi-validation-rule type="required">
+                </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="variance" alignment="center" width="150">
+                <dxi-validation-rule type="required">
+                </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="coat" caption="Coat" alignment="center" width="100">
+              </dxi-column>
+              <dxi-column dataField="layers" alignment="center" width="100" caption="Layers">
+              </dxi-column>
+              <dxi-column dataField="year" alignment="center" width="100">
+                <dxi-validation-rule type="required">
+                </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="colorName" caption="Color" alignment="left">
+                <dxi-validation-rule type="required">
+                </dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="customerRating" width="100" caption="Rating" alignment="center">
+              </dxi-column>
+            </dx-data-grid>
+
+          </tc-card>
+        </div>
+        <div class="col-md-5" *ngIf="selectedVariant">
+          <tc-card [title]="paintCodeText" [padding]="2">
+            <div class="box" id="filtersRow">
+              <div class="field-lable">
+                Layer 1 Oz(s)
+              </div>
+              <dx-number-box width="80" (onValueChanged)="calculateMeasures1($event)" [value]="1"
+                [showSpinButtons]="true" [min]="1">
+              </dx-number-box>
+              <div class="field-lable">
+                Layer 2 Oz(s)
+              </div>
+              <dx-number-box width="80" *ngIf="CalculatedToners2.length>0" (onValueChanged)="calculateMeasures2($event)"
+                [value]="1" [showSpinButtons]="true" [min]="1">
+              </dx-number-box>
+              <div class="field-lable">
+                Prescision
+              </div>
+              <dx-number-box width="80" [(ngModel)]="precision" [showSpinButtons]="true" [min]="2" [max]="3">
+              </dx-number-box>
+            </div>
+
+            <dx-data-grid id="codeGrid" *ngIf="CalculatedToners1.length>0" [showBorders]="true"
+              [dataSource]="CalculatedToners1" class="gridContainer" keyExpr="sortId" [showBorders]="true" height="300">
+              <dxo-selection mode="single">
+              </dxo-selection>
+              <dxo-scrolling mode="infinite">
+              </dxo-scrolling>
+              <dxi-column dataField="layerId" caption="Layer" [groupIndex]="0"></dxi-column>
+              <dxi-column dataField="sortId" caption="Seq" alignment="center" width="50">
+              </dxi-column>
+              <dxi-column dataField="code" caption="Toner" alignment="center" width="120">
+              </dxi-column>
+              <dxi-column dataField="name" caption="Description" alignment="left">
+              </dxi-column>
+              <dxi-column dataField="weight" alignment="center" width="80">
+                <dxo-format type="fixedPoint" [precision]="precision">
+                </dxo-format>
+              </dxi-column>
+              <dxi-column dataField="accum" caption="Accum" alignment="center" width="80">
+                <dxo-format type="fixedPoint" [precision]="precision">
+                </dxo-format>
+              </dxi-column>
+            </dx-data-grid>
+            <dx-data-grid *ngIf="CalculatedToners2.length>0" id="codeGrid2" [showBorders]="true"
+              [dataSource]="CalculatedToners2" class="gridContainer" keyExpr="sortId" [showBorders]="true" height="300">
+              <dxo-selection mode="single">
+              </dxo-selection>
+              <dxo-scrolling mode="infinite">
+              </dxo-scrolling>
+              <dxi-column dataField="layerId" caption="Layer" [groupIndex]="0"></dxi-column>
+              <dxi-column dataField="sortId" caption="Seq" alignment="center" width="50">
+              </dxi-column>
+              <dxi-column dataField="code" caption="Toner" alignment="center" width="120">
+              </dxi-column>
+              <dxi-column dataField="name" caption="Description" alignment="left">
+              </dxi-column>
+              <dxi-column dataField="weight" alignment="center" width="80">
+                <dxo-format type="fixedPoint" [precision]="precision">
+                </dxo-format>
+              </dxi-column>
+              <dxi-column dataField="accum" caption="Accum" alignment="center" width="80">
+                <dxo-format type="fixedPoint" [precision]="precision">
+                </dxo-format>
+              </dxi-column>
+            </dx-data-grid>
+            <div class="box" id="filtersRow">
+              <dx-button stylingMode="contained" class="formulaButton" text="Save Layer1" type="default" [width]="120"
+                (onClick)="saveLayer1Click($event)">
+              </dx-button>
+              <dx-button stylingMode="contained" class="formulaButton" text="Save Layer2" type="default" [width]="120"
+                (onClick)="saveLayer2Click($event)">
+              </dx-button>
+            </div>
+            <dx-text-area [height]="250" [(ngModel)]="formuleaText">
+            </dx-text-area>
+          </tc-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

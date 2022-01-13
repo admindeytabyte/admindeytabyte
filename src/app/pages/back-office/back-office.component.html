@@ -1,0 +1,114 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-5">
+      <!-- Pickups -->
+      <tc-card [title]="'Walkins'" [padding]="2">
+        <dx-data-grid class="gridContainer" [dataSource]="pickupInvoices" [remoteOperations]="false"
+          [allowColumnReordering]="true" [height]="controlHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+          keyExpr="invoiceId" (onToolbarPreparing)="onWalkinsToolbarPreparing($event)">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-scrolling mode="infinite"></dxo-scrolling>
+          <dxo-header-filter [visible]="true"> </dxo-header-filter>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+          </dxo-search-panel>
+          <dxi-column dataField="clientName" [allowEditing]="false" caption="Name">
+          </dxi-column>
+          <dxi-column dataField="orderDate" dataType="datetime" sortOrder="desc" alignment="center" format="dd-MMM-yyyy"
+            width="120" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="invoiceText" caption="Number" alignment="center" width="100" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="status" width="100" alignment="center" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="assemblyPercComplete" caption="Complete (%)" format="number" width="110" alignment="center" [allowEditing]="false">
+            <dxo-format type="percent" [precision]="2"> </dxo-format>
+          </dxi-column>
+          <dxi-column dataField="total" caption="Total ($)" dataType="number" format="currency" alignment="right"
+            width="100" [allowEditing]="false">
+            <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+          </dxi-column>
+          <dxi-column type="buttons" [width]="120">
+            <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+            <dxi-button icon="fa fa-file" hint="Close No Payment" [onClick]="closeInvoiceClick">
+            </dxi-button>
+            <dxi-button hint="Payment" icon="money" [onClick]="payInvoiceClick"></dxi-button>
+          </dxi-column>
+          <!-- <dxi-column type="buttons" [width]="80">
+                                                  <dxi-button hint="Address" icon="map" [onClick]="editAddressClick">
+                                                  </dxi-button>
+                                                  <dxi-button hint="Assemble" icon="cart"
+                                                            [onClick]="assembleInvoiceClick">
+                                                  </dxi-button>
+                                        </dxi-column> -->
+        </dx-data-grid>
+      </tc-card>
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-12">
+          <tc-card [title]="'Driver Logs'" [padding]="2">
+            <div class="box" id="filterBar">
+              <p class="filterLabel">Log Number</p>
+              <dx-number-box width="150" [(ngModel)]="logNum" placeHolder="Log Number" (onValueChanged)="openLogNum()" [showSpinButtons]="false">
+              </dx-number-box>
+              <dx-button icon="search" class="searchButton" (onClick)="openLogNum()" stylingMode="contained">
+              </dx-button>
+              <p class="filterLabel">Log Id</p>
+              <dx-number-box width="150" [(ngModel)]="logId"  (onValueChanged)="openLogById()" placeHolder="Log Id" [showSpinButtons]="false">
+              </dx-number-box>
+              <dx-button icon="search" class="searchButton" (onClick)="openLogById()" stylingMode="contained">
+              </dx-button>
+              <p class="filterLabel">Invoice Number</p>
+              <dx-text-box width="150" [(ngModel)]="invoiceNum" (onValueChanged)="openLogByInvoice()" placeHolder="Log Number">
+              </dx-text-box>
+              <dx-button icon="search" class="searchButton" (onClick)="openLogByInvoice()" stylingMode="contained">
+              </dx-button>
+            </div>
+            <dx-data-grid class="gridContainer" id="gridDispatchLogs" [dataSource]="dispatchLogs"
+              [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+              [showBorders]="true" height="500" (onToolbarPreparing)="onDispatchToolbarPreparing($event)" keyExpr="id">
+              <dxo-search-panel [visible]="true" [width]="300" placeholder="Search...">
+              </dxo-search-panel>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-scrolling mode="infinite"></dxo-scrolling>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+              <dxi-column type="buttons" [width]="120">
+                <dxi-button hint="Close Dispatch" icon="edit" [onClick]="manageLogClick">
+                </dxi-button>
+              </dxi-column>
+              <dxi-column dataField="dispatchId" caption="Log Number" width="100" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="dispatchDate" dataType="datetime" sortOrder="desc" alignment="center"
+                format="dd-MMM-yyyy HH:mm:ss" width="180" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column dataField="driverName" caption="Driver" [width]="120" alignment="center">
+              </dxi-column>
+              <dxi-column dataField="shippingZoneId" caption="Zone" width="100" alignment="center">
+              </dxi-column>
+              <dxi-column dataField="dispatchStatusText" caption="Status" width="120" alignment="center">
+              </dxi-column>
+              <dxi-column dataField="invoiceCount" caption="Invoices" width="120" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="openInvoiceCount" caption="Open" width="120" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="closedInvoiceCount" caption="Closed" width="120" alignment="center"
+                [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="dispatchNotes" caption="Note" alignment="center">
+              </dxi-column>
+            </dx-data-grid>
+          </tc-card>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <tc-card [title]="'Driver Tracking'" [padding]="2">
+            <dx-map provider="google" [zoom]="11" [center]="centerCoordinates" [height]="chartHeight" width="100%"
+              [apiKey]="keys" [controls]="true" [markers]="markers" [autoAdjust]="true">
+            </dx-map>
+          </tc-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

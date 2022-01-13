@@ -1,0 +1,436 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#ProductsView' }"
+    [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div class="container-fluid" id="ProductsView">
+    <div class="row" *ngIf="errorMessage">
+        <div class="col col-sm-6 col-md-8 col-lg-12">
+            <tc-alert [removable]="true" [view]="'error'">
+                {{ errorMessage }}
+            </tc-alert>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box" id="productSearchBar">
+                <dx-select-box class="searchControl" [(ngModel)]="category" [dataSource]="categories"
+                    displayExpr="categoryName" [searchEnabled]="true" [showClearButton]=true
+                    (onValueChanged)="searchProducts($event)" placeholder="Select Category...">
+                </dx-select-box>
+                <dx-text-box class="searchControl" [(ngModel)]="line" placeholder="Search by Line..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box class="searchControl" [(ngModel)]="sku" placeholder="Search by Sku..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box class="searchControl" [(ngModel)]="description" placeholder="Search by Description..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box class="searchControl" [(ngModel)]="combination" placeholder="Combination..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-check-box class="checkBox" text="Active" (onValueChanged)="searchProducts($event)"
+                    [(value)]="active">
+                </dx-check-box>
+                <dx-check-box class="checkBox" text="In Stock" (onValueChanged)="searchProducts($event)"
+                    [(value)]="inStock">
+                </dx-check-box>
+                <dx-check-box class="checkBox" [(ngModel)]="showImages" text="Images">
+                </dx-check-box>
+                <dx-button icon="fa fa-refresh" id="clearButton" (onClick)="reset()" stylingMode="contained">
+                </dx-button>
+
+
+            </div>
+            <div class="box" id="formuleaBar">
+                <p class="formulaeLable">Update</p>
+                <dx-select-box width="150" [(ngModel)]="primaryField" [dataSource]="formulaeFields"
+                    [searchEnabled]="true" [showClearButton]=true placeholder="Select Field...">
+                </dx-select-box>
+                <p class="formulaeLable">as</p>
+                <dx-number-box width="80" [(ngModel)]="valueField" [min]="-500" [max]="500" [showSpinButtons]="true">
+                </dx-number-box>
+                <p class="formulaeLable">% of</p>
+                <dx-select-box width="150" [(ngModel)]="secondaryField" [dataSource]="formulaeFields"
+                    [searchEnabled]="true" [showClearButton]=true placeholder="Select Field...">
+                </dx-select-box>
+                <dx-button icon="fa fa-refresh" id="formuleaButton" (onClick)="applyFormulea()" stylingMode="contained">
+                </dx-button>
+                <p id="indexLable" class="formulaeLable">Index</p>
+                <dx-select-box width="180" [(ngModel)]="indexField" [dataSource]="indexFields" [searchEnabled]="true"
+                    [showClearButton]=true placeholder="Select Index Field...">
+                </dx-select-box>
+                <p class="formulaeLable">to Cost By </p>
+                <dx-number-box width="80" [(ngModel)]="indexValueField" [min]="-500" [max]="500"
+                    [showSpinButtons]="true">
+                </dx-number-box>
+                <p class="formulaeLable">%</p>
+                <dx-button icon="fa fa-refresh" id="refershButton" (onClick)="applyIndexFormulea()"
+                    stylingMode="contained">
+                </dx-button>
+                <p class="formulaeLable">Sold Months</p>
+                <dx-number-box width="80" [(ngModel)]="soldMonthQty" [min]="0" [max]="12" [showSpinButtons]="true"
+                    (onValueChanged)="searchProducts($event)">
+                </dx-number-box>
+            </div>
+        </div>
+        <div class="col-md-4" *ngIf="selectedProduct">
+            <div>
+                <dx-chart id="chart" [dataSource]="productCounts" palette="office">
+                    <dxi-series argumentField="salesMonth" valueField="orderQty" type="bar" color="#000080">
+                        <dxo-label [visible]="true" position="inside">
+                        </dxo-label>
+                    </dxi-series>
+                    <dxo-argument-axis>
+                        <dxo-label format="MMM-yyyy"></dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-legend [visible]="false"></dxo-legend>
+                    <dxo-size [height]="150"></dxo-size>
+                    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                </dx-chart>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Results Grid Bar -->
+        <div class="col-md-8">
+            <dx-data-grid class="invoiceGrid gridContainer" [dataSource]="productsList" [showBorders]="true"
+                [height]="productGridHeight" [remoteOperations]="false" [allowColumnReordering]="true"
+                [rowAlternationEnabled]="true" [showBorders]="true" keyExpr="id" [focusedRowEnabled]="true"
+                (onCellPrepared)="onCellPrepared($event)" [masterDetail]="{ enabled: true, template: 'details' }"
+                (onFocusedRowChanged)="productFocusChanged($event)" [wordWrapEnabled]="true"
+                (onRowUpdated)="productUpdated($event)" (onRowRemoved)="productDeleted($event)"
+                [(focusedRowKey)]="focusedRowKey" [autoNavigateToFocusedRow]="true"
+                (onToolbarPreparing)="onToolbarPreparing($event)">
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]="false"
+                    startEditAction="click" [useIcons]="true">
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="300" placeholder="Search Products...">
+                </dxo-search-panel>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxi-column dataField="productImage" cellTemplate="cellTemplate" caption="" [width]="100"
+                    [allowFiltering]="false" [allowSorting]="false" [allowEditing]="false" [visible]="showImages">
+                </dxi-column>
+                <dxi-column dataField="company" caption="Company" [width]="100">
+                </dxi-column>
+                <dxi-column dataField="categoryId" caption="Category" [visible]="true" [width]="150">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="categories" displayExpr="categoryName" valueExpr="categoryId">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="lineId" caption="Product Line" [width]="100">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="productLines" displayExpr="line" valueExpr="lineId">
+                    </dxo-lookup>
+                </dxi-column>
+
+                <dxi-column dataField="sku" caption="Sku" [width]="120">
+                </dxi-column>
+                <dxi-column dataField="description" caption="Description" [hidingPriority]="1">
+                </dxi-column>
+                <dxi-column dataField="comments" caption="Comments" [width]="200" [hidingPriority]="0">
+                </dxi-column>
+                <dxi-column dataField="soldQty" *ngIf="soldMonthQty>0" caption="Sold Qty" dataType="number"
+                    alignment="center" [width]="80">
+                </dxi-column>
+                <dxi-column dataField="inStockQty" caption="In Stock Qty" dataType="number" alignment="center"
+                    [width]="90">
+                </dxi-column>
+                <dxi-column dataField="onOrderQty" caption="On Order Qty" dataType="number" alignment="center"
+                    [width]="90">
+                </dxi-column>
+                <dxi-column dataField="orderThreshold" caption="Threshold" dataType="number" alignment="center"
+                    [width]="90">
+                </dxi-column>
+                <dxi-column dataField="cost" caption="Cost ($)" dataType="number" alignment="right" [width]="80"
+                    [allowEditing]="true" [visible]="checkRole(9)">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <!-- <dxi-column dataField="sellIndex" caption="Sell Index (%)" dataType="number" alignment="center"
+                    [width]="90" [allowEditing]="true">
+                </dxi-column> -->
+                <dxi-column dataField="fixedJobber" caption="Fixed Jobber ($)" dataType="number" alignment="right"
+                    [width]="80" [allowEditing]="true" [visible]="checkRole(78)">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column>
+                <dxi-column dataField="fixedSell" caption="Fixed Sell ($)" dataType="number" alignment="right"
+                    [width]="80" [allowEditing]="true" [visible]="checkRole(78)">
+                    <dxo-format type="fixedPoint" [precision]="2" >
+                    </dxo-format>
+                </dxi-column>
+                <!-- <dxi-column dataField="sell" caption="Sell ($)" dataType="number" alignment="right" [width]="80"
+                    [allowEditing]="false" [visible]="false">
+                </dxi-column> -->
+                <!-- <dxi-column caption="Sell ($)" dataType="number" alignment="right" [width]="80" [allowEditing]="false"
+                    [visible]="true" [calculateCellValue]="calcSale">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column> -->
+                <!-- <dxi-column dataField="salePrice" caption="Sale Price ($)" dataType="number" alignment="right"
+                    [width]="80" [allowEditing]="true">
+                </dxi-column>
+                <dxi-column dataField="isOnSale" caption="On Sale" alignment="center" [width]="80"
+                    [allowEditing]="true">
+                </dxi-column> -->
+                <!-- <dxi-column dataField="packQty" caption="Pack Qty" dataType="number" alignment="center" [width]="80"
+                    [allowEditing]="true">
+                </dxi-column> -->
+                <dxi-column dataField="active" caption="Active" [width]="100">
+                </dxi-column>
+                <dxi-column type="buttons" [width]="40">
+                    <dxi-button hint="Audit" icon="search" [onClick]="showAuditClick"></dxi-button>
+                </dxi-column>
+                <!-- <dxi-column dataField="shelfLocation" caption="Shelf Location" [visible]="true" [width]="80">
+                </dxi-column> -->
+                <!-- <dxi-column type="buttons" [width]="80">
+                </dxi-column> -->
+                <!-- <dxi-column>
+                </dxi-column> -->
+
+                <div *dxTemplate="let data of 'cellTemplate'">
+                    <img alt="" [src]="data.value" />
+                </div>
+
+                <div *dxTemplate="let dtl of 'details'">
+                    <dx-data-grid class="invoiceGrid gridContainer" [dataSource]="invoiceHistory" [showBorders]="true">
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                        </dxo-pager>
+                        <dxi-column dataField="customer" caption="Customer" [width]="300"></dxi-column>
+                        <dxi-column dataField="billingMonth" format="MMM-yyyy" dataType="date" caption="Billing Month"
+                            [width]="120"></dxi-column>
+                        <dxi-column dataField="orderQty" caption="Qty" alignment="center" [width]="80">
+                        </dxi-column>
+                        <dxi-column dataField="sell" caption="Average Sell ($)" [width]="100"></dxi-column>
+                        <dxi-column dataField="amount" caption="Total ($)" [width]="100"></dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dx-data-grid>
+        </div>
+
+        <div class="col-md-4" *ngIf="selectedProduct">
+            <div *ngIf="checkRole(9)">
+                <table class="minimalistBlack">
+                    <tr>
+                        <th style="width:100px">Cost: ${{cost}}</th>
+                        <th style="width:150px">Min Sell($)</th>
+                        <th style="width:150px">Max Sell($)</th>
+                    </tr>
+                    <tbody>
+                        <tr>
+                            <td class="title">Retail</td>
+                            <td class="value text-md-center">
+                                {{minRetailSell}}</td>
+                            <td class="value text-md-center">
+                                {{maxRetailSell}}</td>
+                        </tr>
+                        <tr>
+                            <td class="title">WholeSale</td>
+                            <td class="value text-md-center">
+                                {{minWholeSell}}</td>
+                            <td class="value text-md-center">
+                                {{maxWholeSell}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <dx-button id="saveButton" icon="save" type="default" text="Save" (onClick)="Saveclicked($event)">
+            </dx-button>
+            <dx-form id="form" [formData]="selectedProduct" (onFieldDataChanged)="form_fieldDataChanged($event)"
+                *ngIf="selectedProduct">
+                <dxi-item itemType="tabbed">
+                    <dxi-tab title="Attributes">
+                        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="categoryId" editorType="dxSelectBox" [editorOptions]="{ dataSource: categories, displayExpr: 'categoryName', 
+                                        valueExpr: 'categoryId',searchEnabled: 'true' }">
+                                <dxi-validation-rule type="required" message="Category is required">
+                                </dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="lineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: productLines, displayExpr: 'line', 
+                                        valueExpr: 'lineId',searchEnabled: 'true' }">
+                                <dxi-validation-rule type="required" message="Category is required">
+                                </dxi-validation-rule>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                            <dxi-item dataField="description"></dxi-item>
+                            <dxi-item dataField="comments"></dxi-item>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" caption="Fixed Pricing" [colCount]="3" [colSpan]="2"
+                            *ngIf="checkRole(9)">
+                            <dxi-item dataField="cost">
+                                <dxo-label location="left" alignment="left" text="Cost ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="fixedSell">
+                                <dxo-label location="left" alignment="left" text="Fixed Sell ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="fixedJobber">
+                                <dxo-label location="left" alignment="left" text="Fixed Jobber ($)">
+                                </dxo-label>
+                            </dxi-item>
+                        </dxi-item>
+
+
+                        <dxi-item itemType="group" caption="Pricing" [colCount]="2" [colSpan]="2" *ngIf="checkRole(9)">
+
+                            <dxi-item dataField="sellIndex" editorType="dxNumberBox"
+                                [editorOptions]="{min: -500, max: 500, showSpinButtons: true , onValueChanged: calcSale()}">
+                                <dxo-label location="left" alignment="left" text="Sell Index (%)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="sell">
+                                <dxo-label location="left" alignment="left" text="Sell ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="jobberIndex" editorType="dxNumberBox"
+                                [editorOptions]="{min: -500, max: 500, showSpinButtons: true }">
+                                <dxo-label location="left" alignment="left" text="Jobber Index (%)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="jobberSell">
+                                <dxo-label location="left" alignment="left" text="Jobber Sell ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="onlineIndex" editorType="dxNumberBox"
+                                [editorOptions]="{min: -500, max: 500, showSpinButtons: true }">
+                                <dxo-label location="left" alignment="left" text="Online Index (%)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="onlineSell">
+                                <dxo-label location="left" alignment="left" text="Online Sell ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="isOnSale"></dxi-item>
+                            <dxi-item dataField="salePrice">
+                                <dxo-label location="left" alignment="left" text="Sale Price ($)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="saleStartDate" editorType="dxDateBox">
+                                <dxo-label location="left" alignment="left" text="Sale Start Date">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="saleEndDate" editorType="dxDateBox">
+                                <dxo-label location="left" alignment="left" text="Sale End Date">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="isOnClearance"></dxi-item>
+                            <dxi-item dataField="clearancePerc" editorType="dxNumberBox"
+                                [editorOptions]="{min: 0, max: 100, showSpinButtons: true }">
+                                <dxo-label location="left" alignment="left" text="Clearance (%)">
+                                </dxo-label>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="Inventory" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="sku"></dxi-item>
+                            <dxi-item dataField="shelfLocation"></dxi-item>
+                            <dxi-item dataField="inStockQty"></dxi-item>
+                            <dxi-item dataField="orderThreshold"></dxi-item>
+                            <dxi-item dataField="packQty"></dxi-item>
+                            <dxi-item dataField="active">
+                                <dxo-label location="left" alignment="left" text="Active">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="vendorSku"></dxi-item>
+                            <dxi-item dataField="specialOrder"></dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="Ranges / Dimentions">
+                        <dxi-item itemType="group" caption="Price Range" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="minRetailSell" editorType="dxNumberBox" [editorOptions]="{min: 0, max: 500, showSpinButtons: true
+                                        , onValueChanged: calcSellRange() }">
+                                <dxo-label location="left" alignment="left" text="Min Sell (Retail %)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="maxRetailSell" editorType="dxNumberBox" [editorOptions]="{min: 0, max: 500, showSpinButtons: true
+                                            , onValueChanged: calcSellRange() }">
+                                <dxo-label location="left" alignment="left" text="Max Sell (Retail %)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="minWholeSell" editorType="dxNumberBox" [editorOptions]="{min: 0, max: 100, showSpinButtons: true
+                                            , onValueChanged: calcSellRange() }">
+                                <dxo-label location="left" alignment="left" text="Min Sell (WholeSale %)">
+                                </dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="maxWholeSell" editorType="dxNumberBox" [editorOptions]="{min: 0, max: 500, showSpinButtons: true
+                                            , onValueChanged: calcSellRange() }">
+                                <dxo-label location="left" alignment="left" text="Max Sell (WholeSale %)">
+                                </dxo-label>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item caption="Dimensions" itemType="group" [colCount]="2" [colSpan]="2">
+
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="Internal Notes">
+                        <dxi-item dataField="productNote" editorType="dxTextArea" [editorOptions]="{height: 400 }">
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="Product Details">
+                        <dx-html-editor height="725px" valueType="html" [(ngModel)]="productOverview">
+                            <dxo-toolbar [multiline]=true>
+                                <dxi-item formatName="undo"></dxi-item>
+                                <dxi-item formatName="redo"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="size"
+                                    [formatValues]="['8pt', '10pt', '12pt', '14pt', '18pt', '24pt', '36pt']"></dxi-item>
+                                <dxi-item formatName="font"
+                                    [formatValues]="['Arial', 'Courier New', 'Georgia', 'Impact', 'Lucida Console', 'Tahoma', 'Times New Roman', 'Verdana']">
+                                </dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="bold"></dxi-item>
+                                <dxi-item formatName="italic"></dxi-item>
+                                <dxi-item formatName="strike"></dxi-item>
+                                <dxi-item formatName="underline"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="alignLeft"></dxi-item>
+                                <dxi-item formatName="alignCenter"></dxi-item>
+                                <dxi-item formatName="alignRight"></dxi-item>
+                                <dxi-item formatName="alignJustify"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="orderedList"></dxi-item>
+                                <dxi-item formatName="bulletList"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="header" [formatValues]="[false, 1, 2, 3, 4, 5]"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="color"></dxi-item>
+                                <dxi-item formatName="background"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="link"></dxi-item>
+                                <dxi-item formatName="image"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="clear"></dxi-item>
+                                <dxi-item formatName="codeBlock"></dxi-item>
+                                <dxi-item formatName="blockquote"></dxi-item>
+                                <dxi-item formatName="separator"></dxi-item>
+                                <dxi-item formatName="insertTable"></dxi-item>
+                                <dxi-item formatName="deleteTable"></dxi-item>
+                                <dxi-item formatName="insertRowAbove"></dxi-item>
+                                <dxi-item formatName="insertRowBelow"></dxi-item>
+                                <dxi-item formatName="deleteRow"></dxi-item>
+                                <dxi-item formatName="insertColumnLeft"></dxi-item>
+                                <dxi-item formatName="insertColumnRight"></dxi-item>
+                                <dxi-item formatName="deleteColumn"></dxi-item>
+                            </dxo-toolbar>
+                            <dxo-media-resizing [enabled]=true>
+                            </dxo-media-resizing>
+                        </dx-html-editor>
+                    </dxi-tab>
+                </dxi-item>
+            </dx-form>
+        </div>
+    </div>
+</div>

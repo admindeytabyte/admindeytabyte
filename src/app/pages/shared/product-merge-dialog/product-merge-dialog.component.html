@@ -1,0 +1,143 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#productsView' }"
+    [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="container-fluid" id="productsView">
+    <div class="row" *ngIf="errorMessage">
+        <div class="col col-sm-6 col-md-8 col-lg-12">
+            <tc-alert [removable]="true" [view]="'error'">
+                {{ errorMessage }}
+            </tc-alert>
+        </div>
+    </div>
+	<div class="row">
+        
+		<div class="col-md-4">
+            <tc-card [title]="'Categories'" id="categoriesCard" [padding]="2">
+                <dx-data-grid [dataSource]="categories" [showBorders]="true" [height]="400" class="invoiceGrid gridContainer"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
+        keyExpr="categoryId" [focusedRowEnabled]="true" [wordWrapEnabled]="true"
+        (onFocusedRowChanged)="categoryFocusChanged($event)" (onCellPrepared)="onCategoryCellPrepared($event)"
+        (onRowUpdated)="categoryUpdated($event)">
+        <dxo-editing mode="batch" [allowUpdating]="true"  [selectTextOnEditStart]=true
+                    startEditAction="click" [useIcons]="true">
+        </dxo-editing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxi-column dataField="categoryId" alignment="center" [allowEditing]="false" [visible]="true" caption="Id" [width]="80">
+        </dxi-column>
+        <dxi-column dataField="categoryName" caption="Category" sortOrder="asc">
+        </dxi-column>
+        <dxi-column dataField="companyName" caption="Company" width="100" sortOrder="asc" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="numberProducts" alignment="center" caption="# Products" [width]="120" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column type="buttons" [width]="50">
+            <dxi-button hint="Merge" icon="link" [onClick]="mergeCategoryClick">
+            </dxi-button>
+        </dxi-column>
+        <dxi-column type="buttons" [width]="50">
+            <dxi-button hint="Delete" icon="close" [onClick]="deleteCategoryClick">
+            </dxi-button>
+        </dxi-column>
+    </dx-data-grid>
+            </tc-card>
+            <tc-card [title]="'Product Lines'" id="productLinesCard" [padding]="2">
+                <dx-data-grid [dataSource]="productLines" [showBorders]="true" [height]="500" class="invoiceGrid gridContainer"
+            [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true" [focusedRowEnabled]="true"
+            [showBorders]="true" keyExpr="lineId" [wordWrapEnabled]="true" (onFocusedRowChanged)="lineFocusChanged($event)"
+            (onCellPrepared)="onProductLineCellPrepared($event)"
+            (onRowUpdated)="productLineUpdated($event)">
+            <dxo-editing mode="batch" [allowUpdating]="true"  [selectTextOnEditStart]=true
+                    startEditAction="click" [useIcons]="true">
+            </dxo-editing>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column dataField="lineId" alignment="center" caption="ID" [width]="80" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="lineTypeDesc" caption="Type" [width]="100" sortOrder="asc" >
+            </dxi-column>
+            <dxi-column dataField="line" caption="Line"  sortOrder="asc">
+            </dxi-column>
+            <dxi-column dataField="companyName" caption="Company" width="120" sortOrder="asc" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="productCount" alignment="center" caption="# Products" [width]="120" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column type="buttons" [width]="50">
+                <dxi-button hint="Merge" icon="link" [onClick]="mergeLineClick">
+                </dxi-button>
+            </dxi-column>
+            <dxi-column type="buttons" [width]="50">
+                <dxi-button hint="Delete" icon="close" [onClick]="deleteProductLineClick">
+                </dxi-button>
+            </dxi-column>
+        </dx-data-grid>
+            </tc-card>
+		</div>
+		<div class="col-md-8">
+            <div class="box" id="productSearchBar">
+                <dx-text-box #lineTextBox class="searchControl" [(ngModel)]="line" placeholder="Search by Line..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box #skuTextBox  [(ngModel)]="sku" class="searchControl" placeholder="Search by Sku..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box #descTextBox [(ngModel)]="description" class="searchControl" placeholder="Search by Description..."
+                    (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-text-box #combTextBox class="searchControl"  [(ngModel)]="combination"
+                    placeholder="Combination..." (onValueChanged)="searchProducts($event)">
+                </dx-text-box>
+                <dx-button icon="fa fa-refresh" id="clearButton" stylingMode="contained" (onClick)="reset()" width="50">
+                </dx-button>
+            </div>
+            <tc-card [title]="'Products'" id="productsCard" [padding]="2">
+                <dx-data-grid [dataSource]="productsList" [showBorders]="true" [height]="950" class="invoiceGrid gridContainer"
+            [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+            [showBorders]="true" keyExpr="rowId" [wordWrapEnabled]="true" (onCellPrepared)="onProductsCellPrepared($event)"
+            (onRowUpdated)="productUpdated($event)">
+            <dxo-editing mode="batch" [allowUpdating]="true"  [selectTextOnEditStart]=true
+                    startEditAction="click" [useIcons]="true">
+            </dxo-editing>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxi-column dataField="id" alignment="center" caption="ID" [width]="120" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="category" caption="Category" width="150" sortOrder="asc" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="line" caption="Line" width="150"  sortOrder="asc" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="sku" caption="Sku" width="150" sortOrder="asc">
+            </dxi-column>
+            <dxi-column dataField="paintNote" caption="Paint Note"> 
+            </dxi-column>
+            <dxi-column dataField="description" caption="description"> 
+            </dxi-column>
+            <dxi-column dataField="company" caption="Company" width="150" sortOrder="asc" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column dataField="numSold" alignment="center" caption="# Sold" [width]="120" [allowEditing]="false">
+            </dxi-column>
+            <dxi-column type="buttons" [width]="50">
+                <dxi-button hint="Merge" icon="link" [onClick]="mergeProductClick">
+                </dxi-button>
+            </dxi-column>
+            <dxi-column type="buttons" [width]="50">
+                <dxi-button hint="Delete" icon="close" [onClick]="deleteProductClick">
+                </dxi-button>
+            </dxi-column>
+        </dx-data-grid>
+            </tc-card>
+		</div>
+	</div>
+</div>
