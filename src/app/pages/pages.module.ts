@@ -100,6 +100,28 @@ import { PaintCodesComponent } from './paint-codes/paint-codes.component';
 import { BackOfficeComponent } from './back-office/back-office.component';
 import { DispatchlogEditorComponent } from './shared/dispatchlog-editor/dispatchlog-editor.component';
 import { SalesManagementComponent } from './sales-management/sales-management.component';
+import { PurchasingComponent } from './purchasing/purchasing.component';
+import { ReportsComponent } from './reports/reports.component';
+import { BackOrdersReportComponent } from './reports/back-orders-report/back-orders-report.component';
+import { DepositLogReportComponent } from './reports/deposit-log-report/deposit-log-report.component';
+import { DispatchLogReportComponent } from './reports/dispatch-log-report/dispatch-log-report.component';
+import { DispatchSummaryReportComponent } from './reports/dispatch-summary-report/dispatch-summary-report.component';
+import { InvoiceReportComponent } from './reports/invoice-report/invoice-report.component';
+import { MonthlySalesReportComponent } from './reports/monthly-sales-report/monthly-sales-report.component';
+import { PaymentsReportComponent } from './reports/payments-report/payments-report.component';
+import { PaymentsSummaryReportComponent } from './reports/payments-summary-report/payments-summary-report.component';
+import { SalesBylineReportComponent } from './reports/sales-byline-report/sales-byline-report.component';
+import { SalesCommReportComponent } from './reports/sales-comm-report/sales-comm-report.component';
+import { StatementsReportComponent } from './reports/statements-report/statements-report.component';
+import { NewQuoteDialogComponent } from './shared/new-quote-dialog/new-quote-dialog.component';
+import { ProfileDialogComponent } from './shared/profile-dialog/profile-dialog.component';
+import { AlertDialogComponent } from './shared/alert-dialog/alert-dialog.component';
+import { QuotesOnholdViewComponent } from './shared/quotes-onhold-view/quotes-onhold-view.component';
+import { SettingsDailogComponent } from './shared/settings-dailog/settings-dailog.component';
+import { SecurityDialogComponent } from './shared/security-dialog/security-dialog.component';
+import { IdleDialogComponent } from './shared/idle-dialog/idle-dialog.component';
+import { AlertShowDialogComponent } from './shared/alert-show-dialog/alert-show-dialog.component';
+import { TimelineComponent } from './shared/timeline/timeline.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -202,7 +224,29 @@ import { SalesManagementComponent } from './sales-management/sales-management.co
     PaintCodesComponent,
     BackOfficeComponent,
     DispatchlogEditorComponent,
-    SalesManagementComponent
+    SalesManagementComponent,
+    ReportsComponent,
+    BackOrdersReportComponent,
+    DepositLogReportComponent,
+    DispatchLogReportComponent,
+    DispatchSummaryReportComponent,
+    InvoiceReportComponent,
+    MonthlySalesReportComponent,
+    PaymentsReportComponent,
+    PaymentsSummaryReportComponent,
+    SalesBylineReportComponent,
+    SalesCommReportComponent,
+    StatementsReportComponent,
+    PurchasingComponent,
+    NewQuoteDialogComponent,
+    ProfileDialogComponent,
+    AlertDialogComponent,
+    QuotesOnholdViewComponent,
+    SettingsDailogComponent,
+    SecurityDialogComponent,
+    IdleDialogComponent,
+    AlertShowDialogComponent,
+    TimelineComponent
   ],
   exports: [],
   entryComponents: [

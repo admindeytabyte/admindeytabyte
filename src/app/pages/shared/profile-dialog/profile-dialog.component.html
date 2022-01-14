@@ -1,0 +1,27 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Security Roles</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+
+<dx-data-grid [showBorders]="true" class="invoiceGrid gridContainer" [dataSource]="roles" keyExpr="roleId" height="950"
+          [showBorders]="true">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-group-panel [visible]="true"></dxo-group-panel>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-scrolling mode="infinite"></dxo-scrolling>
+          <dxi-column dataField="roleCategory" [groupIndex]="0" caption="Category" alignment="center" width="150">
+          </dxi-column>
+          <dxi-column dataField="roleId" sortOrder="asc" caption="Id" alignment="center" width="80"
+                    [allowFiltering]="false">
+          </dxi-column>
+          <dxi-column dataField="roleName" caption="Role" alignment="left">
+          </dxi-column>
+          <dxi-column dataField="granted" caption="Granted" alignment="center" width="100">
+          </dxi-column>
+</dx-data-grid>

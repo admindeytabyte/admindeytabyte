@@ -13,6 +13,8 @@ import { PageNotFoundComponent } from './pages/not-found/not-found.component';
 import { PaintCodesComponent } from './pages/paint-codes/paint-codes.component';
 import { PaintsComponent } from './pages/paints/paints.component';
 import { ProductsComponent } from './pages/products/products.component';
+import { PurchasingComponent } from './pages/purchasing/purchasing.component';
+import { ReportsComponent } from './pages/reports/reports.component';
 import { SalesManagementComponent } from './pages/sales-management/sales-management.component';
 import { AuthGuard } from './pages/services/authguard';
 
@@ -29,6 +31,8 @@ const mainRoutes: Routes = [
   { path: 'paint-codes', component: PaintCodesComponent, canActivate: [AuthGuard] },
   { path: 'backoffice', component: BackOfficeComponent, canActivate: [AuthGuard] },
   { path: 'salesmanagement', component: SalesManagementComponent, canActivate: [AuthGuard] },
+  { path: 'purchasing', component: PurchasingComponent, canActivate: [AuthGuard] },
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: '**', component: PageNotFoundComponent },
 ];
 

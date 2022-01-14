@@ -1,0 +1,68 @@
+<div class="container-fluid" *ngIf="selectedReport">
+          <div class="box" id="reportFilterBar">
+                    <div class="col-md-7">
+                              <p id="reportTitle">{{selectedReport.reportDescription}}</p>
+                    </div>
+                    <div class="col-md-5">
+                              <div class="row" id="reportFilterControl">
+                                        <div class="field-lable">Start Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="Start Date" [(value)]="startDate">
+                                        </dx-date-box>
+                                        <div class="field-lable">End Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="End Date" [(value)]="endDate">
+                                        </dx-date-box>
+                                        <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                                                  (onClick)="refresh()">
+                                        </dx-button>
+                              </div>
+                    </div>
+          </div>
+          <div class="row" id="reportRow">
+                    <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData"
+                              [height]="gridHeight">
+                              <dxo-export [enabled]="true"></dxo-export>
+                              <dxo-group-panel [visible]="false"></dxo-group-panel>
+                              <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxi-column dataField="status" caption="Status" [groupIndex]="0" sortOrder="desc">
+                              </dxi-column>
+                              <dxi-column dataField="orderDate" dataType="date" caption="Ordered Date" sortOrder="asc">
+                              </dxi-column>
+                              <dxi-column dataField="client" caption="Client"></dxi-column>
+                              <dxi-column dataField="description" caption="description">
+                              </dxi-column>
+                              <dxi-column dataField="sku" caption="Sku" width="150">
+                              </dxi-column>
+
+                              <dxi-column dataField="orderQty" caption="Ordered Qty" dataType="number" alignment="right"
+                                        width="150">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="dispatchQty" caption="Dispatched Qty" dataType="number"
+                                        alignment="right" width="150">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="remainingQty" caption="Remaining Qty" dataType="number"
+                                        alignment="right" width="150">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+
+                              <dxi-column dataField="amount" caption="Amount ($)" dataType="number" format="currency"
+                                        alignment="right" width="150">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxo-summary>
+                                        <dxi-group-item column="amount" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Amount: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                              </dxo-summary>
+                    </dx-data-grid>
+          </div>
+</div>

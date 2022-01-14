@@ -1,0 +1,101 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4">
+            <tc-card [title]="'Open Orders'" id="openOrders" [padding]="2">
+                <dx-data-grid class="gridContainer" id="gridPurchaseOrders" [dataSource]="purchaseOrders"
+                    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+                    [height]="gridHeight" [showBorders]="true" keyExpr="poId" [focusedRowEnabled]="true"
+                    (onFocusedRowChanged)="poFocusChanged($event)">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <!-- <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel> -->
+                    <!-- <dxi-column type="buttons" [width]="40">
+                        <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                    </dxi-column> -->
+                    <!-- <dxi-column dataField="invoiceId" alignment="center" width="100"></dxi-column> -->
+                    <dxi-column dataField="docType" caption="Type" [groupIndex]="0"></dxi-column>
+                    <!-- <dxi-column dataField="type"  width="120" alignment="center" [groupIndex]="0">
+                    </dxi-column> -->
+                    <dxi-column dataField="poId" [visible]="false" alignment="center" width="60"></dxi-column>
+                    <dxi-column dataField="poNumber" caption="#" alignment="center" width="60"></dxi-column>
+                    <dxi-column dataField="createdDate" dataType="datetime" sortOrder="asc" alignment="center"
+                        format="dd-MMM-yyyy HH:mm:ss" width="180">
+                    </dxi-column>
+                    <dxi-column dataField="vendorName" alignment="center"></dxi-column>
+                    <dxi-column dataField="poStatusText" caption="Status" alignment="center" width="120">
+                    </dxi-column>
+                    <dxi-column dataField="createdBy" caption="Created By" alignment="center" width="120">
+                    </dxi-column>
+                    <dxi-column dataField="productCount" alignment="center" caption="# Products" width="100">
+                    </dxi-column>
+                    <!-- <dxi-column dataField="orderNotes" alignment="center">
+                    </dxi-column> -->
+                </dx-data-grid>
+            </tc-card>
+		</div>
+		<div class="col-md-8">
+            <dx-chart id="chart" [dataSource]="productCounts" palette="office">
+                <dxi-series argumentField="salesMonth" valueField="orderQty" type="bar" color="#000080">
+                    <dxo-label [visible]="true" position="inside">
+                    </dxo-label>
+                </dxi-series>
+                <dxo-argument-axis>
+                    <dxo-label format="MMM-yyyy"></dxo-label>
+                </dxo-argument-axis>
+                <dxo-legend [visible]="false"></dxo-legend>
+                <dxo-size [height]="150"></dxo-size>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+            </dx-chart>
+            <tc-card [title]="'Products'" id="openItems" [padding]="2">
+                <dx-data-grid class="gridContainer" id="gridPurchaseOrderItems" [dataSource]="poItems"
+                    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+                    [height]="gridHeight" [showBorders]="true" keyExpr="poDtlId"
+                    [focusedRowEnabled]="true"
+                    (onFocusedRowChanged)="productFocusChanged($event)">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-group-panel [visible]="true"></dxo-group-panel>
+                    <dxi-column type="buttons" [width]="80" [visible]="checkRole(41)">
+                        <dxi-button hint="Edit" icon="edit" [onClick]="editProductClick">
+                        </dxi-button>
+                        <dxi-button hint="Audit" icon="search" [onClick]="showAuditClick"></dxi-button>
+                    </dxi-column>
+                    <dxi-column dataField="productImage" cellTemplate="cellTemplate" caption="" [width]="100"
+                        [allowFiltering]="false" [allowSorting]="false" [allowEditing]="false">
+                    </dxi-column>
+                    <dxi-column dataField="category" caption="Category" [groupIndex]="0"></dxi-column>
+                    <dxi-column dataField="productLine" caption="Line" alignment="center" width="100"></dxi-column>
+                    <dxi-column dataField="sku" caption="Sku" alignment="center" width="100"></dxi-column>
+                    <dxi-column dataField="description"  alignment="left"></dxi-column>
+                    <dxi-column dataField="inStockQty" caption="In Stock" dataType="number" alignment="center"[width]="100"></dxi-column>
+                    <dxi-column dataField="soldQty" caption="Sold Qty" dataType="number" alignment="center"[width]="100"></dxi-column>
+                    <dxi-column dataField="threshold" caption="Thold" dataType="number" alignment="center"[width]="80"></dxi-column>
+                    <dxi-column dataField="ordered" caption="Ordered" dataType="boolean" alignment="center"[width]="80"></dxi-column>
+                    <dxi-column dataField="orderQty" caption="Order Qty" dataType="number" alignment="center"[width]="100"></dxi-column>
+                    <dxi-column dataField="receivedQty" caption="Rec Qty" dataType="number" alignment="center"[width]="80"></dxi-column>
+                    <dxi-column dataField="backOrderedQty" caption="Back Order Qty" dataType="number" alignment="center"[width]="100"></dxi-column>
+                    <dxi-column dataField="orderPrice" caption="Order Price ($)" [width]="100" dataType="number" format="currency">
+                     <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="vendorPrice" caption="Vendor Price ($)" [width]="100" dataType="number" format="currency">
+                        <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="orderAmount" caption="Total ($)" [width]="100" dataType="number" format="currency">
+                        <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                       </dxi-column>
+                       <dxi-column dataField="received" caption="Received" dataType="boolean" alignment="center"[width]="80"></dxi-column>
+                    
+                       <div *dxTemplate="let data of 'cellTemplate'">
+                        <img alt="" [src]="data.value" />
+                    </div>
+                </dx-data-grid>
+            </tc-card>
+		</div>
+	</div>
+</div>
+
+

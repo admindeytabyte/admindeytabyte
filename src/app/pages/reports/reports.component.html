@@ -1,0 +1,65 @@
+<div class="container-fluid">
+          <div class="row" *ngIf="errorMessage">
+                    <div class="col col-sm-6 col-md-8 col-lg-12">
+                              <tc-alert [removable]="true" [view]="'error'">
+                                        {{ errorMessage }}
+                              </tc-alert>
+                    </div>
+          </div>
+
+          <div class="row">
+                    <div class="col-md-3">
+                              <dx-data-grid [showBorders]="true" [dataSource]="reports" keyExpr="reportId"
+                                        [showBorders]="true" [height]="controlHeight" [focusedRowEnabled]="true"
+                                        (onFocusedRowChanged)="reportFocusChanged($event)">
+                                        <dxo-group-panel [visible]="false"></dxo-group-panel>
+                                        <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                                        <dxo-selection mode="single"></dxo-selection>
+                                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                        <dxi-column dataField="reportGroupName" caption="Group" alignment="center"
+                                                  [groupIndex]="0">
+                                        </dxi-column>
+                                        <dxi-column dataField="reportName" alignment="left" width="200">
+                                        </dxi-column>
+                                        <dxi-column dataField="reportDescription" alignment="left">
+                                        </dxi-column>
+                                        <dxi-column dataField="isActive" caption="Active" alignment="center" width="80">
+                                        </dxi-column>
+                              </dx-data-grid>
+                    </div>
+
+                    <div class="col-md-9 reportViewer" *ngIf="selectedReport">
+                              <div *ngIf="selectedReport.isActive ===  false">
+                                        <p>Under Development</p>
+                              </div>
+                              <app-invoice-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 1">
+                              </app-invoice-report>
+                              <app-statements-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 2">
+                              </app-statements-report>
+                              <app-sales-comm-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 17"></app-sales-comm-report>
+                              <app-monthly-sales-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 18"></app-monthly-sales-report>
+                              <app-back-orders-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 19">
+                              </app-back-orders-report>
+                              <app-payments-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 12">
+                              </app-payments-report>
+                              <app-sales-byline-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 20">
+                              </app-sales-byline-report>
+                              <!-- <app-dispatch-summary-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 21">
+                              </app-dispatch-summary-report> -->
+                              <app-payments-summary-report [selectedReport]="selectedReport"
+                              *ngIf="selectedReport.reportId === 21">
+                              </app-payments-summary-report>
+                              <!-- <app-dispatch-log-report [selectedReport]="selectedReport"
+                                        *ngIf="selectedReport.reportId === 21">
+                              </app-dispatch-log-report> -->
+                </div>
+        </div>
+</div>

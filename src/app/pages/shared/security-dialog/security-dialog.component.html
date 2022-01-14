@@ -1,0 +1,87 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Security Management</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<div class="container-fluid">
+          <div class="row">
+                    <div class="col-md-8">
+                              <dx-data-grid class="gridContainer" id="gridRoles" [dataSource]="users"
+                                        [remoteOperations]="false" keyExpr="id" height="900" [focusedRowEnabled]="true"
+                                        [rowAlternationEnabled]="true" (onFocusedRowChanged)="userFocusChanged($event)"
+                                        (onRowUpdated)="userUpdated($event)" (onRowRemoved)="userDeleted($event)"
+                                        (onRowInserted)="userAdded($event)"
+                                        (onToolbarPreparing)="onToolbarPreparing($event)">
+                                        <dxo-editing [useIcons]="true" mode="batch" [allowUpdating]="true"
+                                                  [allowAdding]="true">
+                                        </dxo-editing>
+                                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                        <dxo-selection mode="single"></dxo-selection>
+                                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                        <dxi-column dataField="name" alignment="left">
+                                        </dxi-column>
+                                        <dxi-column dataField="userId" width="150" alignment="left"></dxi-column>
+                                        <dxi-column dataField="empType" caption="Staff Type" width="120"
+                                                  alignment="left"></dxi-column>
+                                        <dxi-column dataField="email" caption="Email ID" width="250" alignment="left">
+                                        </dxi-column>
+                                        <dxi-column dataField="status" caption="Status" width="100" alignment="center">
+                                        </dxi-column>
+                                        <dxi-column dataField="canDeliver" caption="Can Deliver?" width="120"
+                                                  alignment="center">
+                                        </dxi-column>
+                                        <dxi-column dataField="defaultScreen" caption="Home Page" width="120"
+                                                  alignment="center"></dxi-column>
+                                        <dxi-column dataField="salesPersonId" caption="Sales Link" width="140" alignment="center">
+                                            <dxo-lookup [dataSource]="salesPeople" displayExpr="salesPersonName"
+                                                valueExpr="salesPersonId">
+                                            </dxo-lookup>
+                                        </dxi-column>
+                                        <!-- <dxi-column type="buttons" [width]="80" [visible]="isAdmin">
+                                                  <dxi-button hint="Show Password" icon="fa fa-lock"
+                                                            [onClick]="showPasswordClick"></dxi-button>
+                                        </dxi-column> -->
+                              </dx-data-grid>
+                    </div>
+                    <div class="col-md-4">
+                              <dx-data-grid class="gridContainer" id="gridMaps" [dataSource]="userMaps"
+                                        keyExpr="companyId" height="300" [rowAlternationEnabled]="true"
+                                        (onRowUpdated)="userMapUpdated($event)">
+                                        <dxo-editing [useIcons]="true" mode="batch" [allowUpdating]="true">
+                                        </dxo-editing>
+                                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                        <dxo-selection mode="single"></dxo-selection>
+                                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                        <dxi-column dataField="companyName" alignment="left" [allowEditing]="false">
+                                        </dxi-column>
+                                        <dxi-column dataField="granted" caption="Granted" width="120"
+                                                  alignment="center">
+                                        </dxi-column>
+                              </dx-data-grid>
+                              <dx-data-grid class="gridContainer" id="gridRoles" [dataSource]="systemRoles"
+                                        [remoteOperations]="false" keyExpr="roleId" height="650"
+                                        [rowAlternationEnabled]="true" (onRowUpdated)="userRoleUpdated($event)">
+                                        <dxo-editing [useIcons]="true" mode="batch" [allowUpdating]="true">
+                                        </dxo-editing>
+                                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                        <dxo-selection mode="single"></dxo-selection>
+                                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                        <dxi-column dataField="roleCategory" sortOrder="asc" caption="Category"
+                                                  alignment="center" width="150" [allowEditing]="false">
+                                        </dxi-column>
+                                        <dxi-column dataField="roleDescription" alignment="left" [allowEditing]="false">
+                                        </dxi-column>
+                                        <dxi-column dataField="granted" caption="Granted" width="120"
+                                                  alignment="center">
+                                        </dxi-column>
+                              </dx-data-grid>
+                    </div>
+          </div>
+</div>

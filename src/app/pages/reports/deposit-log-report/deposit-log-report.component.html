@@ -1,0 +1,69 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div class="container-fluid">
+    <div class="hidden-print text-center text-md-right page-buttons">
+        <button tc-button [view]="'accent'" afterIcon="fa fa-file-pdf-o"
+                  (click)="openPDF()">Print</button>
+        <!-- <button tc-button [view]="'accent'" afterIcon=" sli-email" (click)="emailPDF()" outline=" true">eMail</button> -->
+    </div>
+    <div id="htmlData">
+
+    
+    <div class="box" id="reportFilterBar">
+              <div class="col-md-7">
+                        <p id="reportTitle">Deposit Slip</p>
+              </div>
+              <div class="col-md-5">
+                        <div class="row" id="reportFilterControl">
+                                  <div class="field-lable">Report Date</div>
+                                  <dx-date-box class="filter-control" type="date" width="150"
+                                            placeholder="Report Date" [(value)]="repDate">
+                                  </dx-date-box>
+                                  <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                                            (onClick)="refresh()">
+                                  </dx-button>
+                        </div>
+              </div>
+    </div>
+    <div class="row" >
+              <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData">
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-group-panel [visible]="true"></dxo-group-panel>
+                        <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-scrolling mode="infinite"></dxo-scrolling>
+                        
+                        <dxi-column dataField="paymentType" caption="Payment Type" [groupIndex]="0">
+                        </dxi-column>
+                        
+                        <dxi-column dataField="customer" caption="Client">
+                        </dxi-column>
+                        
+                        <dxi-column dataField="loggedBy" caption="Logged By" alignment="center" width="150">
+                        </dxi-column>
+                        <dxi-column dataField="paymentAmount" caption="Paid ($)" dataType="number"
+                                  format="currency" alignment="right" width="180">
+                                  <dxo-format type="fixedPoint" [precision]="2">
+                                  </dxo-format>
+                        </dxi-column>
+                        <dxi-column dataField="note" caption="Note"></dxi-column>
+                        <dxo-summary>
+                                  <dxi-group-item column="paymentAmount" summaryType="sum"
+                                            [valueFormat]="{ type: 'currency', precision: 2 }"
+                                            [showInGroupFooter]="false">
+                                  </dxi-group-item>
+                                  <dxi-group-item column="paymentAmount" summaryType="sum"
+                                            [valueFormat]="{ type: 'currency', precision: 2 }"
+                                            displayFormat="Total: {0}" [showInGroupFooter]="true"
+                                            [alignByColumn]="true">
+                                  </dxi-group-item>
+                        </dxo-summary>
+              </dx-data-grid>
+              <p></p>
+              <p id="disclaimer">I {{user.userName}} hereby declare that the information provided is true and correct. I also understand that any willful 
+                dishonesty may result in  immediate termination of employment.</p>
+                <p id="dateLine">Date: {{repDateTxt}}</p>
+                <p id="signature"></p>
+              
+    </div>
+</div>
+</div>

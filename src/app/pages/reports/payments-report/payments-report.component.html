@@ -1,0 +1,100 @@
+<div class="container-fluid" *ngIf="selectedReport">
+          <div class="box" id="reportFilterBar">
+                    <div class="col-md-7">
+                              <p id="reportTitle">{{selectedReport.reportDescription}}</p>
+                    </div>
+                    <div class="col-md-5">
+                              <div class="row" id="reportFilterControl">
+                                        <div class="field-lable">Start Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="Start Date" [(value)]="startDate">
+                                        </dx-date-box>
+                                        <div class="field-lable">End Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="End Date" [(value)]="endDate">
+                                        </dx-date-box>
+                                        <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                                                  (onClick)="refresh()">
+                                        </dx-button>
+                              </div>
+                    </div>
+          </div>
+          <div class="row" id="reportRow">
+                    <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData"
+                              [height]="gridHeight" (onToolbarPreparing)="onGridToolbarPreparing($event)"
+                              [masterDetail]="{ enabled: true, template: 'detail' }">
+                              <dxo-search-panel [visible]="true" [width]="240" placeholder="Search...">
+                              </dxo-search-panel>
+                              <dxo-header-filter [visible]="true"></dxo-header-filter>
+                              <dxo-export [enabled]="true"></dxo-export>
+                              <dxo-group-panel [visible]="true"></dxo-group-panel>
+                              <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxi-column dataField="paymentDate" dataType="date" caption="Payment Date"
+                                        [groupIndex]="0">
+                              </dxi-column>
+                              <dxi-column dataField="invoiceType" caption="Type" [groupIndex]="1" sortOrder="desc">
+                              </dxi-column>
+                              <dxi-column dataField="paymentType" caption="Payment Type" [groupIndex]="2">
+                              </dxi-column>
+                              <!-- <dxi-column dataField="paymentId" caption="Payment Id" [groupIndex]="3">
+                              </dxi-column> -->
+                              <dxi-column dataField="customer" caption="Client">
+                              </dxi-column>
+                              <!-- <dxi-column dataField="invoiceNumber" alignment="center" caption="InvoiceNumber"
+                                        width="150">
+                              </dxi-column> -->
+                              <dxi-column dataField="loggedBy" caption="Logged By" alignment="center" width="150">
+                              </dxi-column>
+                              <dxi-column dataField="paymentAmount" caption="Paid ($)" dataType="number"
+                                        format="currency" alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="paymentNote" caption="Note">
+                              </dxi-column>
+                              <div *dxTemplate="let map of 'detail'">
+                                        <dx-data-grid [dataSource]="getDetails(map)" [showBorders]="true"
+                                                  keyExpr="invoiceId">
+                                                  <dxo-selection mode="single">
+                                                  </dxo-selection>
+                                                  <dxi-column dataField="invoiceNumber" caption="Number" [width]="100">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="invoiceType" caption="Type" [width]="100"
+                                                            alignment="center">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="billedDate" caption="Invoice Date"
+                                                            [width]="150" dataType="date" alignment="center">
+                                                  </dxi-column>
+                                                  <dxi-column dataField="billed" caption="Billed ($)" [width]="150"
+                                                            dataType="number" format="currency">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="payment" caption="Paid ($)" [width]="150"
+                                                            dataType="number" format="currency">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                                  <dxi-column dataField="balance" caption="Balance ($)" [width]="150"
+                                                            dataType="number" format="currency">
+                                                            <dxo-format type="fixedPoint" [precision]="2">
+                                                            </dxo-format>
+                                                  </dxi-column>
+                                        </dx-data-grid>
+                              </div>
+                              <dxo-summary>
+                                        <dxi-group-item column="paymentAmount" summaryType="sum"
+                                                  [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                  [showInGroupFooter]="false">
+                                        </dxi-group-item>
+                                        <dxi-group-item column="paymentAmount" summaryType="sum"
+                                                  [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                  displayFormat="Total: {0}" [showInGroupFooter]="true"
+                                                  [alignByColumn]="true">
+                                        </dxi-group-item>
+                              </dxo-summary>
+                    </dx-data-grid>
+          </div>
+</div>

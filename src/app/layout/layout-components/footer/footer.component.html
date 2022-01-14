@@ -1,2 +1,20 @@
-<div class="copyright">© Copyright {{ currentYear }}. All Rights Reserved.</div>
-<div class="version">Version {{ version }}</div>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 text-left">
+        <div class="copyright">© Powered By Deytabyte {{ currentYear }}. All Rights Reserved.</div>
+      </div>
+      <div class="col-md-8 box">
+        <dx-text-box *ngIf="checkRole(2)" class="invoiceFilter" (onValueChanged)="lookupLog($event)"
+          placeholder="Log Lookup..." width="200">
+        </dx-text-box>
+        <dx-text-box *ngIf="checkRole(2)" class="invoiceFilter" [(ngModel)]="invoiceNumber" (onValueChanged)="lookupInvoice($event)"
+          placeholder="Invoice Lookup..." width="300">
+        </dx-text-box>
+        <dx-button icon="search" id="searchButton" (onClick)="openInvoice()" stylingMode="contained">
+        </dx-button>
+      </div>
+      <div class="col-md-2 text-right">
+        <div class="version">{{this.version}}</div>
+      </div>
+    </div>
+  </div>

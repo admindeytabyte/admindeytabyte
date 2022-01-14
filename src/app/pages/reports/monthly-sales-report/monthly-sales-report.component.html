@@ -1,0 +1,78 @@
+<div class="container-fluid" *ngIf="selectedReport">
+          <div class="box" id="reportFilterBar">
+                    <div class="col-md-7">
+                              <p id="reportTitle">{{selectedReport.reportDescription}}</p>
+                    </div>
+                    <div class="col-md-5">
+                              <div class="row" id="reportFilterControl">
+                                        <div class="field-lable">Start Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="Start Date" [(value)]="startDate">
+                                        </dx-date-box>
+                                        <div class="field-lable">End Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="150"
+                                                  placeholder="End Date" [(value)]="endDate">
+                                        </dx-date-box>
+                                        <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                                                  (onClick)="refresh()">
+                                        </dx-button>
+                              </div>
+                    </div>
+          </div>
+          <div class="row" id="reportRow">
+                    <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData"
+                              [height]="gridHeight">
+                              <dxo-export [enabled]="true"></dxo-export>
+                              <dxo-group-panel [visible]="false"></dxo-group-panel>
+                              <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                              <dxo-selection mode="single"></dxo-selection>
+                              <dxo-scrolling mode="infinite"></dxo-scrolling>
+                              <dxi-column dataField="province" caption="Province" [groupIndex]="0">
+                              </dxi-column>
+                              <dxi-column dataField="billingMonth" dataType="date" caption="Month" sortOrder="asc">
+                              </dxi-column>
+                              <dxi-column dataField="gross" caption="Gross ($)" dataType="number" format="currency"
+                                        alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="hst" caption="Tax ($)" dataType="number" format="currency"
+                                        alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="netAmount" caption="Total ($)" dataType="number" format="currency"
+                                        alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="paid" caption="Paid ($)" dataType="number" format="currency"
+                                        alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxi-column dataField="balance" caption="Balance ($)" dataType="number" format="currency"
+                                        alignment="right" width="250">
+                                        <dxo-format type="fixedPoint" [precision]="2">
+                                        </dxo-format>
+                              </dxi-column>
+                              <dxo-summary>
+                                        <dxi-group-item column="gross" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Gross: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                                        <dxi-group-item column="hst" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Tax: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                                        <dxi-group-item column="netAmount" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Net: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                                        <dxi-group-item column="paid" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Paid: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                                        <dxi-group-item column="balance" summaryType="sum" valueFormat="currency"
+                                                  displayFormat="Balance: {0}" [showInGroupFooter]="true">
+                                        </dxi-group-item>
+                              </dxo-summary>
+                    </dx-data-grid>
+          </div>
+</div>

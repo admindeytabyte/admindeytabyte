@@ -1,0 +1,31 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p></p>
+<tc-card [title]="'Quotations on Hold'" [padding]="2">
+          <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="quotes" [remoteOperations]="false"
+                    [allowColumnReordering]="true" [rowAlternationEnabled]="true" height="500" [showBorders]="true"
+                    keyExpr="invoiceId" (onToolbarPreparing)="onInvoicesToolbarPreparing($event)"
+                    (onCellPrepared)="onCellPrepared($event)">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+                    <dxi-column type="buttons" [width]="40">
+                              <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+                    </dxi-column>
+                    <dxi-column type="buttons" [width]="80">
+                              <dxi-button hint="Edit" text="Release" [onClick]="releaseViewClick"></dxi-button>
+                    </dxi-column>
+                    <dxi-column dataField="quoteNumber" alignment="center" width="100"></dxi-column>
+                    <dxi-column dataField="orderDate" alignment="center" width="150">
+                    </dxi-column>
+                    <dxi-column dataField="clientName"></dxi-column>
+                    <dxi-column dataField="onHoldSince" width="200" alignment="center"></dxi-column>
+                    <dxi-column dataField="deliveryMode" width="120" alignment="center"></dxi-column>
+                    <dxi-column dataField="total" caption="Amount ($)" dataType="number" format="currency"
+                              alignment="right" width="120">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+          </dx-data-grid>
+</tc-card>

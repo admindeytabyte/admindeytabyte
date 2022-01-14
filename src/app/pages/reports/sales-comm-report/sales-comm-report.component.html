@@ -1,0 +1,75 @@
+<div class="container-fluid">
+          <div class="box" id="reportFilterBar">
+                    <div class="col-md-8">
+                              <p id="reportTitle">{{selectedReport.reportDescription}}</p>
+                    </div>
+                    <div class="col-md-4">
+                              <div class="row" id="reportFilterControl">
+                                        <div class="field-lable">Start Date</div>
+                                        <dx-date-box class="filter-control" type="date" width="200"
+                                                  placeholder="Start Date" [(value)]="reportDate"
+                                                  (onValueChanged)="dateChanged($event)">
+                                        </dx-date-box>
+                              </div>
+                    </div>
+          </div>
+</div>
+<div class="row" id="reportRow">
+          <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData" keyExpr="id"
+                    [showBorders]="true" [height]="gridHeight" width="auto"
+                    (onToolbarPreparing)="onGridToolbarPreparing($event)">
+                    <dxo-export [enabled]="true"></dxo-export>
+                    <dxo-group-panel [visible]="true"></dxo-group-panel>
+                    <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-header-filter visible="true"></dxo-header-filter>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxi-column dataField="salesPerson" caption="Sales Person" alignment="center" [groupIndex]="0">
+                    </dxi-column>
+                    <dxi-column dataField="invoiceId" alignment="center" width="100" [visible]="false">
+                    </dxi-column>
+                    <dxi-column dataField="clientName" alignment="left">
+                    </dxi-column>
+                    <dxi-column dataField="category" alignment="center" width="250">
+                    </dxi-column>
+                    <dxi-column dataField="billingMonth" alignment="center" width="125" dataType="date"
+                              [groupIndex]="1">
+                    </dxi-column>
+                    <dxi-column dataField="invoiceDate" alignment="center" width="125" dataType="date">
+                    </dxi-column>
+                    <dxi-column dataField="invoiceNumber" alignment="center" width="120">
+                    </dxi-column>
+                    <dxi-column dataField="invoiceType" alignment="center" width="120">
+                    </dxi-column>
+                    <dxi-column dataField="invoiceStatus" alignment="center" width="150">
+                    </dxi-column>
+                    <dxi-column dataField="salesAmount" caption="Sales ($)" alignment="right" width="100"
+                              dataType="number" format="currency">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="commissionPerc" caption="Commission (%)" alignment="center" width="100"
+                              dataType="number">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="calcCommissionAmount" caption="Est Commission ($)" alignment="right"
+                              dataType="number" format="currency" width="150">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="commissionAmount" caption="Actual Commission ($)" alignment="right"
+                              dataType="number" format="currency" width="150">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+                    <dxo-summary>
+                              <dxi-total-item column="calcCommissionAmount" summaryType="sum" valueFormat="currency" width="150">
+                                <dxo-format type="fixedPoint" [precision]="2">
+                                </dxo-format>
+                              </dxi-total-item>
+                              <dxi-total-item column="commissionAmount" summaryType="sum" valueFormat="currency">
+                              </dxi-total-item>
+                    </dxo-summary>
+          </dx-data-grid>
+</div>

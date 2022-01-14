@@ -1,0 +1,371 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#statementReport' }"
+          [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+          [closeOnOutsideClick]="false">
+</dx-load-panel>
+<div class="col-md-12" id="accountBalance" *ngIf="accountId>0">
+          <app-account-balance [accountId]="accountId"></app-account-balance>
+</div>
+<div class="container-fluid" *ngIf="selectedReport" id="statementReport">
+          <div class="box" id="reportFilterBar">
+                <p id="reportTitle">{{reportTitle}}</p>
+                <div id="reportFilterControl">
+                        <dx-button stylingMode="contained"  class="panelButton"
+                           text="Contacts" type="default" [width]="100" (onClick)="openContacts()">
+                        </dx-button>              
+                        <dx-button stylingMode="contained"  class="panelButton"
+                           text="Notes" type="default" [width]="100" (onClick)="openNotes()">
+                        </dx-button>              
+                        <div class="field-lable">Statement Month</div>
+                        <dx-select-box class="searchControl" id="monthSelector" [items]="months"
+                                        [showClearButton]=true
+                                        (onValueChanged)="statementMonthChanged($event)"
+                                        placeholder="Select Month...">
+                        </dx-select-box>
+                </div>
+          </div>
+          <div class="row" id="reportRow">
+                    <div class="col-md-3">
+                              <dx-list #list id="custList" class="list" [dataSource]="customers" [searchEnabled]="true"
+                                        selectionMode="single"
+                                        [searchExpr]="['companyName', 'formattedAddress','landline','mobile','tags']"
+                                        (onSelectionChanged)=listSelectionChanged($event) searchMode="startsWith"
+                                        [showSelectionControls]="true" [height]="800">
+                                        <div *dxTemplate="let item of 'item'">
+                                                  <div class="client">
+                                                            <div class="name">{{item.companyName}}</div>
+                                                            <div class="address">{{item.formattedAddress}}
+                                                            </div>
+                                                            <div class="phone">Landline- {{item.landline}} -
+                                                                      Mobile- {{item.mobile}}</div>
+                                                        <div class="balance">    Balance($) {{formatCurrency(item.balance)}}</div>
+                                                        <div class="balance">Collections($) {{formatCurrency(item.collections)}}</div>
+                                                  </div>
+                                        </div>
+                              </dx-list>
+                    </div>
+                    <div class="col-md-9" *ngIf="selectedAccount">
+                              <div class="hidden-print text-center text-md-right page-buttons">  
+                                <!-- <button  (click)="openPDF()">Export</button> -->
+                                        <button tc-button [view]="'accent'" afterIcon="fa fa-file-pdf-o"
+                                                  (click)="openPDF()">Export</button>
+                                        <!-- <button tc-button [view]="'accent'" afterIcon=" sli-email" (click)="emailPDF()" outline=" true">eMail</button> -->
+                              </div>
+                              <div id="htmlData">
+                                          <div class="row" *ngIf="header" id="header">
+                                                  <div>
+                                                            <img [src]="logoUrl" alt="" width="50" height="50">
+                                                  </div>
+                                                  <div class="container-fluid">
+                                                            <div class="row">
+                                                                      <div class="col-md-6 mb-4 mb-md-0">
+                                                                                <h5>{{header.headerLine1}}</h5>
+                                                                                <p>{{header.headerLine2}}</p>
+                                                                                <p>{{header.addressLine1}}</p>
+                                                                                <p>{{header.addressLine2}}</p>
+                                                                                <p>{{header.phoneLine1}}</p>
+                                                                                <p>{{header.phoneLine2}}</p>
+                                                                      </div>
+                                                                      <div class="col-md-6 text-md-right">
+                                                                                <h5>Billed To</h5>
+                                                                                <address class="line-h-24">
+                                                                                          {{companyName}}<br>
+                                                                                          {{billingAddress.doorNumber}}
+                                                                                          {{billingAddress.street}}<br>
+                                                                                          {{billingAddress.cityText}},
+                                                                                          {{billingAddress.provinceText}}
+                                                                                          {{billingAddress.postalCode}}<br>
+                                                                                          <abbr title="Phone">P:</abbr>
+                                                                                          {{selectedAccount.landline}}
+                                                                                </address>
+                                                                      </div>
+                                                            </div>
+                                                  </div>
+                                          </div><!-- .row -->
+                                        <div id="divider"></div>
+                                        <div class="container-fluid">
+                                                  <tc-card [title]="invoiceTitle" [padding]="2">
+                                                            <div class="table-responsive mb-4">
+                                                                      <table class="invoiceTable">
+                                                                                <thead>
+                                                                                          <tr>
+                                                                                                    <th>Invoice Number
+                                                                                                    </th>
+                                                                                                    <th>Order Date</th>
+                                                                                                    <th>Total ($)</th>
+                                                                                                    <th>Hst ($)</th>
+                                                                                                    <th>Billed ($)</th>
+                                                                                                    <th>Payment Date ($)
+                                                                                                    </th>
+                                                                                                    <th>Paid ($)</th>
+                                                                                                    <th>Balance ($)</th>
+                                                                                                    <th></th>
+                                                                                          </tr>
+                                                                                </thead>
+                                                                                <tfoot>
+                                                                                          <tr>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{invoicesCount}}
+                                                                                                    </th>
+                                                                                                    <th></th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{grossTotal.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{taxTotal.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{billedTotal.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th></th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{paidTotal.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{balanceTotal.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th></th>
+                                                                                          </tr>
+                                                                                </tfoot>
+                                                                                <tbody>
+                                                                                          <tr
+                                                                                                    *ngFor="let i of invoices">
+                                                                                                    <td class="value">
+                                                                                                              {{i.invoiceNumber}}
+                                                                                                    </td>
+                                                                                                    <td class="value">
+                                                                                                              {{i.orderDate}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right  value">
+                                                                                                              {{i.gross.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right  value">
+                                                                                                              {{i.gst.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right  value">
+                                                                                                              {{i.netAmount.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td class="value">
+                                                                                                              {{i.paidDate}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right  value">
+                                                                                                              {{i.payment?.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right  value">
+                                                                                                              {{i.balance.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td></td>
+                                                                                          </tr>
+                                                                                </tbody>
+                                                                      </table>
+                                                            </div><!-- .table-responsive -->
+                                                  </tc-card>
+                                        </div>
+                                        <div class="row">
+                                                  <!-- <tc-card [title]="summaryTitle" [padding]="2">
+                                                            <dx-data-grid [showBorders]="true" class="statements"
+                                                                      [dataSource]="summary" keyExpr="id">
+                                                                      <dxi-column dataField="statementMonthText"
+                                                                                caption="Month" [width]="200">
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="gross" caption="Total($)"
+                                                                                [width]="150" dataType="number"
+                                                                                format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="tax" caption="Tax($)"
+                                                                                [width]="150" dataType="number"
+                                                                                format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="billed" caption="Billed($)"
+                                                                                [width]="150" dataType="number"
+                                                                                format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="paid" caption="Paid($)"
+                                                                                [width]="150" dataType="number"
+                                                                                format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxi-column dataField="balance"
+                                                                                caption="Balance($)" [width]="150"
+                                                                                dataType="number" format="currency">
+                                                                                <dxo-format type="fixedPoint"
+                                                                                          [precision]="2">
+                                                                                </dxo-format>
+                                                                      </dxi-column>
+                                                                      <dxo-summary>
+                                                                                <dxi-total-item column="gross"
+                                                                                          summaryType="sum"
+                                                                                          [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                                                          displayFormat="{0}">
+                                                                                </dxi-total-item>
+                                                                                <dxi-total-item column="tax"
+                                                                                          summaryType="sum"
+                                                                                          [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                                                          displayFormat="{0}">
+                                                                                </dxi-total-item>
+                                                                                <dxi-total-item column="billed"
+                                                                                          summaryType="sum"
+                                                                                          [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                                                          displayFormat="{0}">
+                                                                                </dxi-total-item>
+                                                                                <dxi-total-item column="paid"
+                                                                                          summaryType="sum"
+                                                                                          [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                                                          displayFormat="{0}">
+                                                                                </dxi-total-item>
+                                                                                <dxi-total-item column="balance"
+                                                                                          summaryType="sum"
+                                                                                          [valueFormat]="{ type: 'currency', precision: 2 }"
+                                                                                          displayFormat="{0}">
+                                                                                </dxi-total-item>
+                                                                      </dxo-summary>
+                                                            </dx-data-grid>
+                                                  </tc-card> -->
+
+                                                  <div *ngIf="summaryAlert">
+                                                          <p id="alertText">{{summaryAlert}}</p>
+                                                  </div>
+
+                                                  <div id="summaryTable" class="table-responsive mb-12">
+                                                            <tc-card [title]="summaryTitle" [padding]="2">
+                                                                      <table class="invoiceTable">
+                                                                                <thead>
+                                                                                          <tr>
+                                                                                                    <th>Month
+                                                                                                    </th>
+                                                                                                    <th>Total ($)
+                                                                                                    </th>
+                                                                                                    <th>Tax ($)
+                                                                                                    </th>
+                                                                                                    <th>Billed ($)
+                                                                                                    </th>
+                                                                                                    <th>Paid ($)
+                                                                                                    </th>
+                                                                                                    <th>Balance
+                                                                                                              ($)
+                                                                                                    </th>
+                                                                                          </tr>
+                                                                                </thead>
+                                                                                <tfoot>
+                                                                                          <tr>
+                                                                                                    <th>
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{grossSummary.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{taxSummary.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{billedSummary.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{paidSummary.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                                    <th
+                                                                                                              class="footerValue">
+                                                                                                              {{balanceSummary.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </th>
+                                                                                          </tr>
+                                                                                </tfoot>
+                                                                                <tbody>
+                                                                                          <tr *ngFor="let s of summary">
+                                                                                                    <td
+                                                                                                              class="text-left">
+                                                                                                              {{s.statementMonthText}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right">
+                                                                                                              {{s.gross.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right">
+                                                                                                              {{s.tax.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right">
+                                                                                                              {{s.billed.toFixed(2)|
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right">
+                                                                                                              {{s.paid.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                              class="text-right">
+                                                                                                              {{s.balance.toFixed(2)
+                                                                                                              |
+                                                                                                              currency}}
+                                                                                                    </td>
+                                                                                          </tr>
+                                                                                </tbody>
+                                                                      </table>
+                                                            </tc-card>
+                                                  </div>
+
+                                        </div>
+                              </div>
+                </div>
+          </div>
+</div>

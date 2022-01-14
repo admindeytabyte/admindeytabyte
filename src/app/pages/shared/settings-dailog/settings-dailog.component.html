@@ -1,0 +1,160 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<dx-button id="refresh-button" icon="refresh" [width]="40" (onClick)="refreshStatics()">
+</dx-button>
+<p>Settings</p>
+<div class="row" *ngIf="errorMessage">
+    <div class="col col-sm-6 col-md-8 col-lg-12">
+        <tc-alert [removable]="true" [view]="'error'">
+            {{ errorMessage }}
+        </tc-alert>
+    </div>
+</div>
+<dx-form>
+    <dxi-item itemType="tabbed">
+        <dxi-tab title="Headers" id="headerTab">
+            <dx-button class="save-button" icon="save" type="default" (onClick)="SaveHeaderClicked($event)">
+            </dx-button>
+            <dx-form id="form" [formData]="header" (onFieldDataChanged)="headerForm_fieldDataChanged($event)">
+                <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                    <dxi-item dataField="headerLine1"></dxi-item>
+                    <dxi-item dataField="headerLine2"></dxi-item>
+                    <dxi-item dataField="addressLine1"></dxi-item>
+                    <dxi-item dataField="addressLine2"></dxi-item>
+                    <dxi-item dataField="phoneLine1"></dxi-item>
+                    <dxi-item dataField="phoneLine2"></dxi-item>
+                    <dxi-item dataField="footerLine1"></dxi-item>
+                </dxi-item>
+            </dx-form>
+        </dxi-tab>
+        <dxi-tab title="Sales Person" id="salesPersonTab">
+            <dx-data-grid [showBorders]="true" class="gridContainer" [dataSource]="salesPeople"
+                [masterDetail]="{ enabled: true, template: 'details' }" keyExpr="salesPersonId" [showBorders]="true"
+                (onRowUpdated)="salesPersonUpdated($event)" (onRowRemoved)="salesPersonDeleted($event)"
+                (onRowInserted)="salesPersonAdded($event)" (onFocusedRowChanged)="salesPersonFocusChanged($event)"
+                [focusedRowEnabled]="true">
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true"
+                    [allowDeleting]="true" [useIcons]="true" startEditAction="dblClick">
+                </dxo-editing>
+                <dxi-column dataField="salesPersonId" [allowEditing]="false" [width]="50" caption="Id"
+                    alignment="center">
+                </dxi-column>
+                <dxi-column dataField="salesPersonName" caption="Name" [width]="120">
+                    <dxi-validation-rule type="required">
+                    </dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="notes" caption="Note">
+                </dxi-column>
+                <dxi-column dataField="startDate" [width]="150" dataType="date" alignment="center">
+                    <dxi-validation-rule type="required">
+                    </dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="endDate" [width]="150" dataType="date" alignment="center">
+                </dxi-column>
+                <dxi-column dataField="status" [width]="80" alignment="center">
+                </dxi-column>
+                <div *dxTemplate="let dtl of 'details'">
+                    <dx-data-grid [dataSource]="dtl.data.salesCommissions" keyExpr="id" [showBorders]="true"
+                        (onRowUpdated)="salesCommissionUpdated($event)" (onRowRemoved)="salesCommissionDeleted($event)"
+                        (onRowInserted)="salesCommissionAdded($event)">
+                        <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true"
+                            [selectTextOnEditStart]=false [useIcons]="true" [allowAdding]="true">
+                        </dxo-editing>
+                        <dxi-column [visible]="false" [allowEditing]="false" dataField="salesPersonId" [width]="50"
+                            alignment="center" caption="Id">
+                        </dxi-column>
+                        <dxi-column dataField="categoryId" alignment="center" caption="Category" [width]="250">
+                            <dxo-lookup [dataSource]="categories" displayExpr="categoryName" valueExpr="categoryId">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="commissionPerc" dataType="number" [width]="80" alignment="center"
+                            caption="Comm (%)">
+                        </dxi-column>
+                        <dxi-column dataField="notes" caption="Note">
+                        </dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dx-data-grid>
+        </dxi-tab>
+        <dxi-tab title="Delivery Zones" class="settingsTab" id="zonesTab">
+            <dx-data-grid [width]="400" class="gridContainer" [dataSource]="shippingZones" keyExpr="shippingZoneId"
+                [showBorders]="true" (onRowUpdated)="shippingZoneUpdated($event)"
+                (onRowRemoved)="shippingZoneDeleted($event)" (onRowInserted)="shippingZoneAdded($event)">
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]=false
+                    [useIcons]="true" [allowAdding]="true">
+                </dxo-editing>
+                <dxi-column [allowEditing]="false" dataField="shippingZoneId" [width]="100" alignment="center"
+                    caption="Id">
+                </dxi-column>
+                <dxi-column dataField="zoneDesc" [width]="150" alignment="center" caption="Shipping Zone">
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-tab>
+
+        <dxi-tab title="Delivery Modes" id="delModesTab" class="settingsTab">
+            <dx-data-grid [width]="400" class="gridContainer" [dataSource]="deliveryModes" keyExpr="deliveryModeId"
+                [showBorders]="true" (onRowUpdated)="deliveryModeUpdated($event)"
+                (onRowRemoved)="deliveryModeDeleted($event)" (onRowInserted)="deliveryModeAdded($event)">
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]=false
+                    [useIcons]="true" [allowAdding]="true">
+                </dxo-editing>
+                <dxi-column [allowEditing]="false" dataField="deliveryModeId" [width]="100" alignment="center"
+                    caption="Id">
+                </dxi-column>
+                <dxi-column dataField="deliveryMode1" [width]="150" alignment="center" caption="Delivery Mode">
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-tab>
+
+        <dxi-tab title="Provinces" id="provincesTab" class="settingsTab">
+            <dx-data-grid [width]="400" class="gridContainer" [dataSource]="provinces" keyExpr="provinceId"
+                [showBorders]="true" (onRowUpdated)="provinceUpdated($event)" (onRowRemoved)="provinceDeleted($event)"
+                (onRowInserted)="provinceAdded($event)" [height]="400">
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]=false
+                    [useIcons]="true" [allowAdding]="true">
+                </dxo-editing>
+                <dxi-column [visible]="false" [allowEditing]="false" dataField="provinceId" [width]="100"
+                    alignment="center" caption="Id">
+                </dxi-column>
+                <dxi-column dataField="provinceName" sortOrder="asc" alignment="left" caption="Province Name">
+                </dxi-column>
+                <dxi-column dataField="tax" dataType="number" [width]="100" alignment="center" caption="Tax">
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-tab>
+        <dxi-tab title="Charge Types" id="chargeTypesTab" class="settingsTab">
+            <dx-data-grid [width]="400" class="gridContainer" [dataSource]="chargeTypes" keyExpr="chargeTypeId"
+                [showBorders]="true" (onRowUpdated)="chargeTypeUpdated($event)"
+                (onRowRemoved)="chargeTypeDeleted($event)" (onRowInserted)="chargeTypeAdded($event)" [height]="400">
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]=false
+                    [useIcons]="true" [allowAdding]="true">
+                </dxo-editing>
+                <dxi-column [visible]="true" [allowEditing]="false" dataField="chargeTypeId" [width]="100"
+                    alignment="center" caption="Id">
+                </dxi-column>
+                <dxi-column dataField="chargeTypeDesc" sortOrder="asc" alignment="left" caption="ChargeType">
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-tab>
+        <dxi-tab title="Payment Types" id="paymentTypesTab" class="settingsTab">
+            <dx-data-grid [width]="400" class="gridContainer" [dataSource]="paymentTypes" keyExpr="paymentTypeId"
+                [showBorders]="true" (onRowUpdated)="paymentTypeUpdated($event)"
+                (onRowRemoved)="paymentTypeDeleted($event)" (onRowInserted)="paymentTypeAdded($event)" [height]="400">
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]=false
+                    [useIcons]="true" [allowAdding]="true">
+                </dxo-editing>
+                <dxi-column [visible]="true" [allowEditing]="false" dataField="paymentTypeId" [width]="100"
+                    alignment="center" caption="Id">
+                </dxi-column>
+                <dxi-column dataField="paymentTypeDesc" sortOrder="asc" alignment="left" caption="PaymentType">
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-tab>
+    </dxi-item>
+</dx-form>

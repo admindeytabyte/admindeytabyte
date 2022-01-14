@@ -2,6 +2,26 @@
 
 :host {
   .site-container {
+
+    #onHoldButton {
+      width: 150px;
+    }
+
+    // #backOfficeButton {
+    //   width: 150px;
+    // }
+
+    .HeaderButton {
+      font-weight: bold;
+      font-size: 100;
+      width: 140px;
+      margin: 0px 0px 0px 5px;
+    }
+
+    // #navBarComponent {
+    //   left: 0;
+    // }
+
     .app-h-navbar {
       left: $vertical-navbar-width;
       position: absolute;

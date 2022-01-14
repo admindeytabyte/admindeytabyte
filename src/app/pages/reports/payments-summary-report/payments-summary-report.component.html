@@ -1,0 +1,131 @@
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#paymentsReport' }"
+          [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+          [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div class="container-fluid" *ngIf="selectedReport" id="paymentsReport">
+    <div  class="box" id="reportFilterBar">
+        <div class="col-md-7">
+                  <p id="reportTitle">{{reportTitle}}</p>
+        </div>
+        <div class="col-md-5">
+                  <div class="row" id="reportFilterControl" *ngIf="selectedAccount">
+                    <div class="field-lable">Start Date</div>
+                    <dx-date-box class="filter-control" type="date" width="150"
+                              placeholder="Start Date" [(value)]="startDate">
+                    </dx-date-box>
+                    <div class="field-lable">End Date</div>
+                    <dx-date-box class="filter-control" type="date" width="150"
+                              placeholder="End Date" [(value)]="endDate">
+                    </dx-date-box>
+                    <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                              (onClick)="refresh()">
+                    </dx-button>
+                  </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <dx-list #list class="list" [dataSource]="customers" [searchEnabled]="true"
+            selectionMode="single"
+            [searchExpr]="['companyName', 'formattedAddress','landline','mobile','tags']"
+            (onSelectionChanged)=listSelectionChanged($event) searchMode="startsWith"
+            [showSelectionControls]="true" [height]="gridHeight">
+            <div *dxTemplate="let item of 'item'">
+                      <div class="client">
+                                <div class="name">{{item.companyName}}</div>
+                                <div class="address">{{item.formattedAddress}}
+                                </div>
+                                <div class="phone">Landline- {{item.landline}} -
+                                          Mobile- {{item.mobile}}</div>
+                      </div>
+            </div>
+            </dx-list>
+        </div>
+        <div class="col-md-9"  *ngIf="selectedAccount">
+            
+            <div id="htmlData">
+                <div class="row" *ngIf="header" id="header">
+                    <div>
+                              <img [src]="logoUrl" alt="" width="50" height="50">
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                                  <div class="col-md-6 mb-4 mb-md-0">
+                                    <address class="line-h-24">
+                                        {{header.headerLine1}}<br>
+                                        {{header.headerLine2}}<br>
+                                        {{header.addressLine1}}<br>
+                                        {{header.addressLine2}}<br>
+                                        {{header.phoneLine1}}<br>
+                                        {{header.phoneLine2}}<br>
+                                    </address>
+                                </div>
+                                  <div class="col-md-6 text-md-right">
+                                            <address class="line-h-24">
+                                                     <h6>Report For</h6><br>
+                                                      {{companyName}}<br>
+                                                      {{billingAddress.doorNumber}}
+                                                      {{billingAddress.street}}<br>
+                                                      {{billingAddress.cityText}},
+                                                      {{billingAddress.provinceText}}
+                                                      {{billingAddress.postalCode}}<br>
+                                                      <abbr title="Phone">P:</abbr>
+                                                      {{selectedAccount.landline}}
+                                            </address>
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData"
+                    [height]="gridHeight" (onToolbarPreparing)="onGridToolbarPreparing($event)">
+                          <dxo-export [enabled]="true"></dxo-export>
+                          <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                          <dxo-group-panel [visible]="true"></dxo-group-panel>
+                          <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                          <dxo-selection mode="single"></dxo-selection>
+                          <dxo-scrolling mode="infinite"></dxo-scrolling>
+                          <!-- <dxi-column dataField="clientName" caption="" [groupIndex]="0"></dxi-column> -->
+                          <!-- <dxi-column dataField="paymentId" caption="" [groupIndex]="0"></dxi-column> -->
+                          <dxi-column dataField="paymentNote" caption="" [groupIndex]="0"></dxi-column>                          
+                          <dxi-column dataField="invoiceNumber" alignment="center" caption="Invoice #"></dxi-column>
+                          <dxi-column dataField="billedDate" dataType="date" sortOrder="asc"
+                          alignment="center" format="dd-MMM-yyyy" caption="Billed Date"></dxi-column>
+                          <dxi-column dataField="subtotal" caption="SubTotal ($)" dataType="number"
+                                    format="currency" alignment="right" width="150">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                          </dxi-column>
+                          <dxi-column dataField="tax" caption="Tax ($)" dataType="number"
+                                    format="currency" alignment="right" width="150">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                          </dxi-column>
+                          <dxi-column dataField="billed" caption="Billed ($)" dataType="number"
+                                    format="currency" alignment="right" width="250">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                          </dxi-column>
+                          <dxi-column dataField="paid" caption="Paid ($)" dataType="number"
+                                    format="currency" alignment="right" width="150">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                          </dxi-column>
+                          <dxi-column dataField="balance" caption="Balance ($)" dataType="number"
+                                    format="currency" alignment="right" width="150">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                          </dxi-column>
+                          <dxo-summary>
+                            <dxi-group-item
+                                column="InvoiceNumber"
+                                summaryType="count"
+                                displayFormat="{0} Invoices Paid">
+                            </dxi-group-item>
+                        </dxo-summary>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

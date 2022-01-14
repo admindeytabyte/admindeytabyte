@@ -1,10 +1,8 @@
 <div class="site-container" [ngClass]="getClasses()" [attr.dir]="appSettings?.rtl ? 'rtl' : null">
-  <app-horizontal-navbar [ngClass]="{ 'open': appSettings?.sidebarOpened }" *ngIf="appSettings?.showTopNavbar">
-    <button
-      class="no-style navbar-button"
-      [ngClass]="{ 'open': appSettings?.sidebarOpened }"
-      (click)="toggleSidebar(!appSettings?.sidebarOpened)"
-    >
+  <app-horizontal-navbar class="row header" [ngClass]="{ 'open': appSettings?.sidebarOpened }"
+    *ngIf="appSettings?.showTopNavbar">
+    <button class="no-style navbar-button" [ngClass]="{ 'open': appSettings?.sidebarOpened }"
+      (click)="toggleSidebar(!appSettings?.sidebarOpened)">
       <span></span>
       <span></span>
       <span></span>
@@ -17,20 +15,53 @@
       <span *ngIf="appSettings?.showTitle">{{ pageData?.title }}</span>
     </h1>
 
+    <div id="navBarComponent" class="box">
+      <dx-button id="homeButton" text="Home" class="HeaderButton" icon="home" (onClick)="homeClicked()">
+      </dx-button>
+      <dx-button *ngIf="checkRole(24)" icon="fa fa-file" text="New Quote" class="HeaderButton"
+        (onClick)="newQuoteClicked()">
+      </dx-button>
+      <dx-button text="Customers" *ngIf="checkRole(40)" icon="fa fa-user" class="HeaderButton"
+        (onClick)="customersClicked()">
+      </dx-button>
+      <dx-button text="Products" *ngIf="checkRole(41)" icon="fa fa-shopping-cart" class="HeaderButton"
+        (onClick)="productsClicked()">
+      </dx-button>
+      <dx-button text="Dispatch" *ngIf="checkRole(42)" icon="fa fa-truck" class="HeaderButton"
+        (onClick)="dispatchClicked()">
+      </dx-button>
+      <dx-button class="HeaderButton" text="Back Office" *ngIf="checkRole(45)" icon="fa fa-check-square-o"
+        class="HeaderButton" (onClick)="backOfficeClicked()">
+      </dx-button>
+      <dx-button text="Alerts({{alertCount}})" icon="fa fa-bell-o" class="HeaderButton" (onClick)="openAlertsClicked()">
+      </dx-button>
+      <dx-button id="onHoldButton" *ngIf="checkRole(57)" text="On Hold({{onHoldCount}})" icon="fa fa-hand-paper-o"
+        class="HeaderButton" (onClick)="onHoldClicked()">
+      </dx-button>
+      <dx-button *ngIf="checkRole(34)" text="Security" icon="fa fa-shield" class="HeaderButton"
+        (onClick)="securityClicked()">
+      </dx-button>
+      <dx-button *ngIf="checkRole(70)" text="Settings" icon="fa fa-cog" class="HeaderButton"
+        (onClick)="settingsClicked()">
+      </dx-button>
+      <dx-button id="exitButton" text="Logout" icon="fa fa-sign-out" class="HeaderButton" (onClick)="logoutClicked()">
+      </dx-button>
+
+      <!-- <dx-button text="idle" (onClick)="checkIdle()"></dx-button> -->
+
+    </div>
     <app-actions></app-actions>
   </app-horizontal-navbar>
 
   <app-vertical-navbar [ngClass]="{ 'open': appSettings?.sidebarOpened }">
-    <app-logo [src]="'assets/img/logo.svg'" [text]="'assist'" [alt]="'Logo'" [width]="33" [height]="33"></app-logo>
+    <app-logo [src]="logoUrl" [alt]="'Logo'" [width]="33" [height]="33">
+    </app-logo>
 
-    <app-menu [src]="'assets/data/main-menu.json'"></app-menu>
+    <app-menu [src]="'assets/data/menu.json'"></app-menu>
   </app-vertical-navbar>
 
-  <!-- <app-addition-navbar
-    [title]="'App settings'"
-    [opened]="openedAddition"
-    (open)="toggleAddition($event)"
-  ></app-addition-navbar> -->
+  <app-addition-navbar [title]="'App settings'" [opened]="openedAddition" (open)="toggleAddition($event)">
+  </app-addition-navbar>
 
   <main class="main-content" [ngClass]="{ 'loaded': pageData?.loaded }">
     <div *ngIf="!pageData?.loaded" class="page-loader-box">
@@ -38,21 +69,17 @@
     </div>
 
     <div class="main-content-wrap">
-      <tc-breadcrumb
-        [menu]="pageData?.breadcrumbs"
-        [style]="appSettings?.crumbsType"
-        *ngIf="appSettings?.showCrumbs && pageData?.breadcrumbs && pageData?.breadcrumbs.length"
-        class="mb-4"
-      ></tc-breadcrumb>
-
+      <tc-breadcrumb [menu]="pageData?.breadcrumbs" [style]="appSettings?.crumbsType"
+        *ngIf="appSettings?.showCrumbs && pageData?.breadcrumbs && pageData?.breadcrumbs.length" class="mb-4">
+      </tc-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-
+    <!-- <app-on-hold-quotes></app-on-hold-quotes> -->
+    <div  class="toolbar" id="toolbar" tabindex="0">
     <app-footer></app-footer>
+  </div>
   </main>
 
-  <div
-    class="app-overlay"
-    [ngClass]="{ 'shown': appSettings?.sidebarOpened || openedAddition }" (click)="toggleSidebar(false); toggleAddition(false)">
-  </div>
+  <div class="app-overlay" [ngClass]="{ 'shown': appSettings?.sidebarOpened || openedAddition }"
+    (click)="toggleSidebar(false); toggleAddition(false)"></div>
 </div>

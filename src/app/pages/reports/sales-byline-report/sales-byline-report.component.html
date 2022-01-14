@@ -1,0 +1,60 @@
+<div class="container-fluid" *ngIf="selectedReport">
+          <div class="box" id="reportFilterBar">
+            <p id="reportTitle">{{selectedReport.reportDescription}}</p>
+            <div id="reportFilterControl">
+                <div class="field-lable">Start Date</div>
+                <dx-date-box class="filter-control" type="date" width="150"
+                          placeholder="Start Date" [(value)]="startDate">
+                </dx-date-box>
+                <div class="field-lable">End Date</div>
+                <dx-date-box class="filter-control" type="date" width="150"
+                          placeholder="End Date" [(value)]="endDate">
+                </dx-date-box>
+                <dx-button icon="fa fa-refresh" id="reportRefreshButton" stylingMode="contained"
+                          (onClick)="refresh()">
+                </dx-button>
+            </div>
+        </div>
+</div>
+<div class="row" id="reportRow">
+          <dx-data-grid class="gridContainer" [showBorders]="true" [dataSource]="reportData" [height]="gridHeight"
+                    [width]="1500">
+                    <dxo-export [enabled]="true"></dxo-export>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-group-panel [visible]="false"></dxo-group-panel>
+                    <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+                    <dxi-column dataField="soldBy" dataType="Sold By" caption="Sold By" [groupIndex]="0"></dxi-column>
+                    <dxi-column dataField="productLine" caption="Product Line" width="150" alignment="center">
+                    </dxi-column>
+                    <dxi-column dataField="productLineDesc" caption="Description" width="300" alignment="left">
+                    </dxi-column>
+
+                    <dxi-column dataField="orderQty" caption="Total Qty" dataType="number" format="number"
+                              alignment="right" width="200" alignment="center">
+                              <dxo-format type="fixedPoint" [precision]="0">
+                              </dxo-format>
+                    </dxi-column>
+
+                    <dxi-column dataField="total" caption="Total Amount ($)" dataType="number" format="currency"
+                              alignment="right" width="200" sortOrder="desc">
+                              <dxo-format type="fixedPoint" [precision]="2">
+                              </dxo-format>
+                    </dxi-column>
+
+                    <dxi-column>
+                    </dxi-column>
+
+                    <dxo-summary>
+                              <dxi-group-item column="orderQty" summaryType="sum" [showInGroupFooter]="true">
+                              </dxi-group-item>
+                              <dxi-group-item column="total" summaryType="sum"
+                                        [valueFormat]="{ type: 'currency', precision: 2 }" displayFormat="{0}"
+                                        [showInGroupFooter]="true">
+                              </dxi-group-item>
+                    </dxo-summary>
+          </dx-data-grid>
+</div>

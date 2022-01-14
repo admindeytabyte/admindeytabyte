@@ -1,0 +1,39 @@
+::ng-deep .list .dx-list-group-header {
+    color: #f05b41;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+::ng-deep .list .client {
+    float: left;
+}
+
+::ng-deep .list .client .name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#htmlData {
+    font-size: small;
+}
+
+
+::ng-deep .phone {
+    font-size: 12px;
+    font-weight: bold;
+    color: maroon;
+}
+
+body {
+    background: #EEE;
+    /* font-size:0.9em !important; */
+}
+
+#paymentsReport {
+    height: 100%;
+}
+
+::ng-deep #header {
+    font-size: larger;
+    margin: 0px 20px 0px 10px;
+}

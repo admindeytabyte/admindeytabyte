@@ -1,5 +1,20 @@
 @import '../../../../assets/scss/variables';
 
+::ng-deep .navButton {
+  margin: 5px;
+  height: 40px;
+  width: 40px;
+}
+
+#exitButton {
+  margin: 5px;
+}
+
+::ng-deep #companyList {
+  margin: 5px;
+  height: 40px;
+}
+
 :host {
   display: flex;
   height: 100%;
@@ -10,9 +25,10 @@
     display: flex;
     height: 100%;
     margin: 0 ($module-rem);
-    @include min544 {
-      position: relative;
-    }
+
+    // @media #{$min544} {
+    //   position: relative;
+    // }
 
     ::ng-deep {
       .tc-dropdown-link {
@@ -32,16 +48,19 @@
             right: auto;
           }
         }
-        .avatar-box {
-          margin: 0 (-$module-rem * 0.5);
 
-          > * {
-            margin: 0 ($module-rem * 0.5);
+        .avatar-box {
+          margin: 0 (-$module-rem / 2);
+
+          >* {
+            margin: 0 ($module-rem / 2);
           }
+
           .name {
             font-size: 1rem;
           }
         }
+
         &:hover {
           color: $navbar-icon-color-hover;
         }

@@ -1,0 +1,39 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<div id="container">
+    <p id="title">Alert</p>
+    <table id="attTable">
+        <tbody>
+        <tr>
+        <td class="tHead">Created By</td>
+        <td class="tHead">Created Time</td>
+        <td class="tHead">Reminder Time</td>
+        </tr>
+        <tr>
+        <td>{{data.alert.loggedByUser}}</td>
+        <td>{{data.alert.loggedTime}}</td>
+        <td>{{data.alert.reminderTime}}</td>
+        </tr>
+        </tbody>
+        </table>
+    
+    <h3 id="client">{{data.alert.customerName}}</h3>
+    <div id="note" [innerHTML]="data.alert.note"></div>
+    <dx-button stylingMode="contained" id="okbutton" 
+                                    text="Ok Got It!" type="default" [width]="300" (onClick)="alertOk()"
+                                    hint="Ok">
+                                </dx-button>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <dx-date-box id="remDate" [ngModel]="remDate" type="datetime"> </dx-date-box>
+        </div>
+        <div class="col-md-6">
+            <dx-button stylingMode="contained" class="button" 
+            text="Remind Again" type="danger" [width]="250" (onClick)="remind()"
+            hint="Ok">
+        </dx-button>        
+        </div>
+    </div>
+
+    
+</div>
