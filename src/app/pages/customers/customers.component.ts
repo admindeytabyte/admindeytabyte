@@ -45,6 +45,7 @@ export class CustomersComponent extends BasePageComponent implements OnInit, OnD
   chargeTypes: any[];
   paymentTypes: any[];
   salesPeople: any[];
+  activeOnly = true;
   phoneRules: any = {
     X: /[02-9]/
   }
@@ -126,7 +127,7 @@ export class CustomersComponent extends BasePageComponent implements OnInit, OnD
 
   refreshClients() {
     this.loadingVisible = true;
-    this.dataService.getClients(this.user.companyId, true).subscribe(data => {
+    this.dataService.getClients(this.user.companyId, true, this.activeOnly).subscribe(data => {
       this.loadingVisible = false;
       this.customers = data;
       this.focusedRowKey = data.length > 0 ?
@@ -232,15 +233,15 @@ export class CustomersComponent extends BasePageComponent implements OnInit, OnD
           onClick: this.openNotes.bind(this)
         }
       },
-      // {
-      //   location: 'after',
-      //   widget: 'dxCheckBox',
-      //   options: {
-      //     text: 'Show Sales',
-      //     value: this.calcSales,
-      //     onValueChanged: this.SetShowSalesFilter.bind(this),
-      //   }
-      // },
+      {
+        location: 'after',
+        widget: 'dxCheckBox',
+        options: {
+          text: 'Active Only',
+          value: this.activeOnly,
+          onValueChanged: this.SetActiveMode.bind(this),
+        }
+      },
       {
         location: 'after',
         widget: 'dxButton',
@@ -258,6 +259,11 @@ export class CustomersComponent extends BasePageComponent implements OnInit, OnD
           onClick: this.showSales.bind(this)
         }
       });
+  }
+
+  SetActiveMode(e){
+    this.activeOnly = e.value;
+    this.refreshClients();
   }
 
 

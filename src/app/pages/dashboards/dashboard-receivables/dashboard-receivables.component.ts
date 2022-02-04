@@ -40,6 +40,7 @@ export class DashboardReceivablesComponent extends BasePageComponent implements 
   gridCaption = 'Details for past Year';
   clientCaption: string;
   recGridDataSource: PivotGridDataSource;
+  expGridDataSource: PivotGridDataSource;
   user: any;
   client: any;
   clientNotes: any[];
@@ -95,6 +96,7 @@ export class DashboardReceivablesComponent extends BasePageComponent implements 
     }
     const currentDate = new Date();
     this.startDate = new Date(currentDate.getFullYear() - 4, 0, 1);
+    //this.startDate = new Date(currentDate.getFullYear()-1, 5, 1);
     this.refreshReceivablesData();
   }
 
@@ -117,6 +119,7 @@ export class DashboardReceivablesComponent extends BasePageComponent implements 
       this.monthlyChartData = data.monthlySummary;
       this.refreshRecGrid(this.recData);
       this.refreshChart(0);
+      console.log(this.recData);
     });
   }
 
@@ -180,6 +183,53 @@ export class DashboardReceivablesComponent extends BasePageComponent implements 
         },
         { groupName: 'Date', groupInterval: 'year', groupIndex: 0 },
         { groupName: 'Date', groupInterval: 'month', groupIndex: 1 },
+        {
+          caption: 'Balance ($)',
+          dataField: 'currentBalance',
+          dataType: 'number',
+          summaryType: 'sum',
+          format: 'currency',
+          area: 'data',
+          sortOrder: 'desc'
+        }
+      ],
+      store: data
+    });
+
+    //Export
+
+    this.expGridDataSource = new PivotGridDataSource({
+      fields: [
+        {
+          caption: 'Client',
+          dataField: 'client',
+          area: 'row',
+          sortBySummaryField: 'currentBalance',
+          sortOrder: 'desc'
+        },
+        {
+          dataField: 'billingMonth',
+          dataType: 'date',
+          area: 'column',
+          sortOrder: 'asc',
+          groupName: 'Date'
+        },
+        // {
+        //   dataField: 'monthIndex',
+        //   dataType: 'number',
+        //   area: 'column',
+        //   sortOrder: 'asc',
+        //   //visible: false,
+        //   //filterType: "include",
+        //   //filterValues: [1, 2, 3]
+        // },
+        { groupName: 'Date', groupInterval: 'month', groupIndex: 0, format: 'MMM-yyyy',
+        selector: function(data) {
+          const year = new Date(data.billingMonth).getFullYear();
+          const month = new Date(data.billingMonth).getMonth();
+          return new Date(year, month);
+        }, 
+      },    
         {
           caption: 'Balance ($)',
           dataField: 'currentBalance',

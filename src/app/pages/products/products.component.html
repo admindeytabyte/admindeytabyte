@@ -104,7 +104,8 @@
                 (onFocusedRowChanged)="productFocusChanged($event)" [wordWrapEnabled]="true"
                 (onRowUpdated)="productUpdated($event)" (onRowRemoved)="productDeleted($event)"
                 [(focusedRowKey)]="focusedRowKey" [autoNavigateToFocusedRow]="true"
-                (onToolbarPreparing)="onToolbarPreparing($event)">
+                (onToolbarPreparing)="onToolbarPreparing($event)"
+                (onExporting)="onExporting($event)">
                 <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [selectTextOnEditStart]="false"
                     startEditAction="click" [useIcons]="true">
                 </dxo-editing>
@@ -113,6 +114,7 @@
                 <dxo-filter-row [visible]="true"></dxo-filter-row>
                 <dxo-header-filter [visible]="true"></dxo-header-filter>
                 <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxo-export [enabled]="true"></dxo-export>
                 <dxo-selection mode="single"></dxo-selection>
                 <dxo-paging [enabled]="false"></dxo-paging>
                 <dxi-column dataField="productImage" cellTemplate="cellTemplate" caption="" [width]="100"

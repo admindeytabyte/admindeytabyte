@@ -8,9 +8,10 @@
                               <div class="col-md-4 text-md-center">
                                         <p class="headerText">{{invoice.clientName}}</p>
                               </div>
-                              <div class="col-md-4 text-md-right">
+                              <div class="col-md-4 text-right">
                                         <p class="headerText">{{invoice.dateDisplay}}</p>
                               </div>
+                              
                     </div>
           </div>
           <div class="row">
@@ -18,7 +19,7 @@
                               <div id="detailsGrid">
                                         <dx-data-grid [dataSource]="invoice.details" keyExpr="invoiceDtlid"
                                                   [showBorders]="true" height="800" keyExpr="sequenceId"
-                                                  class="gridContainer">
+                                                  class="gridContainer" (onToolbarPreparing)="onToolbarPreparing($event)">
                                                   <dxo-selection mode="single"></dxo-selection>
                                                   <dxo-search-panel [visible]="true" [width]="300"
                                                             placeholder="Search...">
@@ -28,6 +29,9 @@
                                                   <dxi-column [allowEditing]="false" [allowFiltering]="false"
                                                             dataField="sequenceId" sortOrder="asc" [width]="80"
                                                             alignment="center" caption="Id">
+                                                  </dxi-column>
+                                                  <dxi-column [allowEditing]="false" dataField="category" caption="Category"
+                                                            [width]="150">
                                                   </dxi-column>
                                                   <dxi-column [allowEditing]="false" dataField="line" caption="Line"
                                                             [width]="80">

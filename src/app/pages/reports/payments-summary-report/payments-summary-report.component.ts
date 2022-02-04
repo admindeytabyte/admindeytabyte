@@ -53,7 +53,7 @@ export class PaymentsSummaryReportComponent implements OnInit {
       this.reportDate = this.datepipe.transform(new Date(), 'dd-MMM-yyyy');
       this.logoUrl = this.user.companyId === 4 ? 'assets/img/logo3P.png' : 'assets/img/iffylogo.jpg';
   
-      this.dataService.getClients(this.user.companyId, false).subscribe(data => {
+      this.dataService.getClients(this.user.companyId, false, false).subscribe(data => {
         this.customers = data;
       });
     }

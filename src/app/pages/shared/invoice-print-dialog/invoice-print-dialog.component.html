@@ -1,5 +1,5 @@
 <button class="close-button" mat-button (click)="CloseClick()">X</button>
-<div class="hidden-print text-center text-md-right page-buttons">
+<div class="hidden-print text-center text-md-right page-buttons text-right">
           <button *ngIf="isInvoice" tc-button [view]="'accent'" afterIcon="sli-printer" (click)="printDoc()">Print</button>
           <button tc-button [view]="'accent'" afterIcon="fa fa-file-pdf-o" (click)="openPDF()">Export</button>
           <!-- <button tc-button [view]="'accent'" afterIcon=" sli-email" (click)="emailPDF()" outline=" true">eMail</button> -->
@@ -18,7 +18,7 @@
                                         <p>{{header.phoneLine1}}</p>
                                         <p>{{header.phoneLine2}}</p>
                               </div>
-                              <div class="col-md-6 text-md-right">
+                              <div class="col-md-6 text-right">
                                         <p class="mb-2"><strong>Order Date:
                                                   </strong><i>{{data.invoice.dateDisplay}}</i>
                                         </p>
@@ -29,9 +29,9 @@
                                         </p>
                                         <p><strong>Po #:
                                                   </strong>{{data.invoice.clientPo}}</p>
-                                        <p><strong>Invoice #
+                                        <p><strong>{{data.invoice.invoiceType}} #
                                                   </strong>{{data.invoice.invoiceNumber}}</p>
-                              </div>
+                            </div>
                     </div><!-- .row -->
                     <div id="divider"></div>
                     <div class="row">
@@ -49,7 +49,7 @@
                                         </address>
                               </div>
 
-                              <div class="col-md-6 text-md-right">
+                              <div class="col-md-6 text-right">
                                         <h5>Shipping Address</h5>
 
                                         <address class="line-h-24" *ngIf="shippingAddress">
@@ -134,7 +134,7 @@
                                         </div>
 
                                         <div class="col-md-6">
-                                                  <div class="mb-5 text-center text-md-right">
+                                                  <div class="mb-5 text-center text-right">
                                                             <p class="h6"><strong>Sub-total:
                                                                                 {{data.invoice.gross.toFixed(2) |
                                                                                 currency}}</strong>
@@ -171,7 +171,7 @@
                                                   {{data.invoice.currentBalance.toFixed(2) | currency }}
                                         </p>
                               </div>
-                              <div class="col-md-4 text-md-right">
+                              <div class="col-md-4 text-right">
                                         <p class="header">
                                                   Credit Available:
                                                   {{data.invoice.creditAvailable.toFixed(2) | currency}}

@@ -79,25 +79,27 @@
           <div class="row">
                     <div class="col-md-3">
                               <tc-card [title]="gridCaption" [padding]="2">
-
-                                        <dx-pivot-grid class="pivotGrid" id="sales" [allowSortingBySummary]="true"
-                                                  [allowSorting]="true" [allowFiltering]="true" [showBorders]="true"
-                                                  [dataSource]="recGridDataSource" [showRowTotals]="false"
-                                                  [showColumnGrandTotals]="true" [showColumnTotals]="false"
-                                                  [allowSortingBySummary]="true" [height]="pivotGridHeight"
-                                                  (onCellClick)="clientCellClicked($event)"
-                                                  (onCellPrepared)="onCellPrepared($event)">
-                                                  <dxo-export [enabled]="true"></dxo-export>
-                                                  <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true"
-                                                            [width]="300">
-                                                  </dxo-header-filter>
-                                                  <dxo-scrolling mode="virtual"></dxo-scrolling>
-                                                  <dxo-field-panel [visible]="true"></dxo-field-panel>
-                                        </dx-pivot-grid>
+                                <dx-pivot-grid class="pivotGrid" id="sales" [allowSortingBySummary]="true"
+                                            [allowSorting]="true" [allowFiltering]="true" [showBorders]="true"
+                                            [dataSource]="recGridDataSource" [showRowTotals]="false"
+                                            [showColumnGrandTotals]="true" [showColumnTotals]="false"
+                                            [allowSortingBySummary]="true" [height]="pivotGridHeight"
+                                            (onCellClick)="clientCellClicked($event)"
+                                            (onCellPrepared)="onCellPrepared($event)">
+                                            <dxo-export [enabled]="true"></dxo-export>
+                                            <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true"
+                                                      [width]="300">
+                                            </dxo-header-filter>
+                                            <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                            <dxo-field-panel [visible]="true"></dxo-field-panel>
+                                        </dx-pivot-grid>  
                               </tc-card>
                     </div>
                     <div class="col-md-9" *ngIf="accountId">
-                              <tc-card [title]="clientCaption" [padding]="2">
+                        <dx-form id="detailsTab">
+                            <dxi-item itemType="tabbed">
+                                <dxi-tab title="Client Details">
+                                    <tc-card [title]="clientCaption" [padding]="2">
                                         <div class="row">
                                                   <div class="col-md-6">
                                                             <dx-data-grid id="contactsGrid" class="gridContainer"
@@ -244,7 +246,26 @@
                                                             </dx-data-grid>
                                                   </div>
                                         </div>
-                              </tc-card>
+                                    </tc-card>
+                                </dxi-tab>
+                                <dxi-tab title="Monthly Summary">
+                                    <dx-pivot-grid class="pivotGrid" id="export" [allowSortingBySummary]="true"
+                                    [allowSorting]="true" [allowFiltering]="true" [showBorders]="true"
+                                    [dataSource]="expGridDataSource" [showRowTotals]="false"
+                                    [showColumnGrandTotals]="true" [showColumnTotals]="false"
+                                    [allowSortingBySummary]="true" [height]="pivotGridHeight"
+                                    (onCellClick)="clientCellClicked($event)"
+                                    (onCellPrepared)="onCellPrepared($event)">
+                                    <dxo-export [enabled]="true"></dxo-export>
+                                    <dxo-header-filter [allowSearch]="true" [showRelevantValues]="true"
+                                              [width]="300">
+                                    </dxo-header-filter>
+                                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                    <dxo-field-panel [visible]="false"></dxo-field-panel>
+                                    </dx-pivot-grid>  
+                                </dxi-tab>
+                            </dxi-item>
+                        </dx-form>
                     </div>
           </div>
 </div>

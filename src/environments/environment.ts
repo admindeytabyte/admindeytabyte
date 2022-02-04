@@ -20,7 +20,7 @@ export const environment = {
         messagingSenderId: '126593393147',
         appId: '1:126593393147:web:ae499e70ea8b40c5'
     },
-    version: 'Version 3.74 Jan 05 2022'
+    version: 'Version 3.75 Feb 04 2022'
 };
 
 /*

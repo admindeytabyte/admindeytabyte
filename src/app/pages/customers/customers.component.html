@@ -50,9 +50,7 @@
                                 [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="950" [height]="1100">
                             </dxo-popup>
                             <dxo-form>
-                                <dxi-item itemType="tabbed" class="EditTab" [tabPanelOptions]="{
-                                    height: 1050, width: 900
-                                }">
+                                <dxi-item itemType="tabbed" class="EditTab" [tabPanelOptions]="{height: 1050, width: 900}">
                                     <dxi-tab title="Basic Info">
                                         <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
                                             <dxi-item dataField="companyName"></dxi-item>
@@ -60,7 +58,7 @@
                                         <dxi-item itemType="group" [colCount]="3" [colSpan]="2">
                                             <dxi-item dataField="isaJobber"></dxi-item>
                                             <dxi-item dataField="valuedCustomer"></dxi-item>
-                                            <dxi-item dataField="estimatesByDefault"></dxi-item>
+                                            <dxi-item dataField="isActive"></dxi-item>
                                         </dxi-item>
                                         <dxi-item itemType="group" [colCount]="3" [colSpan]="2">
                                             <dxi-item dataField="locked"></dxi-item>
@@ -72,6 +70,9 @@
                                             <dxi-item dataField="showTransactions"></dxi-item>
                                             <dxi-item dataField="hasPaintSystem"></dxi-item>
                                         </dxi-item>
+                                        <!-- <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                                            <dxi-item dataField="isActive"></dxi-item>
+                                        </dxi-item> -->
                                         <dxi-item itemType="group" caption="Billing Address" [colCount]="2"
                                             [colSpan]="2">
                                             <dxi-item dataField="doorNumber">
@@ -147,12 +148,12 @@
                                 </dxi-item>
                             </dxo-form>
                         </dxo-editing>
-                        <dxi-column dataField="locked" caption="Locked" alignment="center" width="100">
-                        </dxi-column>
                         <dxi-column type="buttons" [width]="100">
                             <dxi-button name="edit"></dxi-button>
                             <dxi-button name="delete"></dxi-button>
                         </dxi-column>
+                        <dxi-column dataField="locked" caption="Locked" alignment="center" width="100"></dxi-column>
+                        <dxi-column dataField="isActive" caption="Active" alignment="center" width="100"></dxi-column>
                         <dxo-scrolling mode="infinite"></dxo-scrolling>
                         <dxo-header-filter [visible]="true"></dxo-header-filter>
                         <dxo-filter-row [visible]="true"></dxo-filter-row>
@@ -239,8 +240,7 @@
                         </dxi-column>
                         <dxi-column dataField="shipSameAsBill" caption="Ship same as Bill" [visible]="false">
                         </dxi-column>
-                        <dxi-column dataField="estimatesByDefault" [visible]="false">
-                        </dxi-column>
+                        
                         <dxi-column dataField="salesPerc" caption="Sales Percentage (%)" dataType="number"
                             [visible]="false">
                         </dxi-column>

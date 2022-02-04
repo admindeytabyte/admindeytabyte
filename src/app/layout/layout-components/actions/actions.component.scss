@@ -50,10 +50,10 @@
         }
 
         .avatar-box {
-          margin: 0 (-$module-rem / 2);
+          margin: 0 (-$module-rem , 2);
 
           >* {
-            margin: 0 ($module-rem / 2);
+            margin: 0 ($module-rem , 2);
           }
 
           .name {

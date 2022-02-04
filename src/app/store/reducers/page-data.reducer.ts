@@ -18,8 +18,6 @@ const newState = (state, newData) => {
 
 // Reducer function
 export function pageDataReducer(state: any = defaultData, action: Action) {
-  // console.log(action.data, state);
-
   switch (action.type) {
     case PageActions.SET: {
       return action.data;

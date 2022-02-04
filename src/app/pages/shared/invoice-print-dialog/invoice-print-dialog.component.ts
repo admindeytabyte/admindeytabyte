@@ -34,7 +34,6 @@ export class InvoicePrintDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.invoice);
     this.mdDialogRef.keydownEvents().subscribe(event => {
       if (event.key === "Escape") {
         this.CloseClick();

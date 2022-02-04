@@ -13,7 +13,11 @@ import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { ProductSaleDialogComponent } from '../shared/product-sale-dialog/product-sale-dialog.component';
 import { ProductMergeDialogComponent } from '../shared/product-merge-dialog/product-merge-dialog.component';
-
+import { Workbook } from 'exceljs';
+import * as Excel from 'exceljs/dist/exceljs.min.js'
+import { saveAs } from 'file-saver-es';
+// Our demo infrastructure requires us to use 'file-saver-es'. We recommend that you use the official 'file-saver' package in your applications.
+import { exportDataGrid } from 'devextreme/excel_exporter';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -552,7 +556,7 @@ export class ProductsComponent extends BasePageComponent implements OnInit, OnDe
         partLinkId: e.row.data.id
       },
       height: '90%',
-      width: '80%'
+      width: '95%'
     });
   }
 
@@ -592,6 +596,23 @@ export class ProductsComponent extends BasePageComponent implements OnInit, OnDe
         this.searchProducts(this.refreshProducts());
       }
     );
+  }
+
+  onExporting(e) {
+    
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Products');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ProductExport.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 
   ngOnDestroy() {

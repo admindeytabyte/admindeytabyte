@@ -16,8 +16,7 @@
         <div class="col-md-12">
             <div class="row" id="invoiceHeader">
                 <div class="col-md-2 text-md-left">
-                    <p class="headerText">{{invoice?.invoiceType}} - {{invoice?.invoiceNumber}}
-                    </p>
+                    <p class="headerText">{{invoice?.invoiceType}} - {{invoice?.invoiceNumber}}</p>
                 </div>
                 <div class="col-md-8 text-md-center">
                     <p class="headerText">{{invoice?.clientName}} (Landline - {{client?.landline}} Mobile -
@@ -310,32 +309,25 @@
                                 <dxi-column [allowEditing]="false" [allowFiltering]="false" dataField="sequenceId"
                                     sortOrder="asc" [width]="80" alignment="center" caption="Id">
                                 </dxi-column>
-                                <dxi-column [allowEditing]="true" dataField="line" caption="Line" [width]="80">
+
+                                <dxi-column alignment="center" caption="Product">
+                                    <dxi-column [allowEditing]="false" dataField="category" caption="Category" [width]="150">
+                                    </dxi-column>
+                                    <dxi-column [allowEditing]="false" dataField="line" caption="Line" [width]="80">
+                                    </dxi-column>
+                                    <dxi-column [allowEditing]="false" dataField="sku" caption="Sku" [width]="120">
+                                    </dxi-column>
+                                    <dxi-column dataField="description" caption="Description"></dxi-column>    
                                 </dxi-column>
-                                <dxi-column [allowEditing]="false" dataField="sku" caption="Sku" [width]="120">
-                                </dxi-column>
-                                <dxi-column dataField="description" caption="Description"></dxi-column>
+
+                                
                                 <dxi-column dataField="inStockQty" [allowEditing]="false" caption="Stock Qty" alignment="center"
-                                    [allowFiltering]="false" [width]="120">
+                                    [allowFiltering]="false" [width]="100">
                                 </dxi-column>
-                                <dxi-column dataField="unit" [allowEditing]="true" caption="Unit" alignment="center" [allowFiltering]="false"
-                                    [width]="100">
-                                </dxi-column>
-                                <dxi-column dataField="orderQty" dataType="number" [allowEditing]="statusSortId<=9"  caption="Qty" [allowFiltering]="false"
-                                    alignment="center" [width]="80">
-                                </dxi-column>
-                                <dxi-column dataField="cost" caption="Cost ($)" [visible]="minimizedView" [width]="80"
-                                    [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="isQuotation">
-                                    <dxo-format type="fixedPoint" [precision]="2" >
-                                    </dxo-format>
-                                </dxi-column>
-                                <dxi-column dataField="jobber" caption="Jobber ($)" [width]="80"
-                                    [visible]="minimizedView" [allowFiltering]="false" [allowEditing]="false"
-                                    dataType="number" format="currency">
-                                    <dxo-format type="fixedPoint" [precision]="2">
-                                    </dxo-format>
-                                </dxi-column>
-                                <dxi-column dataField="discountText" caption="Discount" alignment="center"
+
+                                
+                                <dxi-column alignment="center" caption="Discounts">
+                                    <dxi-column dataField="discountText" caption="Discount" alignment="center"
                                     [visible]="checkRole(62)" [width]="100" [allowFiltering]="false"
                                     [allowEditing]="isQuotation">
                                 </dxi-column>
@@ -352,29 +344,55 @@
                                     <dxo-format type="fixedPoint" [precision]="2">
                                     </dxo-format>
                                 </dxi-column>
-                                <!-- dataField="sell" -->
-                                <dxi-column dataField="priceModifiedBy" caption="Sell Mod By" [visible]="minimizedView" [width]="80"
-                                    [allowFiltering]="false"  [allowEditing]="false">
                                 </dxi-column>
-                                <dxi-column dataField="defSell" caption="Orig Sell ($)" [visible]="minimizedView" [width]="80"
-                                    [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="false">
+                                
+                                <dxi-column alignment="center" caption="Changes" [visible]="minimizedView">
+                                    <dxi-column dataField="priceModifiedBy" caption="Sell Mod By"  [width]="80"
+                                    [allowFiltering]="false"  [allowEditing]="false">
+                                    </dxi-column>
+                                    <dxi-column dataField="defSell" caption="Orig Sell ($)" [width]="80"
+                                        [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="false">
+                                        <dxo-format type="fixedPoint" [precision]="2" >
+                                        </dxo-format>
+                                    </dxi-column>
+                                </dxi-column>
+                                
+                                
+
+                                <dxi-column alignment="center">
+                                    <dxi-column dataField="unit" [allowEditing]="true" caption="Unit" alignment="center" [allowFiltering]="false"
+                                    [width]="100">
+                                    </dxi-column>
+                                    <dxi-column dataField="orderQty" dataType="number" 
+                                    [allowEditing]="isQuotation"  caption="Qty" [allowFiltering]="false"
+                                            alignment="center" [width]="80">
+                                    </dxi-column>
+                                    <dxi-column dataField="sell" caption="Sell ($)" [width]="100" [allowFiltering]="false"
+                                    [allowEditing]="checkRole(13) && isQuotation" dataType="number" format="currency">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                    </dxi-column>    
+                                </dxi-column>
+
+                                <dxi-column [allowEditing]="false" caption="Total ($)" [width]="100" dataType="number"
+                                    format="currency" [calculateCellValue]="getAmount">
+                                    <dxo-format type="fixedPoint" [precision]="2">
+                                    </dxo-format>
+                                </dxi-column>
+
+                                <dxi-column dataField="assemblyInfo" caption="Assembly Status" [width]="200"
+                                    [allowFiltering]="false"  [allowEditing]="false" *ngIf="isInvoice" alignment="center">
+                                </dxi-column>
+
+                                <dxi-column [visible]="minimizedView" caption="Internals" alignment="center">
+                                    <dxi-column dataField="cost" caption="Cost ($)" [visible]="minimizedView" [width]="80"
+                                    [allowFiltering]="false" dataType="number" format="currency" [allowEditing]="isQuotation">
                                     <dxo-format type="fixedPoint" [precision]="2" >
                                     </dxo-format>
                                 </dxi-column>
-                                
-                                <dxi-column dataField="sell" caption="Sell ($)" [width]="100" [allowFiltering]="false"
-                                    [allowEditing]="checkRole(13) && statusSortId<=9" dataType="number" format="currency">
-                                    <dxo-format type="fixedPoint" [precision]="2">
-                                    </dxo-format>
-                                </dxi-column>
-                                <!-- <dxi-column [calculateCellValue]="getSell" caption="Sell ($)" [width]="100"
-                                    [allowFiltering]="false" [allowEditing]="checkRole(13)" dataType="number"
-                                    format="currency">
-                                    <dxo-format type="fixedPoint" [precision]="2">
-                                    </dxo-format>
-                                </dxi-column> -->
-                                <dxi-column [allowEditing]="false" caption="Total ($)" [width]="100" dataType="number"
-                                    format="currency" [calculateCellValue]="getAmount">
+                                <dxi-column dataField="jobber" caption="Jobber ($)" [width]="80"
+                                    [visible]="minimizedView" [allowFiltering]="false" [allowEditing]="false"
+                                    dataType="number" format="currency">
                                     <dxo-format type="fixedPoint" [precision]="2">
                                     </dxo-format>
                                 </dxi-column>
@@ -383,6 +401,7 @@
                                     [calculateCellValue]="margin">
                                     <dxo-format type="fixedPoint" [precision]="2">
                                     </dxo-format>
+                                </dxi-column>
                                 </dxi-column>
                                 
                                 <dxi-column type="buttons" [width]="50" *ngIf="isQuotation">
@@ -394,17 +413,17 @@
                                     <dxi-button hint="QDelete" icon="close" [onClick]="deleteItemClick">
                                     </dxi-button>
                                 </dxi-column>
-                                <!-- <dxi-column type="buttons" [width]="50" alignment="center" *ngIf="isInvoice && statusSortId<=8">
-                                    <dxi-button hint="IDelete" icon="close" [onClick]="deleteItemClick">
-                                    </dxi-button>
-                                </dxi-column> -->
-                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice && statusSortId<10 || isAdmin"  alignment="center">
-                                    <dxi-button hint="Return" icon="revert" [visible]="checkRole(32)"
-                                        [onClick]="returnItemClick">
+                                
+                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice && statusSortId<16"  alignment="center">
+                                    <dxi-button hint="Return" icon="revert" [visible]="checkRole(32)" [onClick]="returnItemClick">
                                     </dxi-button>
                                 </dxi-column>
-                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice && statusSortId<10 || isAdmin">
+                                <dxi-column type="buttons" [width]="50" *ngIf="isInvoice">
                                     <dxi-button hint="EditItem" icon="edit" [onClick]="editItemClick">
+                                    </dxi-button>
+                                </dxi-column>
+                                <dxi-column type="buttons" [width]="50" alignment="center" *ngIf="isInvoice && hasReturns">
+                                    <dxi-button hint="IDelete" icon="close" [onClick]="deleteItemClick">
                                     </dxi-button>
                                 </dxi-column>
                                 <!-- <dxi-column dataField="detStatus" alignment="center" [width]="80"></dxi-column> -->
@@ -416,6 +435,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- <div class="row" class="AssemblyInfo">
+                    <div class="col-md-4 AssemblyInfoCol">
+                        <p>Assembled</p>
+                    </div>
+                    <div class="col-md-4 AssemblyInfoCol"></div>
+                    <div class="col-md-4 AssemblyInfoCol"></div>
+                </div> -->
+
+
                 <div class="row" id="invoiceFooter">
                     <div class="col-md-4" id="footer-left">
                         <table class="footerTable" *ngIf="invoice">
@@ -443,7 +472,7 @@
                                 <tr>
                                     <td class="title">Invoice Memo</td>
                                     <td> 
-                                        <dx-text-area [height]="60" [(value)]="invoice.notes" [disabled]="statusSortId>=11">
+                                        <dx-text-area [height]="100" [(value)]="invoice.notes" [disabled]="statusSortId>=11">
                                         </dx-text-area>
                                     </td>
                                 </tr>

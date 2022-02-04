@@ -57,7 +57,7 @@ export class VerticalLayoutComponent extends BaseLayoutComponent implements OnIn
     this.refreshHeader();
     //this.checkAlerts();
     this.startAlertTimer();
-    // this.newQuoteClicked();
+    //this.newQuoteClicked();
     // this.onHoldClicked();
     //this.securityClicked();
 

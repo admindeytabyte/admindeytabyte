@@ -14,17 +14,11 @@
                                                   <dxo-selection mode="single"></dxo-selection>
                                                   <dxo-paging [enabled]="false"></dxo-paging>
                                                   <dxo-group-panel [visible]="true"></dxo-group-panel>
-                                                  <!-- <dxi-column type="buttons" [width]="40" [visible]="checkRole(48)">
-                                                            
-                                                  </dxi-column> -->
                                                   <dxi-column type="buttons" [width]="120" [visible]="checkRole(48)">
                                                     <dxi-button hint="Edit" icon="edit"
                                                     [onClick]="editInvoiceClick"></dxi-button>
-                                                            <dxi-button icon="fa fa-file" hint="Close No Payment"
-                                                                      [onClick]="closeInvoiceClick">
-                                                            </dxi-button>
-                                                            <dxi-button hint="Payment" icon="money"
-                                                                      [onClick]="payInvoiceClick"></dxi-button>
+                                                  <dxi-button icon="fa fa-file" hint="CloseNoPayment" [onClick]="closeInvoiceClick"></dxi-button>
+                                                  <dxi-button hint="Payment" icon="money" [onClick]="payInvoiceClick"></dxi-button>
                                                   </dxi-column>
                                                   <dxi-column dataField="invoiceNumber" alignment="center" width="120">
                                                   </dxi-column>

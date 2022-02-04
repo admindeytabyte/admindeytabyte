@@ -43,6 +43,7 @@ export class InvoiceDialogComponent implements OnInit {
   isComplete: boolean;
   isEstimate: boolean;
   isAdmin: boolean = false;
+  hasReturns: boolean =  false;
   dtlHistory: any[];
   purchaseHistory: any[] = [];
   billingAddress: any;
@@ -120,6 +121,7 @@ export class InvoiceDialogComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.userService.getUser();
     this.isAdmin = this.user.isAdmin;
+    
     this.loadInvoice();
 
     this.mdDialogRef.keydownEvents().subscribe((event) => {
@@ -143,7 +145,6 @@ export class InvoiceDialogComponent implements OnInit {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     //this.invoiceGridHeight = this.screenHeight * .50;
-    //console.log(this.screenHeight + ',' + this.invoiceGridHeight);
   }
 
   @HostListener("window:keydown.f2", ["$event"])
@@ -316,11 +317,15 @@ export class InvoiceDialogComponent implements OnInit {
           addedBy: item.addedBy,
           addedById: item.addedById,
           detStatus: "O",
+          category: item.category,
           discountMapId: item.discountMapId,
           percDiscount: item.percDiscount === null ? 0 : item.percDiscount,
           discountText: item.discountText,
+          assemblyInfo: item.assemblyInfo,
+          isAssembled: item.isAssembled,
           inStockQty: item.inStockQty,
           quantityBreaks: item.quauntityBreaks,
+          
         });
         if (this.invoice.client.houseAccount === true) {
           dtl.cost = 0;
@@ -333,6 +338,12 @@ export class InvoiceDialogComponent implements OnInit {
       this.loadingVisible = false;
       this.calcTotals();
       this.changeCounter = 0;
+      this.hasReturns = this.invoiceDetails.filter((item) => item.detStatusCde === 'R').length>0; 
+
+      if (this.user.usedId='SYS'){
+        this.errorMessage = this.invoice.invoiceId;
+      }
+
       // this.showClientMatrix(null);
       //this.showProductLookup(null);
       // this.printInvoice();
@@ -351,16 +362,16 @@ export class InvoiceDialogComponent implements OnInit {
       //   location: 'before',
       //   template: 'invoiceAlert',
       // },
-      {
-        location: "before",
-        widget: "dxButton",
-        options: {
-          text: "Assign To Tas",
-          visible: this.showAssign(),
-          width: 200,
-          onClick: this.assignQuote.bind(this),
-        },
-      },
+      // {
+      //   location: "before",
+      //   widget: "dxButton",
+      //   options: {
+      //     text: "Assign To Tas",
+      //     visible: this.showAssign(),
+      //     width: 200,
+      //     onClick: this.assignQuote.bind(this),
+      //   },
+      // },
       {
         location: "after",
         widget: "dxCheckBox",
@@ -632,19 +643,29 @@ export class InvoiceDialogComponent implements OnInit {
 
     if (e.rowType === "data" && e.column.type === "buttons") {
       if (e.column.buttons[0].hint === "EditItem") {
-        if (this.allowEditCheck(e.data) === false) {
-          e.cellElement.style.display = "none";
+        if (e.data.isAssembled == true) {
+          e.cellElement.style.visibility = "hidden";
         }
         if (e.data.detStatusCde === "R") {
-          e.cellElement.style.display = "none";
+          e.cellElement.style.visibility = "hidden";
         }
       }
 
       if (e.column.buttons[0].hint === "Return") {
         if (e.data.detStatusCde === "R") {
-          e.cellElement.style.display = "none";
+          e.cellElement.style.visibility = "hidden";
         }
       }
+
+      if (e.column.buttons[0].hint === "IDelete") {
+        if (e.data.detStatusCde != "R") {
+          e.cellElement.style.visibility = "hidden";
+        }
+      }
+
+      
+
+      
 
       // if (e.column.buttons[0].hint === 'Delete' && this.isInvoice)
       // {

@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { Router } from '@angular/router';
 import { ProductSaleDialogComponent } from '../../shared/product-sale-dialog/product-sale-dialog.component';
+import { GlobalConstants } from 'src/app/common/globals';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -79,17 +80,19 @@ export class DashboardHomeComponent extends BasePageComponent implements OnInit,
 
   ngOnInit(): void {
     super.ngOnInit();
-    // this.user = this.userService.getUser();
-    // if (this.checkRole(69) === false) {
-    //   this.router.navigateByUrl('/vertical/notallowed');
-    //   return;
-    // }
+     this.user = this.userService.getUser();
+    if (this.checkRole(69) === false) {
+      this.router.navigateByUrl('/vertical/notallowed');
+      return;
+    }
     this.refreshInvoices(true);
     this.startTimer();
 
+    //console.log(GlobalConstants.rolesAudits);
+
     // this.dialogRef = this.dialog.open(InvoiceDialogComponent, {
     //   data: {
-    //     invoiceId: 264784
+    //     invoiceId: 276448
     //   },
     //   height: '99%',
     //   width: '99%'
@@ -122,7 +125,7 @@ export class DashboardHomeComponent extends BasePageComponent implements OnInit,
 
   refreshInvoices(showLoader) {
     this.loadingVisible = showLoader;
-    this.dataService.getHomePanelData(this.numDays, 1).subscribe(data => {
+    this.dataService.getHomePanelData(this.numDays, this.user.companyId).subscribe(data => {
       this.loadingVisible = false;
       this.invoicesData = data.invoices;
       this.invoices = data.invoices;
@@ -142,11 +145,11 @@ export class DashboardHomeComponent extends BasePageComponent implements OnInit,
     });
   }
 
-  rowClicked(e) {
-    this.dataService.getDetails(e.key).subscribe(data => {
-      this.invoiceDetails = data;
-    });
-  }
+  // rowClicked(e) {
+  //   this.dataService.getDetails(e.key).subscribe(data => {
+  //     this.invoiceDetails = data;
+  //   });
+  // }
 
   onToolbarPreparing(e) {
     e.toolbarOptions.items.unshift(
@@ -202,6 +205,7 @@ export class DashboardHomeComponent extends BasePageComponent implements OnInit,
   onCellPrepared(e) {
     if (e.rowType === 'data' && e.column.dataField === 'total') {
       e.cellElement.style.color = e.data.total >= 0 ? 'green' : 'red';
+      e.cellElement.style.fontWeight = 'bold';
     }
 
     if (e.rowType === 'data' && e.column.dataField === 'status') {
@@ -212,6 +216,19 @@ export class DashboardHomeComponent extends BasePageComponent implements OnInit,
         }
       }
     }
+
+    if (e.rowType === 'data' && e.column.dataField === 'assemblyPercComplete') {
+      e.cellElement.style.fontWeight = 'bold';
+      e.cellElement.style.color = 'white';
+      if (e.data.assemblyPercComplete >= 0 && e.data.assemblyPercComplete < .4) {
+        e.cellElement.style.backgroundColor = 'maroon';
+      } else if (e.data.assemblyPercComplete >= .50 && e.data.assemblyPercComplete < 1) {
+        e.cellElement.style.backgroundColor = '#e2942d';
+      } else {
+        e.cellElement.style.backgroundColor = '#186b23';
+      }
+    }
+
 
     if (e.rowType === 'data' && e.column.dataField === 'client') {
       if (e.data.locked === true) {

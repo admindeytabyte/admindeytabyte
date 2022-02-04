@@ -24,6 +24,7 @@ export class NewQuoteDialogComponent implements OnInit {
   deliveryModes: any[] = [];
   OrderTypes: any[] = [];
   orderType: any;
+  activeOnly= true;
   deliveryModeText: any[];
   selectedAccount: any;
   delMode: any;
@@ -36,6 +37,9 @@ export class NewQuoteDialogComponent implements OnInit {
   notesDialogRef: MatDialogRef<NotesDialogComponent>;
   user: any;
   clientDialogRef: MatDialogRef<CommonEditorDialogComponent>;
+  screenHeight: number;
+  screenWidth: number;
+  listHeight: number;
   constructor(@Inject(MAT_DIALOG_DATA) public data: {
     invoiceId: any,
   },
@@ -47,7 +51,15 @@ export class NewQuoteDialogComponent implements OnInit {
     mdDialogRef.disableClose = true;
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    this.listHeight = this.screenHeight * .65;
+  }
+
   ngOnInit(): void {
+    this.onResize();
     this.loadingVisible = true;
     this.user = this.userService.getUser();
 
@@ -55,15 +67,18 @@ export class NewQuoteDialogComponent implements OnInit {
       this.deliveryModes = data.deliveryModes;
       this.OrderTypes = data.orderTypes;
     });
-
-    this.dataService.getClients(this.user.companyId, false).subscribe(data => {
-      this.customers = data;
-      this.loadingVisible = false;
-    });
+    this.refreshClients();
     this.mdDialogRef.keydownEvents().subscribe(event => {
       if (event.key === "Escape") {
         this.CloseClick();
       }
+    });
+  }
+
+  refreshClients(){
+    this.dataService.getClients(this.user.companyId, false, this.activeOnly).subscribe(data => {
+      this.customers = data;
+      this.loadingVisible = false;
     });
   }
 
@@ -171,7 +186,9 @@ export class NewQuoteDialogComponent implements OnInit {
 
   waitListClicked() {
     this.createParams('W');
+    this.loadingVisible = true;
     this.dataService.createQuotation(this.quoteParams).subscribe(data => {
+      this.loadingVisible = false;
       this.toastr.success('Quotation Created ' + data.quoteNumber, 'PaintCity Inc', { timeOut: 1000 });
       this.selectedAccount = null;
     });
@@ -179,7 +196,9 @@ export class NewQuoteDialogComponent implements OnInit {
 
   quotationClicked() {
     this.createParams('I');
+    this.loadingVisible = true;
     this.dataService.createQuotation(this.quoteParams).subscribe(data => {
+      this.loadingVisible = false;
       this.toastr.success('Quotation Created ' + data.quoteNumber, 'PaintCity Inc', { timeOut: 1000 });
       this.CloseClick();
       this.dialogRef = this.dialog.open(InvoiceDialogComponent, {

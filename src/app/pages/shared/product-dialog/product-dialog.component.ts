@@ -91,7 +91,6 @@ export class ProductDialogComponent implements OnInit {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     this.productGridHeight = this.screenHeight * .50;
-    console.log('Products-' +this.screenHeight + ',' + this.productGridHeight);
   }
 
   @HostListener('window:keydown.Control.r', ['$event'])

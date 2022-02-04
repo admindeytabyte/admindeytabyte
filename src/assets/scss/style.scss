@@ -292,6 +292,12 @@ body {
     justify-content: center;
 }
 
+.box-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
 .left-box {
     display: flex;
     flex-direction: row;
@@ -370,3 +376,6 @@ body {
 
 .text-right {
     text-align: right !important; }
+
+.text-md-right{
+        text-align: right !important; }

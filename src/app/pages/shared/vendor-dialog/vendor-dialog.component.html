@@ -1,0 +1,55 @@
+<button class="close-button" mat-button (click)="CloseClick()">X</button>
+<p>Vendor Management</p>
+<div class="row" *ngIf="errorMessage">
+          <div class="col col-sm-6 col-md-8 col-lg-12">
+                    <tc-alert [removable]="true" [view]="'error'">
+                              {{ errorMessage }}
+                    </tc-alert>
+          </div>
+</div>
+<div>
+    <dx-data-grid class="gridContainer" id="gridVendors" [dataSource]="vendors"
+    [remoteOperations]="false" keyExpr="vendorId" height="500" [focusedRowEnabled]="true"
+    [rowAlternationEnabled]="true" 
+    (onRowUpdated)="vendorUpdated($event)" (onRowRemoved)="vendorDeleted($event)"
+    (onRowInserted)="vendorAdded($event)">
+    <dxo-editing [useIcons]="true" mode="batch" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-scrolling mode="infinite"></dxo-scrolling>
+    <dxi-column dataField="vendorName" alignment="left" width="200">
+        <dxi-validation-rule type="required"> </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="contactName" width="150" alignment="left"></dxi-column>
+    <dxi-column dataField="accountNo" width="150" alignment="center"></dxi-column>
+    <dxi-column dataField="address" alignment="left"></dxi-column>
+    <dxi-column dataField="mobile"  width="150" alignment="left"></dxi-column>
+    <dxi-column dataField="landline"  width="150" alignment="left"></dxi-column>
+    <dxi-column dataField="fax"  width="150" alignment="left"></dxi-column>
+    <dxi-column dataField="email"  width="150" alignment="left"></dxi-column>
+    <dxi-column dataField="creditLimit" width="100" alignment="center"></dxi-column>
+    <dxi-column dataField="autoOrderNumber" caption="Auto Order (0-7)" alignment="center"
+            [width]="120" dataType="number"
+            editCellTemplate="numericBoxTemplate">
+    </dxi-column>
+    <div *dxTemplate="let cell of 'numericBoxTemplate'">
+        <dx-number-box  [(value)]="cell.value"  [min]="0" [max]="7" [showSpinButtons]="true"
+        (onValueChanged)="cell.setValue($event.value)"></dx-number-box>
+    </div>
+    <dxi-column dataField="countryId" caption="Country" width="140" alignment="center">
+        <dxo-lookup [dataSource]="countries" displayExpr="country1"
+            valueExpr="countryId">
+        </dxo-lookup>
+        <dxi-validation-rule type="required"> </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="status"  width="100" alignment="center"> </dxi-column>
+    
+    
+    <!-- <dxi-column type="buttons" [width]="80" [visible]="isAdmin">
+              <dxi-button hint="Show Password" icon="fa fa-lock"
+                        [onClick]="showPasswordClick"></dxi-button>
+    </dxi-column> -->
+</dx-data-grid>
+</div>
+

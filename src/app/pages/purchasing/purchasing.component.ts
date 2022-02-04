@@ -8,8 +8,9 @@ import { UserService } from '../services/user.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { ProductEditorDialogComponent } from '../shared/product-editor-dialog/product-editor-dialog.component';
-import { ProductSaleDialogComponent } from '../shared/product-sale-dialog/product-sale-dialog.component';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { VendorDialogComponent } from '../shared/vendor-dialog/vendor-dialog.component';
+import { PoviewerDialogComponent } from '../shared/poviewer-dialog/poviewer-dialog.component';
 
 @Component({
   selector: 'app-purchasing',
@@ -22,13 +23,15 @@ export class PurchasingComponent extends BasePageComponent implements OnInit, On
   screenWidth: number;
   user: any;
   purchaseOrders: any[];
-  poItems: any[];
-  gridHeight: number = 900;
-  selectedProduct: any;
-  invoiceHistory: any;
-  productCounts: any[];
-  productdialogRef: MatDialogRef<ProductEditorDialogComponent>;
-  auditDialogRef: MatDialogRef<ProductSaleDialogComponent>;
+  selectedVendor: any;
+  vendors: any[];
+  startDate: any;
+  gridHeight: number;
+  selectedPo: any;
+  loadingVisible = false;
+  confDialogRef: MatDialogRef<ConfirmDialogComponent>;
+  vendorDialog: MatDialogRef<VendorDialogComponent>;
+  poViewerDialog: MatDialogRef<PoviewerDialogComponent>;
   constructor(
     store: Store<AppState>,
     private toastr: ToastrService,
@@ -53,9 +56,8 @@ export class PurchasingComponent extends BasePageComponent implements OnInit, On
         }
       ]
     };
-    
-    this.editProductClick = this.editProductClick.bind(this);
-    this.showAuditClick = this.showAuditClick.bind(this);
+    this.editPoClick = this.editPoClick.bind(this);
+    this.deletePoClick = this.deletePoClick.bind(this);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -72,60 +74,142 @@ export class PurchasingComponent extends BasePageComponent implements OnInit, On
       this.router.navigateByUrl('/vertical/notallowed');
       return;
     }
-    this.user = this.userService.getUser();
-    this.refreshPage();
-  }
-
-  refreshPage(){
-    this.dataService.getOpenPurchaseOrders(this.user.companyId).subscribe(data => {
-      this.purchaseOrders = data;
+    this.dataService.getvendors(this.user.companyId).subscribe(data => {
+      this.vendors = data;
+      this.refreshPage();
     });
+    this.startDate = new Date(new Date().getFullYear(), new Date().getMonth()-1,new Date().getDate());
+    //this.editVendorsClick();
+    //this.OpenPO(5);
+
   }
 
-  poFocusChanged(e){
-    
-    this.dataService.getPurchaseOrderItems(e.row.data.poId,this.user.companyId).subscribe(data => {
-      this.poItems = data;
-      console.log(data);
-    });
-  }
-
-  productFocusChanged(e) {
-    this.selectedProduct = e.row.data;
-    this.dataService.getProductHistory(this.selectedProduct.partLinkId, this.user.companyId).subscribe(data => {
-      this.invoiceHistory = data.productHistory;
-      this.productCounts = [];
-      data.productCounts.forEach(item => {
-        const dtl = {
-          salesMonth: this.datepipe.transform(item.salesMonth, 'MMM-yy'),
-          orderQty: item.orderQty
-        };
-        this.productCounts.push(dtl);
+  onCellPrepared(e) {
+    if (e.rowType === "data" && e.column.type === "buttons") {
+      e.column.buttons.forEach((button: any) => 
+      { 
+        if (e.data.poStatusId > 1) {
+          e.cellElement.style.visibility = "hidden";
+        } 
       });
-    });
+    }
   }
 
-  editProductClick(e) {
-    this.productdialogRef = this.dialog.open(ProductEditorDialogComponent, {
+  
+  OpenPO(poId: any){
+    this.poViewerDialog = this.dialog.open(PoviewerDialogComponent, {
       data: {
-        partLinkId: e.row.data.partLinkId,
+        poId: poId, editable: true
       },
-      height: '95%',
-      width: '70%',
+      height: '90%',
+      width: '75%',
       panelClass: 'my-dialog'
     });
   }
 
-  showAuditClick(e){
-    this.auditDialogRef = this.dialog.open(ProductSaleDialogComponent, {
+  editPoClick(e){
+    this.poViewerDialog = this.dialog.open(PoviewerDialogComponent, {
       data: {
-        partLinkId: e.row.data.id
+        poId: e.row.data.poId, editable: e.row.data.poStatusId==1
       },
       height: '90%',
-      width: '80%'
+      width: '75%',
+      panelClass: 'my-dialog'
     });
   }
 
+  deletePoClick(e){
+    if (e.row.data.poStatusId>1) {
+      alert('Purchase Order cannot be deleted');
+      return;
+    }
+
+
+    this.confDialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm',
+        message: 'Do you want to Delete the Purchase Order?'
+      }, height: '200px', width: '600px', panelClass: 'my-dialog'
+    });
+
+    const sub = this.confDialogRef.componentInstance.confirmEvent.subscribe((data) => {
+      if (data === true) {
+        this.dataService.DeletePo(e.row.data.poId).subscribe (
+          (response): void => {
+            this.toastr.success('Purchase Order Deleted Successfully!', 'Success', {
+              timeOut: 3000,
+            });
+            this.refreshPage();
+          },
+          (error) => {
+            this.errorMessage = error.error;
+            this.toastr.error('Purchase Order Delete Failed ');
+            this.refreshPage();
+          }
+        );
+      }
+    });
+
+    this.confDialogRef.afterClosed().subscribe(() => {
+      sub.unsubscribe();
+    });
+
+  }
+
+  sendPoClick(e){
+
+  }
+
+  refreshPage(){
+    this.loadingVisible= true;
+    this.dataService.getOpenPurchaseOrders(this.user.companyId).subscribe(data => {
+      this.purchaseOrders = data;
+      this.loadingVisible= false;
+    });
+  }
+
+  // refreshPoItems(){
+  //   this.loadingVisible= true;
+  //   this.dataService.getPurchaseOrderItems(this.selectedPo.poId,this.user.companyId,this.activeProducts).subscribe(data => {
+  //     this.poItems = data;
+  //     this.loadingVisible= false;
+  //   });
+  // }
+
+  poFocusChanged(e){
+    this.selectedPo = e.row.data;
+  }
+
+  
+
+  addPo(){
+  }
+
+  addAutoPo(){
+    const poModel = {
+      companyId: this.user.companyId,
+      startDate: this.startDate
+    }
+    this.loadingVisible= true;
+    this.dataService.CreateAutoPo(poModel).subscribe(data => {
+      this.toastr.success('Success', 'PaintCity Inc', { timeOut: 1000 });
+      this.errorMessage = null;
+      this.loadingVisible= false;
+      this.refreshPage();
+    },
+      (error) => {
+        this.errorMessage = error.error;
+        this.toastr.error('Failed');
+      });
+  }
+
+  editVendorsClick(){
+    this.vendorDialog = this.dialog.open(VendorDialogComponent, {
+      height: '50%',
+      width: '70%',
+      panelClass: 'my-dialog'
+    });
+  }
 
   checkRole(roleId: any) {
     return this.userService.checkRole(roleId);

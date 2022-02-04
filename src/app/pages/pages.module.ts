@@ -122,6 +122,8 @@ import { SecurityDialogComponent } from './shared/security-dialog/security-dialo
 import { IdleDialogComponent } from './shared/idle-dialog/idle-dialog.component';
 import { AlertShowDialogComponent } from './shared/alert-show-dialog/alert-show-dialog.component';
 import { TimelineComponent } from './shared/timeline/timeline.component';
+import { VendorDialogComponent } from './shared/vendor-dialog/vendor-dialog.component';
+import { PoviewerDialogComponent } from './shared/poviewer-dialog/poviewer-dialog.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -246,7 +248,9 @@ import { TimelineComponent } from './shared/timeline/timeline.component';
     SecurityDialogComponent,
     IdleDialogComponent,
     AlertShowDialogComponent,
-    TimelineComponent
+    TimelineComponent,
+    VendorDialogComponent,
+    PoviewerDialogComponent
   ],
   exports: [],
   entryComponents: [

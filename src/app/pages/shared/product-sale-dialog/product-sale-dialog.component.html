@@ -18,7 +18,7 @@
 	<div class="row">
 		<div class="col-md-3">
             <tc-card [title]="'Snapshots'" [padding]="2">
-                <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="inventoryLogs" [remoteOperations]="false"
+                <dx-data-grid class="gridContainer" id="gridLogs" [dataSource]="inventoryLogs" [remoteOperations]="false"
                     [allowColumnReordering]="true" [rowAlternationEnabled]="true" 
                     [showBorders]="true" [height]="200"
                     keyExpr="id" [focusedRowEnabled]="true" (onFocusedRowChanged)="logSelectionChanged($event)">
@@ -31,7 +31,7 @@
                 </dx-data-grid>
             </tc-card>
             <tc-card [title]="'Daily Summary'" id="backOfficeCard" [padding]="2">
-                <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="dailyStats" [remoteOperations]="false"
+                <dx-data-grid class="gridContainer" id="gridLogSummary" [dataSource]="dailyStats" [remoteOperations]="false"
                 
                     [allowColumnReordering]="true" [rowAlternationEnabled]="true" 
                     [showBorders]="true" [height]="600">
@@ -63,26 +63,36 @@
         [showInfo]="true" 
         [showNavigationButtons]="true">
     </dxo-pager>
-    <dxi-column type="buttons" [width]="40">
-        <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
-    </dxi-column>                
-    <dxi-column dataField="logDate" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Date"></dxi-column>
-                    <dxi-column dataField="logText" caption="Note" ></dxi-column>
-                    <dxi-column dataField="createdBy" caption="Created By" width="100" alignment="center"></dxi-column>
-                    <dxi-column dataField="createdTime" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Created"></dxi-column>
-                    <dxi-column dataField="modifiedBy" caption="Modified By" width="100" alignment="center"></dxi-column>
-                    <dxi-column dataField="modifiedTime" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Modified"></dxi-column>
-                    <dxi-column dataField="originalPrice" width="80" dataType="number" format="currency" caption="Default Sell ($)">
-                        <dxo-format type="fixedPoint" [precision]="2">
-                        </dxo-format>
-                    </dxi-column>
-                    <dxi-column dataField="sellPrice" width="80" dataType="number" caption="Sell ($)" format="currency">
-                        <dxo-format type="fixedPoint" [precision]="2">
-                        </dxo-format>
-                    </dxi-column>
-                    <dxi-column dataField="orderQty" width="80"></dxi-column>
-                    <dxi-column dataField="runningQty" width="80"></dxi-column>
-                </dx-data-grid>
+            <dxi-column type="buttons" [width]="40">
+                <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
+            </dxi-column>                
+            <dxi-column dataField="logDate" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Date"></dxi-column>
+            <dxi-column dataField="logText" caption="Note" ></dxi-column>
+            <dxi-column caption="Created" alignment="center">
+                <dxi-column dataField="createdBy" caption="Created By" width="100" alignment="center"></dxi-column>
+                <dxi-column dataField="createdTime" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Created"></dxi-column>
+            </dxi-column>
+            <dxi-column caption="Modified" alignment="center">
+                <dxi-column dataField="modifiedBy" caption="Modified By" width="100" alignment="center"></dxi-column>
+                <dxi-column dataField="modifiedTime" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Modified"></dxi-column>
+            </dxi-column>
+            <dxi-column caption="Assembled" alignment="center">
+                <dxi-column dataField="assembledBy" caption="Assembled By" width="100" alignment="center"></dxi-column>
+                <dxi-column dataField="assembledTime" dataType="datetime" alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180" caption="Assembled Time"></dxi-column>
+            </dxi-column>
+            
+            
+            <dxi-column dataField="originalPrice" width="80" dataType="number" format="currency" caption="Default Sell ($)">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="sellPrice" width="80" dataType="number" caption="Sell ($)" format="currency">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="orderQty" width="80"></dxi-column>
+            <dxi-column dataField="runningQty" width="80"></dxi-column>
+        </dx-data-grid>
 		</div>
 	</div>
 </div>

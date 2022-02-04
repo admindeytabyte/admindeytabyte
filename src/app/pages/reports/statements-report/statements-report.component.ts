@@ -87,7 +87,6 @@ export class StatementsReportComponent implements OnInit {
   }
 
   openContacts() {
-    console.log('Notes');
     if (this.selectedAccount === undefined || this.selectedAccount === null) {
       alert('Please Select a Client');
       return;

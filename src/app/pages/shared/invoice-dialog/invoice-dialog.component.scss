@@ -72,6 +72,19 @@
   margin: 5px 0px 5px -16px;
 }
 
+::ng-deep .AssemblyInfo {
+  font-weight: bold;
+  min-height: 30px;
+  color: navy;
+  font-size: medium;
+  line-height: 45px;
+  margin: 5px 0px 5px -16px;
+  border: maroon;
+  border-style: double;
+}
+
+
+
 ::ng-deep #saveButton {
   float: right;
 }
@@ -81,6 +94,10 @@
 }
 
 
+::ng-deep .AssemblyInfoCol {
+  border: maroon;
+  border-style: solid;
+}
 
 ::ng-deep #discountControl {
   float: right;
@@ -108,6 +125,8 @@
   display: grid;
   place-items: center;
 }
+
+
 
 ::ng-deep #footer-center {
   border: navy;

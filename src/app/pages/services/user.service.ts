@@ -1,22 +1,38 @@
 import { Injectable } from '@angular/core';
+import { GlobalConstants } from 'src/app/common/globals';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  
+  constructor(private dataService: DataService)  {
+  }
+
   // confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
   setToken(user): void {
     localStorage.setItem('currentUser', user);
   }
 
   checkRole(roleId): boolean {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
+      //Save Role
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      let model = {
+        id: user.id,
+        companyId: user.companyId,
+        userId: user.userId,
+        roleId: roleId,
+        granted: false
+      }
+
     const role = user.roles.filter(f => f.roleId === roleId);
-    if (role.length === 0) {
-      return false;
-    } else {
-      return role[0].granted;
-    }
+    if (role.length > 0) {
+      model.granted = role[0].granted;
+    } 
+    //this.dataService.updateRoleCheck(model).subscribe(data => {},(error) => {});
+    //GlobalConstants.rolesAudits.push(model);
+    return model.granted;
   }
 
   setUser(user): void {

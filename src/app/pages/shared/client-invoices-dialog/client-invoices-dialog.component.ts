@@ -61,7 +61,6 @@ export class ClientInvoicesDialogComponent implements OnInit {
   closeInvoiceClick(e) {
     // Close Invoice without Payment
     e.row.data.updateUserId = this.user.id;
-    console.log(e.row.data);
     this.dataService.closeInvoice(e.row.data).subscribe(res => {
       this.toastr.success('Closed on Account', 'PaintCity Inc', { timeOut: 3000 });
       this.refreshInvoices();
@@ -89,13 +88,14 @@ export class ClientInvoicesDialogComponent implements OnInit {
   }
 
   onCellPrepared(e) {
-
-    if (e.rowType === 'data' && e.column.type === 'buttons' && e.column.visibleIndex === 1) {
-      if (e.row.data.statusOrder <= 10 || e.row.data.statusOrder >= 12) {
-        e.cellElement.hidden = true;
-      }
+    if (e.rowType === "data" && e.column.type === "buttons") {
+      e.column.buttons.forEach((button: any) => 
+      { 
+        if (button.hint=="CloseNoPayment") {
+          button.visibility = "hidden";
+        } 
+      });
     }
-
   }
 
 

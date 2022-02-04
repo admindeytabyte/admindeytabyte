@@ -29,6 +29,8 @@
     "devextreme": "21.2.4",
     "devextreme-angular": "21.2.4",
     "devextreme-schematics": "^1.2.24",
+    "exceljs": "^4.3.0",
+    "file-saver-es": "^2.0.5",
     "font-awesome": "^4.7.0",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.0",

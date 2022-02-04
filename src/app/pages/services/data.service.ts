@@ -26,6 +26,8 @@ export class DataService {
     return throwError(errorMessage);
   }
 
+
+
   GeoCodeAccount(accountId: any): Observable<any> {
     return this.httpClient
       .get(environment.baseURL + 'Generics/GeoCodeAddress?accountId=' + accountId)
@@ -63,6 +65,13 @@ export class DataService {
     return this.httpClient.post(
       environment.baseURL + 'ClientNotes/UpdateNote',
       alert
+    );
+  }
+
+  updateRoleCheck(roleRecord: any): Observable<any> {
+    return this.httpClient.post(
+      environment.baseURL + 'LoginProfiles/UpdateRoleCheck',
+      roleRecord
     );
   }
 
@@ -677,9 +686,9 @@ export class DataService {
       .pipe(catchError(this.handleError));
   }
 
-  getClients(companyId: any, calcSale: boolean): Observable<any> {
+  getClients(companyId: any, calcSale: boolean,active: boolean): Observable<any> {
     return this.httpClient
-      .get(environment.baseURL + 'Clients/GetClientForCompany?companyId=' + companyId + '&calcSale=' + calcSale)
+      .get(environment.baseURL + 'Clients/GetClientForCompany?companyId=' + companyId + '&calcSale=' + calcSale + '&active=' + active)
       .pipe(catchError(this.handleError));
   }
 
@@ -1494,16 +1503,66 @@ export class DataService {
   }
 
  //Purchase Orders
+ public getCountries(): Observable<any> {
+  return this.httpClient
+    .get(environment.baseURL + 'Countries')
+    .pipe(catchError(this.handleError));
+}
+
+public getvendors(companyId: any): Observable<any> {
+  return this.httpClient
+    .get(environment.baseURL + 'Vendors/GetVendors?companyId=' + companyId)
+    .pipe(catchError(this.handleError));
+}
+
+public AddVendor(paramData,companyId) {
+  return this.httpClient.put(
+    environment.baseURL + 'Vendors/AddVendor?companyId=' + companyId,
+    paramData
+  );
+}
+
+public UpdateVendor(paramData: any) {
+  return this.httpClient.put(
+    environment.baseURL + 'Vendors/' + paramData.vendorId,
+    paramData
+  );
+}
+
+public DeleteVendor(vendorId: any) {
+  return this.httpClient.delete(
+    environment.baseURL + 'Vendors/' + vendorId
+  );
+}
+
  public getOpenPurchaseOrders(companyId: any): Observable<any> {
   return this.httpClient
     .get(environment.baseURL + 'PurchaseOrders/GetOpenPurchaseOrders?companyId=' + companyId)
     .pipe(catchError(this.handleError));
 }
 
-public getPurchaseOrderItems(poId: any,companyId: any): Observable<any> {
+public getPurchaseOrderItems(poId: any,companyId: any,activeProducts: boolean): Observable<any> {
   return this.httpClient
-    .get(environment.baseURL + 'PurchaseOrders/GetPoItems?poId=' + poId + '&companyId=' + companyId)
+    .get(environment.baseURL + 'PurchaseOrders/GetPoItems?poId=' + poId + '&companyId=' + companyId + '&activeProducts=' + activeProducts)
     .pipe(catchError(this.handleError));
+}
+
+public CreateAutoPo(paramData: any) {
+  return this.httpClient.post(
+    environment.baseURL + 'PurchaseOrders/CreateAutoOrder/', paramData
+  );
+}
+
+public DeletePo(poId: any) {
+  return this.httpClient.delete(
+    environment.baseURL + 'PurchaseOrders/' + poId
+  );
+}
+
+public DeletePoItem(poDtlParam: any) {
+  return this.httpClient.post(
+    environment.baseURL + 'PurchaseOrders/DeletePoItem',  poDtlParam
+  );
 }
 
 assignQuote(params): Observable<any> {

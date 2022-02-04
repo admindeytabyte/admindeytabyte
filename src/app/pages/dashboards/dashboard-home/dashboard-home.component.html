@@ -77,8 +77,9 @@
                 <dx-data-grid class="gridContainer" id="gridInvoices" [dataSource]="invoices" [remoteOperations]="false"
                     [allowColumnReordering]="true" [rowAlternationEnabled]="true" [height]="invoiceGridHeight"
                     [showBorders]="true" (onToolbarPreparing)="onToolbarPreparing($event)"
-                    (onCellPrepared)="onCellPrepared($event)" (onRowClick)="rowClicked($event)"
-                    [masterDetail]="{ enabled: true, template: 'details' }" keyExpr="invoiceId">
+                    (onCellPrepared)="onCellPrepared($event)"
+                     keyExpr="invoiceId">
+                     <!-- [masterDetail]="{ enabled: true, template: 'details' }" -->
                     <dxo-editing mode="row" [allowDeleting]="true" [useIcons]="true"></dxo-editing>
                     <dxo-group-panel [visible]="true"></dxo-group-panel>
                     <dxo-selection mode="single"></dxo-selection>
@@ -86,34 +87,38 @@
                     <dxo-header-filter [visible]="true"></dxo-header-filter>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
                     <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
-                    <dxi-column type="buttons" [width]="40">
+                    <dxi-column type="buttons" [width]="40" alignment="center">
                         <dxi-button hint="Edit" icon="edit" [onClick]="editInvoiceClick"></dxi-button>
                     </dxi-column>
-                    <!-- <dxi-column dataField="invoiceId" alignment="center" width="100"></dxi-column> -->
-                    <dxi-column dataField="docType" caption="Type" [groupIndex]="0"></dxi-column>
-                    <!-- <dxi-column dataField="type"  width="120" alignment="center" [groupIndex]="0">
-                    </dxi-column> -->
+                    <dxi-column dataField="docType" caption="Invoice Type" [groupIndex]="0"></dxi-column>
                     <dxi-column dataField="number" alignment="center" width="100"></dxi-column>
                     <dxi-column dataField="date" dataType="datetime" cellTemplate="cellTemplate" sortOrder="desc"
                         alignment="center" format="dd-MMM-yyyy HH:mm:ss" width="180">
                     </dxi-column>
                     <dxi-column dataField="client" cellTemplate="cellTemplate"></dxi-column>
+                    
                     <dxi-column dataField="logNumber" alignment="center" width="120"></dxi-column>
                     <dxi-column dataField="deliveryMode" alignment="center" width="120"></dxi-column>
                     <dxi-column dataField="loggedBy" width="120" alignment="center"></dxi-column>
                     <dxi-column dataField="status" width="150" cellTemplate="cellTemplate" alignment="center">
                     </dxi-column>
-                    <dxi-column dataField="total" cellTemplate="cellTemplate" caption="Amount ($)" dataType="number"
+                    
+                    <dxi-column dataField="total" cellTemplate="cellTemplate" [allowFiltering]="false" caption="Amount ($)" dataType="number"
                         format="currency" alignment="right" width="120">
                         <dxo-format type="fixedPoint" [precision]="2">
                         </dxo-format>
                     </dxi-column>
 
+                    <dxi-column dataField="assemblyPercComplete" caption="Assembly %" width="100"  alignment="center" [allowFiltering]="false"
+                        dataType="number" format="percent">
+                    </dxi-column>
+                    
+
                     <div *dxTemplate="let cell of 'cellTemplate'">
                         <div class="cellText">{{cell.text}}</div>
-                    </div>
+                    </div> 
 
-                    <div *dxTemplate="let dtl of 'details'">
+                    <!-- <div *dxTemplate="let dtl of 'details'">
                         <dx-data-grid [dataSource]="invoiceDetails" [showBorders]="true">
                             <dxi-column dataField="sequenceId" [width]="50" alignment="center" caption="Id">
                             </dxi-column>
@@ -125,7 +130,7 @@
                             <dxi-column dataField="sell" caption="Sell ($)" [width]="100"></dxi-column>
                             <dxi-column dataField="amount" caption="Total ($)" [width]="100"></dxi-column>
                         </dx-data-grid>
-                    </div>
+                    </div>  -->
                 </dx-data-grid>
             </tc-card>
         </div>

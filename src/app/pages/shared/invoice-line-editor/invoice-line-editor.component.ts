@@ -11,6 +11,7 @@ import { InvoiceDetail } from '../interfaces/InvoiceDetail';
 })
 export class InvoiceLineEditorComponent implements OnInit {
   product: InvoiceDetail[]=[];
+  allowQtyEdit: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA)
   public data: {
     invoiceItem: any,
@@ -24,7 +25,9 @@ export class InvoiceLineEditorComponent implements OnInit {
 
   ngOnInit() {
     this.product.push(this.data.invoiceItem);
+    this.allowQtyEdit = this.data.invoiceItem.isAssembled==false;
   }
+
 
   save(){
     this.dataService.modifyInvoiceDtl(this.product[0]).subscribe(

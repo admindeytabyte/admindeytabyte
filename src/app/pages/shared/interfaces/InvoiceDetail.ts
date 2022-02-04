@@ -5,6 +5,7 @@ export class InvoiceDetail {
     discountMapText: string;
     sequenceId: number;
     partLinkId: number;
+    category: string;
     line: string;
     unit: string;
     sku: string;
@@ -23,6 +24,8 @@ export class InvoiceDetail {
     percDiscount: number;
     inStockQty: number;
     discountText: string;
+    assemblyInfo: string;
+    isAssembled: boolean;
     quantityBreaks: any[];
 
     constructor(values: Object = {}) {

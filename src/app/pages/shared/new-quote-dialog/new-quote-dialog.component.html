@@ -7,124 +7,125 @@
     <p mat-dialog-title>New Quotation</p>
 </div>
 
-<div id="clientSelectPanel">
-    <div class="left">
-        <div class="left">
-            <div>
-                <span>Search mode</span>
-                <dx-select-box #searchMode [items]="['contains', 'startsWith']" [(value)]="list.searchMode">
+<div class="container-fluid" id="clientSelectPanel">
+	<div class="row">
+		<div class="col-md-4" id="left">
+            <span>Search mode</span>
+            <div class="box-left">
+                <dx-select-box width="300" #searchMode [items]="['contains', 'startsWith']" [(value)]="list.searchMode">
                 </dx-select-box>
-            </div>
-            <dx-list #list class="list" [dataSource]="customers" [searchEnabled]="true" selectionMode="single"
+                <p class="field-caption">Active</p>
+                <dx-check-box [(value)]="activeOnly" (onValueChanged)="refreshClients()"></dx-check-box>
+            </div>    
+            
+            <dx-list #list id="list" [dataSource]="customers" [searchEnabled]="true" selectionMode="single"
                 [searchExpr]="['companyName', 'formattedAddress','landline','mobile','tags']"
                 (onSelectionChanged)=listSelectionChanged($event) searchMode="startsWith" [showSelectionControls]="true"
-                [height]="800">
-                <div *dxTemplate="let item of 'item'">
-                    <div class="client">
-                        <div class="name">{{item.companyName}}</div>
-                        <div class="address">{{item.formattedAddress}}</div>
-                        <div class="phone">Landline- {{item.landline}} - Mobile- {{item.mobile}}</div>
-                        <!-- <div *ngIf="item.rating>0" class="address">Rating: {{item.rating}}</div> -->
-                    </div>
+                [height]="listHeight">
+                <div *dxTemplate="let item of 'item'" class="listItem">
+                    <div class="name">{{item.companyName}}</div>
+                    <div class="address">{{item.formattedAddress}}</div>
+                    <div class="phone">Landline- {{item.landline}} - Mobile- {{item.mobile}}</div>
                 </div>
             </dx-list>
-        </div>
-    </div>
-    <div class="right" *ngIf="selectedAccount">
-        <div class="header">
-            <div *ngIf="selectedAccount.locked;then locked else unlocked"></div>
-            <ng-template #locked>
-                <div class="locked-name-container">
-                    <div class="locked-name">{{selectedAccount.companyName}}</div>
+		</div>
+		<div class="col-md-8" id="right">
+            <div  *ngIf="selectedAccount">
+                <div class="header">
+                    <div *ngIf="selectedAccount.locked;then locked else unlocked"></div>
+                    <ng-template #locked>
+                        <div class="locked-name-container">
+                            <div class="locked-name">{{selectedAccount.companyName}}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template #unlocked>
+                        <div class="name-container">
+                            <div class="name">{{selectedAccount.companyName}}</div>
+                        </div>
+                    </ng-template>
                 </div>
-            </ng-template>
-            <ng-template #unlocked>
-                <div class="name-container">
-                    <div class="name">{{selectedAccount.companyName}}</div>
+                <div class="row contacts">
+                    <h5 class="alert">{{selectedAccount.alert}}</h5>
                 </div>
-            </ng-template>
-        </div>
-        <div class="row contacts">
-            <h5 class="alert">{{selectedAccount.alert}}</h5>
-        </div>
-        <div class="row contacts">
-            <dx-text-box [width]="150" placeholder="Client PO#" [(value)]="poNum"></dx-text-box>
-            <div class="field-caption">Shipping</div>
-            <dx-select-box height="40" width="500" [(ngModel)]="selectedShippingAddress" [dataSource]="addresses"
-                displayExpr="address" placeholder="Select Shipping Address...">
-            </dx-select-box>
-            <dx-button icon="edit" id="editButton" (onClick)="editAddressClick()">
-            </dx-button>
-            <dx-button icon="comment" id="noteButton" (onClick)="openNotesClick()">
-            </dx-button>
-        </div>
-        <div class="row contacts">
-            <span>Contacts</span>
-            <dx-data-grid #contactsGrid [dataSource]="contacts" [showBorders]="true" [height]="250"
-                class="invoiceGrid gridContainer" keyExpr="contactId" [focusedRowEnabled]="true"
-                (onFocusedRowChanged)="contactsFocusChanged($event)" (onRowUpdated)="clientContactUpdated($event)"
-                (onRowRemoved)="clientContactDeleted($event)" (onRowInserted)="clientContactAdded($event)">
-                <dxo-selection mode="single"></dxo-selection>
-                <dxo-paging [enabled]="false"></dxo-paging>
-                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true"
-                    [allowDeleting]="true" [useIcons]="true">
-                    <dxo-popup title="Customer Contact" [showTitle]="true"
-                        [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="700" [height]="400">
-                    </dxo-popup>
-                    <dxo-form>
-                        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
-                            <dxi-item dataField="fullName"></dxi-item>
-                            <dxi-item dataField="position"></dxi-item>
-                            <dxi-item dataField="phone"></dxi-item>
-                            <dxi-item dataField="email"></dxi-item>
-                        </dxi-item>
-                    </dxo-form>
-                </dxo-editing>
-                <dxi-column dataField="fullName" [width]="150">
-                    <dxi-validation-rule type="required">
-                    </dxi-validation-rule>
-                </dxi-column>
-                <dxi-column dataField="position" [width]="140">
-                </dxi-column>
-                <dxi-column dataField="phone" [width]="140">
-                </dxi-column>
-                <dxi-column dataField="email">
-                    <dxi-validation-rule type="email"></dxi-validation-rule>
-                </dxi-column>
-            </dx-data-grid>
-        </div>
-        <div *ngIf="selectedContact">
-            <div class="row contacts">
-                <div class="col-md-4">Delivery Mode</div>
-                <div class="col-md-8">
-                    <dx-radio-group [items]="deliveryModeText" [(ngModel)]="delMode" layout="horizontal">
-                    </dx-radio-group>
+                
+                <div class="box-left" id="shippingContainer">
+                    <dx-text-box [width]="150" placeholder="Client PO#" [(value)]="poNum"></dx-text-box>
+                    <div class="field-caption">Shipping</div>
+                    <dx-select-box height="40" width="500" [(ngModel)]="selectedShippingAddress" [dataSource]="addresses"
+                        displayExpr="address" placeholder="Select Shipping Address...">
+                    </dx-select-box>
+                    <dx-button icon="edit" class="edit-button" id="editButton" (onClick)="editAddressClick()" width="50"></dx-button>
+                    <dx-button icon="comment" class="edit-button" id="noteButton" (onClick)="openNotesClick()" width="50"></dx-button>
+                </div>
+                <div class="row contacts">
+                    <span class="title">Contacts</span>
+                    <dx-data-grid #contactsGrid [dataSource]="contacts" [showBorders]="true" [height]="250"
+                        class="invoiceGrid gridContainer" keyExpr="contactId" [focusedRowEnabled]="true"
+                        (onFocusedRowChanged)="contactsFocusChanged($event)" (onRowUpdated)="clientContactUpdated($event)"
+                        (onRowRemoved)="clientContactDeleted($event)" (onRowInserted)="clientContactAdded($event)">
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-paging [enabled]="false"></dxo-paging>
+                        <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowUpdating]="true"
+                            [allowDeleting]="true" [useIcons]="true">
+                            <dxo-popup title="Customer Contact" [showTitle]="true"
+                                [position]="{ my: 'center', at: 'center', of: 'window' }" [width]="700" [height]="400">
+                            </dxo-popup>
+                            <dxo-form>
+                                <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                                    <dxi-item dataField="fullName"></dxi-item>
+                                    <dxi-item dataField="position"></dxi-item>
+                                    <dxi-item dataField="phone"></dxi-item>
+                                    <dxi-item dataField="email"></dxi-item>
+                                </dxi-item>
+                            </dxo-form>
+                        </dxo-editing>
+                        <dxi-column dataField="fullName" [width]="150">
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-column>
+                        <dxi-column dataField="position" [width]="140">
+                        </dxi-column>
+                        <dxi-column dataField="phone" [width]="140">
+                        </dxi-column>
+                        <dxi-column dataField="email">
+                            <dxi-validation-rule type="email"></dxi-validation-rule>
+                        </dxi-column>
+                    </dx-data-grid>
+                </div>
+                <div *ngIf="selectedContact">
+                    <div class="row contacts">
+                        <div class="col-md-4 title">Delivery Mode</div>
+                        <div class="col-md-8">
+                            <dx-radio-group [items]="deliveryModeText" [(ngModel)]="delMode" layout="horizontal">
+                            </dx-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="delMode" class="contacts">
+                    <div class="row">
+                        <div class="col-md-12">
+                            OrderDesk Notes (Optional)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <dx-text-area [height]="120" [(value)]="odNotes">
+                            </dx-text-area>
+                        </div>
+                    </div>
+                    <div></div>
+                    <div class="dialog-button-container">
+                        <div mat-dialog-actions>
+                            <dx-button class="dialog-button" stylingMode="contained" text="Quotation" type="default"
+                                [width]="120" (onClick)="quotationClicked()">
+                            </dx-button>
+                            <dx-button class="dialog-button" stylingMode="contained" text="WaitList" type="default"
+                                [width]="120" (onClick)="waitListClicked()">
+                            </dx-button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div *ngIf="delMode" class="contacts">
-            <div class="row">
-                <div class="col-md-12">
-                    OrderDesk Notes (Optional)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <dx-text-area [height]="120" [(value)]="odNotes">
-                    </dx-text-area>
-                </div>
-            </div>
-            <div></div>
-            <div class="dialog-button-container">
-                <div mat-dialog-actions>
-                    <dx-button class="dialog-button" stylingMode="contained" text="Quotation" type="default"
-                        [width]="120" (onClick)="quotationClicked()">
-                    </dx-button>
-                    <dx-button class="dialog-button" stylingMode="contained" text="WaitList" type="default"
-                        [width]="120" (onClick)="waitListClicked()">
-                    </dx-button>
-                </div>
-            </div>
-        </div>
-    </div>
+		</div>
+	</div>
 </div>
